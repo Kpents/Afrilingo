@@ -1,0 +1,8 @@
+import { Download, RefreshCw, WifiOff } from "lucide-react";
+
+export default function AppStatus({ dark, lifecycle }) {
+  if (lifecycle.updateReady) return <aside role="status" className={`fixed inset-x-3 bottom-24 z-[65] mx-auto flex max-w-md items-center gap-3 rounded-2xl border p-3 shadow-2xl ${dark?"border-white/10 bg-[#232B28]":"border-black/10 bg-white"}`}><RefreshCw className="shrink-0 text-[#F28C28]"/><div className="min-w-0 flex-1 text-sm font-bold">A fresh AfriLingo version is ready.</div><button onClick={lifecycle.reload} className="min-h-11 rounded-xl bg-[#F28C28] px-3 text-sm font-black text-white">Update</button></aside>;
+  if (!lifecycle.online) return <aside role="status" aria-live="polite" className={`fixed inset-x-3 bottom-24 z-[65] mx-auto flex max-w-md items-center gap-3 rounded-2xl border p-4 shadow-2xl ${dark?"border-white/10 bg-[#232B28]":"border-black/10 bg-white"}`}><WifiOff className="shrink-0 text-[#F6C445]"/><div><div className="font-black">Learning offline</div><div className="text-xs font-semibold opacity-50">Saved lessons and progress remain available.</div></div></aside>;
+  if (lifecycle.canInstall) return <aside className={`fixed inset-x-3 bottom-24 z-[65] mx-auto flex max-w-md items-center gap-3 rounded-2xl border p-3 shadow-2xl ${dark?"border-white/10 bg-[#232B28]":"border-black/10 bg-white"}`}><Download className="shrink-0 text-[#24745B]"/><div className="min-w-0 flex-1 text-sm font-bold">Install AfriLingo for quicker access.</div><button onClick={lifecycle.install} className="min-h-11 rounded-xl bg-[#24745B] px-3 text-sm font-black text-white">Install</button></aside>;
+  return null;
+}

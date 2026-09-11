@@ -1,0 +1,26 @@
+{
+  "name": "afrilingo-twi-unit1",
+  "private": true,
+  "version": "0.2.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "validate:content": "node scripts/validate-content.mjs",
+    "validate:bundle": "node scripts/validate-bundle.mjs",
+    "build": "npm run validate:content && vite build && npm run validate:bundle",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@tailwindcss/vite": "^4.1.11",
+    "framer-motion": "^12.23.12",
+    "lucide-react": "^0.468.0",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "recharts": "^3.1.2",
+    "tailwindcss": "^4.1.11"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.4",
+    "vite": "^7.1.1"
+  }
+}

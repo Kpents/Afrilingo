@@ -1,0 +1,1657 @@
+{
+  "generatedAt": "2026-09-11T11:00:28.703Z",
+  "stats": {
+    "languages": 14,
+    "units": 392,
+    "lessons": 1611,
+    "questions": 5745,
+    "cultureCards": 1611,
+    "exploreEntries": 4747,
+    "immersionItems": 362
+  },
+  "errors": [],
+  "warnings": [
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "twi/unit-5/twi-unit-5-lesson-2",
+      "message": "Culture text duplicates twi/unit-5/twi-unit-5-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "twi/unit-6/twi-unit-6-lesson-2",
+      "message": "Culture text duplicates twi/unit-6/twi-unit-6-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "twi/unit-7/twi-unit-7-lesson-2",
+      "message": "Culture text duplicates twi/unit-7/twi-unit-7-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "twi/unit-21/twi-unit-21-lesson-2",
+      "message": "Culture text duplicates twi/unit-21/twi-unit-21-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/pending-sports-beginner",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/pending-sports-intermediate",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/pending-sports-advanced",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/pending-colours-beginner",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/pending-colours-intermediate",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/pending-colours-advanced",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/pending-restaurant-beginner",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/pending-restaurant-intermediate",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/pending-restaurant-advanced",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "ga/unit-3/ga-unit-3-lesson-2",
+      "message": "Culture text duplicates ga/unit-3/ga-unit-3-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "ga/unit-4/ga-unit-4-lesson-2",
+      "message": "Culture text duplicates ga/unit-4/ga-unit-4-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "ga/unit-5/ga-unit-5-lesson-2",
+      "message": "Culture text duplicates ga/unit-5/ga-unit-5-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "ga/unit-21/ga-unit-21-lesson-2",
+      "message": "Culture text duplicates ga/unit-21/ga-unit-21-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "ga/explore/sport-review-beginner",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "ga/explore/sport-review-intermediate",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "ga/explore/sport-review-advanced",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "ga/explore/weather-review-beginner",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "ga/explore/weather-review-intermediate",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "ga/explore/weather-review-advanced",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "ga/explore/restaurant-review-beginner",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "ga/explore/restaurant-review-intermediate",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "ga/explore/restaurant-review-advanced",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "ewe/unit-3/ewe-unit-3-lesson-2",
+      "message": "Culture text duplicates ewe/unit-3/ewe-unit-3-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "ewe/unit-4/ewe-unit-4-lesson-2",
+      "message": "Culture text duplicates ewe/unit-4/ewe-unit-4-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "ewe/unit-5/ewe-unit-5-lesson-2",
+      "message": "Culture text duplicates ewe/unit-5/ewe-unit-5-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "ewe/unit-6/ewe-unit-6-lesson-2",
+      "message": "Culture text duplicates ewe/unit-6/ewe-unit-6-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "ewe/unit-21/ewe-unit-21-lesson-2",
+      "message": "Culture text duplicates ewe/unit-21/ewe-unit-21-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "ewe/explore/pending-sport-beginner",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "ewe/explore/pending-sport-intermediate",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "ewe/explore/pending-sport-advanced",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "ewe/explore/pending-colour-beginner",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "ewe/explore/pending-colour-intermediate",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "ewe/explore/pending-colour-advanced",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "ewe/explore/pending-restaurant-beginner",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "ewe/explore/pending-restaurant-intermediate",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "ewe/explore/pending-restaurant-advanced",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "swahili/unit-3/introductions-challenge",
+      "message": "Culture text duplicates swahili/unit-3/introductions-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "swahili/unit-4/family-challenge",
+      "message": "Culture text duplicates swahili/unit-4/family-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "swahili/unit-5/actions-challenge",
+      "message": "Culture text duplicates swahili/unit-5/actions-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "swahili/unit-6/food-challenge",
+      "message": "Culture text duplicates swahili/unit-6/food-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "swahili/unit-7/home-challenge",
+      "message": "Culture text duplicates swahili/unit-7/home-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "swahili/unit-8/descriptions-challenge",
+      "message": "Culture text duplicates swahili/unit-8/descriptions-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "swahili/unit-9/questions-challenge",
+      "message": "Culture text duplicates swahili/unit-9/questions-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "swahili/unit-10/directions-challenge",
+      "message": "Culture text duplicates swahili/unit-10/directions-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "swahili/unit-11/time-challenge",
+      "message": "Culture text duplicates swahili/unit-11/time-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "swahili/unit-12/shopping-challenge",
+      "message": "Culture text duplicates swahili/unit-12/shopping-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "swahili/unit-13/social-challenge",
+      "message": "Culture text duplicates swahili/unit-13/social-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "swahili/unit-14/school-work-challenge",
+      "message": "Culture text duplicates swahili/unit-14/school-work-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "swahili/unit-15/travel-challenge",
+      "message": "Culture text duplicates swahili/unit-15/travel-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "swahili/unit-16/feelings-challenge",
+      "message": "Culture text duplicates swahili/unit-16/feelings-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "swahili/unit-17/health-challenge",
+      "message": "Culture text duplicates swahili/unit-17/health-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "swahili/unit-18/weather-challenge",
+      "message": "Culture text duplicates swahili/unit-18/weather-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "swahili/unit-19/tenses-challenge",
+      "message": "Culture text duplicates swahili/unit-19/tenses-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "swahili/unit-20/natural-conversation-challenge",
+      "message": "Culture text duplicates swahili/unit-20/natural-conversation-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "swahili/unit-21/swahili-unit-21-lesson-2",
+      "message": "Culture text duplicates swahili/unit-21/swahili-unit-21-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "COURSE_EDITORIAL_REVIEW",
+      "path": "yoruba/unit-3",
+      "message": "Unit is explicitly awaiting native-speaker editorial sign-off."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "yoruba/unit-3/yoruba-unit-3-lesson-2",
+      "message": "Culture text duplicates yoruba/unit-3/yoruba-unit-3-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "COURSE_EDITORIAL_REVIEW",
+      "path": "yoruba/unit-4",
+      "message": "Unit is explicitly awaiting native-speaker editorial sign-off."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "yoruba/unit-4/yoruba-unit-4-lesson-2",
+      "message": "Culture text duplicates yoruba/unit-4/yoruba-unit-4-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "COURSE_EDITORIAL_REVIEW",
+      "path": "yoruba/unit-5",
+      "message": "Unit is explicitly awaiting native-speaker editorial sign-off."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "yoruba/unit-5/yoruba-unit-5-lesson-2",
+      "message": "Culture text duplicates yoruba/unit-5/yoruba-unit-5-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "COURSE_EDITORIAL_REVIEW",
+      "path": "yoruba/unit-6",
+      "message": "Unit is explicitly awaiting native-speaker editorial sign-off."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "yoruba/unit-6/yoruba-unit-6-lesson-2",
+      "message": "Culture text duplicates yoruba/unit-6/yoruba-unit-6-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "COURSE_EDITORIAL_REVIEW",
+      "path": "yoruba/unit-7",
+      "message": "Unit is explicitly awaiting native-speaker editorial sign-off."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "yoruba/unit-7/yoruba-unit-7-lesson-2",
+      "message": "Culture text duplicates yoruba/unit-7/yoruba-unit-7-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "COURSE_EDITORIAL_REVIEW",
+      "path": "yoruba/unit-8",
+      "message": "Unit is explicitly awaiting native-speaker editorial sign-off."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "yoruba/unit-8/yoruba-unit-8-lesson-2",
+      "message": "Culture text duplicates yoruba/unit-8/yoruba-unit-8-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "COURSE_EDITORIAL_REVIEW",
+      "path": "yoruba/unit-9",
+      "message": "Unit is explicitly awaiting native-speaker editorial sign-off."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "yoruba/unit-9/yoruba-unit-9-lesson-2",
+      "message": "Culture text duplicates yoruba/unit-9/yoruba-unit-9-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "COURSE_EDITORIAL_REVIEW",
+      "path": "yoruba/unit-10",
+      "message": "Unit is explicitly awaiting native-speaker editorial sign-off."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "yoruba/unit-10/yoruba-unit-10-lesson-2",
+      "message": "Culture text duplicates yoruba/unit-10/yoruba-unit-10-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "COURSE_EDITORIAL_REVIEW",
+      "path": "yoruba/unit-11",
+      "message": "Unit is explicitly awaiting native-speaker editorial sign-off."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "yoruba/unit-11/yoruba-unit-11-lesson-2",
+      "message": "Culture text duplicates yoruba/unit-11/yoruba-unit-11-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "COURSE_EDITORIAL_REVIEW",
+      "path": "yoruba/unit-12",
+      "message": "Unit is explicitly awaiting native-speaker editorial sign-off."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "yoruba/unit-12/yoruba-unit-12-lesson-2",
+      "message": "Culture text duplicates yoruba/unit-12/yoruba-unit-12-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "COURSE_EDITORIAL_REVIEW",
+      "path": "yoruba/unit-13",
+      "message": "Unit is explicitly awaiting native-speaker editorial sign-off."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "yoruba/unit-13/yoruba-unit-13-lesson-2",
+      "message": "Culture text duplicates yoruba/unit-13/yoruba-unit-13-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "COURSE_EDITORIAL_REVIEW",
+      "path": "yoruba/unit-14",
+      "message": "Unit is explicitly awaiting native-speaker editorial sign-off."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "yoruba/unit-14/yoruba-unit-14-lesson-2",
+      "message": "Culture text duplicates yoruba/unit-14/yoruba-unit-14-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "COURSE_EDITORIAL_REVIEW",
+      "path": "yoruba/unit-15",
+      "message": "Unit is explicitly awaiting native-speaker editorial sign-off."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "yoruba/unit-15/yoruba-unit-15-lesson-2",
+      "message": "Culture text duplicates yoruba/unit-15/yoruba-unit-15-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "COURSE_EDITORIAL_REVIEW",
+      "path": "yoruba/unit-16",
+      "message": "Unit is explicitly awaiting native-speaker editorial sign-off."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "yoruba/unit-16/yoruba-unit-16-lesson-2",
+      "message": "Culture text duplicates yoruba/unit-16/yoruba-unit-16-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "COURSE_EDITORIAL_REVIEW",
+      "path": "yoruba/unit-17",
+      "message": "Unit is explicitly awaiting native-speaker editorial sign-off."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "yoruba/unit-17/yoruba-unit-17-lesson-2",
+      "message": "Culture text duplicates yoruba/unit-17/yoruba-unit-17-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "COURSE_EDITORIAL_REVIEW",
+      "path": "yoruba/unit-18",
+      "message": "Unit is explicitly awaiting native-speaker editorial sign-off."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "yoruba/unit-18/yoruba-unit-18-lesson-2",
+      "message": "Culture text duplicates yoruba/unit-18/yoruba-unit-18-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "COURSE_EDITORIAL_REVIEW",
+      "path": "yoruba/unit-19",
+      "message": "Unit is explicitly awaiting native-speaker editorial sign-off."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "yoruba/unit-19/yoruba-unit-19-lesson-2",
+      "message": "Culture text duplicates yoruba/unit-19/yoruba-unit-19-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "COURSE_EDITORIAL_REVIEW",
+      "path": "yoruba/unit-20",
+      "message": "Unit is explicitly awaiting native-speaker editorial sign-off."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "yoruba/unit-20/yoruba-unit-20-lesson-2",
+      "message": "Culture text duplicates yoruba/unit-20/yoruba-unit-20-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "COURSE_EDITORIAL_REVIEW",
+      "path": "yoruba/unit-21",
+      "message": "Unit is explicitly awaiting native-speaker editorial sign-off."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "yoruba/unit-21/yoruba-unit-21-lesson-2",
+      "message": "Culture text duplicates yoruba/unit-21/yoruba-unit-21-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "COURSE_EDITORIAL_REVIEW",
+      "path": "yoruba/unit-22",
+      "message": "Unit is explicitly awaiting native-speaker editorial sign-off."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "yoruba/unit-22/yoruba-unit-22-lesson-2",
+      "message": "Culture text duplicates yoruba/unit-22/yoruba-unit-22-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "COURSE_EDITORIAL_REVIEW",
+      "path": "yoruba/unit-23",
+      "message": "Unit is explicitly awaiting native-speaker editorial sign-off."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "yoruba/unit-23/yoruba-unit-23-lesson-2",
+      "message": "Culture text duplicates yoruba/unit-23/yoruba-unit-23-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "COURSE_EDITORIAL_REVIEW",
+      "path": "yoruba/unit-24",
+      "message": "Unit is explicitly awaiting native-speaker editorial sign-off."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "yoruba/unit-24/yoruba-unit-24-lesson-2",
+      "message": "Culture text duplicates yoruba/unit-24/yoruba-unit-24-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "COURSE_EDITORIAL_REVIEW",
+      "path": "yoruba/unit-25",
+      "message": "Unit is explicitly awaiting native-speaker editorial sign-off."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "yoruba/unit-25/yoruba-unit-25-lesson-2",
+      "message": "Culture text duplicates yoruba/unit-25/yoruba-unit-25-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "COURSE_EDITORIAL_REVIEW",
+      "path": "yoruba/unit-26",
+      "message": "Unit is explicitly awaiting native-speaker editorial sign-off."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "yoruba/unit-26/yoruba-unit-26-lesson-2",
+      "message": "Culture text duplicates yoruba/unit-26/yoruba-unit-26-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "COURSE_EDITORIAL_REVIEW",
+      "path": "yoruba/unit-27",
+      "message": "Unit is explicitly awaiting native-speaker editorial sign-off."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "yoruba/unit-27/yoruba-unit-27-lesson-2",
+      "message": "Culture text duplicates yoruba/unit-27/yoruba-unit-27-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "COURSE_EDITORIAL_REVIEW",
+      "path": "yoruba/unit-28",
+      "message": "Unit is explicitly awaiting native-speaker editorial sign-off."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "yoruba/unit-28/yoruba-unit-28-lesson-2",
+      "message": "Culture text duplicates yoruba/unit-28/yoruba-unit-28-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "hausa/unit-3/hausa-unit-3-lesson-2",
+      "message": "Culture text duplicates hausa/unit-3/hausa-unit-3-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "hausa/unit-4/hausa-unit-4-lesson-2",
+      "message": "Culture text duplicates hausa/unit-4/hausa-unit-4-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "hausa/unit-5/hausa-unit-5-lesson-2",
+      "message": "Culture text duplicates hausa/unit-5/hausa-unit-5-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "hausa/unit-6/hausa-unit-6-lesson-2",
+      "message": "Culture text duplicates hausa/unit-6/hausa-unit-6-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "hausa/unit-7/hausa-unit-7-lesson-2",
+      "message": "Culture text duplicates hausa/unit-7/hausa-unit-7-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "hausa/unit-8/hausa-unit-8-lesson-2",
+      "message": "Culture text duplicates hausa/unit-8/hausa-unit-8-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "hausa/unit-9/hausa-unit-9-lesson-2",
+      "message": "Culture text duplicates hausa/unit-9/hausa-unit-9-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "hausa/unit-10/hausa-unit-10-lesson-2",
+      "message": "Culture text duplicates hausa/unit-10/hausa-unit-10-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "hausa/unit-11/hausa-unit-11-lesson-2",
+      "message": "Culture text duplicates hausa/unit-11/hausa-unit-11-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "hausa/unit-12/hausa-unit-12-lesson-2",
+      "message": "Culture text duplicates hausa/unit-12/hausa-unit-12-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "hausa/unit-13/hausa-unit-13-lesson-2",
+      "message": "Culture text duplicates hausa/unit-13/hausa-unit-13-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "hausa/unit-14/hausa-unit-14-lesson-2",
+      "message": "Culture text duplicates hausa/unit-14/hausa-unit-14-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "hausa/unit-15/hausa-unit-15-lesson-2",
+      "message": "Culture text duplicates hausa/unit-15/hausa-unit-15-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "hausa/unit-16/hausa-unit-16-lesson-2",
+      "message": "Culture text duplicates hausa/unit-16/hausa-unit-16-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "hausa/unit-17/hausa-unit-17-lesson-2",
+      "message": "Culture text duplicates hausa/unit-17/hausa-unit-17-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "hausa/unit-18/hausa-unit-18-lesson-2",
+      "message": "Culture text duplicates hausa/unit-18/hausa-unit-18-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "hausa/unit-19/hausa-unit-19-lesson-2",
+      "message": "Culture text duplicates hausa/unit-19/hausa-unit-19-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "hausa/unit-20/hausa-unit-20-lesson-2",
+      "message": "Culture text duplicates hausa/unit-20/hausa-unit-20-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "hausa/unit-21/hausa-unit-21-lesson-2",
+      "message": "Culture text duplicates hausa/unit-21/hausa-unit-21-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "hausa/unit-22/hausa-unit-22-lesson-2",
+      "message": "Culture text duplicates hausa/unit-22/hausa-unit-22-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "hausa/unit-23/hausa-unit-23-lesson-2",
+      "message": "Culture text duplicates hausa/unit-23/hausa-unit-23-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "hausa/unit-24/hausa-unit-24-lesson-2",
+      "message": "Culture text duplicates hausa/unit-24/hausa-unit-24-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "hausa/unit-25/hausa-unit-25-lesson-2",
+      "message": "Culture text duplicates hausa/unit-25/hausa-unit-25-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "hausa/unit-26/hausa-unit-26-lesson-2",
+      "message": "Culture text duplicates hausa/unit-26/hausa-unit-26-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "hausa/unit-27/hausa-unit-27-lesson-2",
+      "message": "Culture text duplicates hausa/unit-27/hausa-unit-27-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "hausa/unit-28/hausa-unit-28-lesson-2",
+      "message": "Culture text duplicates hausa/unit-28/hausa-unit-28-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "igbo/unit-2/igbo-unit-2-lesson-2",
+      "message": "Culture text duplicates igbo/unit-2/igbo-unit-2-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "igbo/unit-3/igbo-unit-3-lesson-2",
+      "message": "Culture text duplicates igbo/unit-3/igbo-unit-3-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "igbo/unit-4/igbo-unit-4-lesson-2",
+      "message": "Culture text duplicates igbo/unit-4/igbo-unit-4-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "igbo/unit-5/igbo-unit-5-lesson-2",
+      "message": "Culture text duplicates igbo/unit-5/igbo-unit-5-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "igbo/unit-6/igbo-unit-6-lesson-2",
+      "message": "Culture text duplicates igbo/unit-6/igbo-unit-6-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "igbo/unit-7/igbo-unit-7-lesson-2",
+      "message": "Culture text duplicates igbo/unit-7/igbo-unit-7-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "igbo/unit-8/igbo-unit-8-lesson-2",
+      "message": "Culture text duplicates igbo/unit-8/igbo-unit-8-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "igbo/unit-9/igbo-unit-9-lesson-2",
+      "message": "Culture text duplicates igbo/unit-9/igbo-unit-9-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "igbo/unit-10/igbo-unit-10-lesson-2",
+      "message": "Culture text duplicates igbo/unit-10/igbo-unit-10-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "igbo/unit-11/igbo-unit-11-lesson-2",
+      "message": "Culture text duplicates igbo/unit-11/igbo-unit-11-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "igbo/unit-12/igbo-unit-12-lesson-2",
+      "message": "Culture text duplicates igbo/unit-12/igbo-unit-12-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "igbo/unit-13/igbo-unit-13-lesson-2",
+      "message": "Culture text duplicates igbo/unit-13/igbo-unit-13-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "igbo/unit-14/igbo-unit-14-lesson-2",
+      "message": "Culture text duplicates igbo/unit-14/igbo-unit-14-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "igbo/unit-15/igbo-unit-15-lesson-2",
+      "message": "Culture text duplicates igbo/unit-15/igbo-unit-15-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "igbo/unit-16/igbo-unit-16-lesson-2",
+      "message": "Culture text duplicates igbo/unit-16/igbo-unit-16-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "igbo/unit-17/igbo-unit-17-lesson-2",
+      "message": "Culture text duplicates igbo/unit-17/igbo-unit-17-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "igbo/unit-18/igbo-unit-18-lesson-2",
+      "message": "Culture text duplicates igbo/unit-18/igbo-unit-18-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "igbo/unit-19/igbo-unit-19-lesson-2",
+      "message": "Culture text duplicates igbo/unit-19/igbo-unit-19-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "igbo/unit-20/igbo-unit-20-lesson-2",
+      "message": "Culture text duplicates igbo/unit-20/igbo-unit-20-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "igbo/unit-21/igbo-unit-21-lesson-2",
+      "message": "Culture text duplicates igbo/unit-21/igbo-unit-21-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "igbo/unit-22/igbo-unit-22-lesson-2",
+      "message": "Culture text duplicates igbo/unit-22/igbo-unit-22-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "igbo/unit-23/igbo-unit-23-lesson-2",
+      "message": "Culture text duplicates igbo/unit-23/igbo-unit-23-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "igbo/unit-24/igbo-unit-24-lesson-2",
+      "message": "Culture text duplicates igbo/unit-24/igbo-unit-24-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "igbo/unit-25/igbo-unit-25-lesson-2",
+      "message": "Culture text duplicates igbo/unit-25/igbo-unit-25-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "igbo/unit-26/igbo-unit-26-lesson-2",
+      "message": "Culture text duplicates igbo/unit-26/igbo-unit-26-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "igbo/unit-27/igbo-unit-27-lesson-2",
+      "message": "Culture text duplicates igbo/unit-27/igbo-unit-27-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "igbo/unit-28/igbo-unit-28-lesson-2",
+      "message": "Culture text duplicates igbo/unit-28/igbo-unit-28-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "shona/unit-2/shona-unit-2-lesson-2",
+      "message": "Culture text duplicates shona/unit-2/shona-unit-2-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "shona/unit-3/shona-unit-3-lesson-2",
+      "message": "Culture text duplicates shona/unit-3/shona-unit-3-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "shona/unit-4/shona-unit-4-lesson-2",
+      "message": "Culture text duplicates shona/unit-4/shona-unit-4-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "shona/unit-5/shona-unit-5-lesson-2",
+      "message": "Culture text duplicates shona/unit-5/shona-unit-5-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "shona/unit-6/shona-unit-6-lesson-2",
+      "message": "Culture text duplicates shona/unit-6/shona-unit-6-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "shona/unit-7/shona-unit-7-lesson-2",
+      "message": "Culture text duplicates shona/unit-7/shona-unit-7-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "shona/unit-8/shona-unit-8-lesson-2",
+      "message": "Culture text duplicates shona/unit-8/shona-unit-8-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "shona/unit-9/shona-unit-9-lesson-2",
+      "message": "Culture text duplicates shona/unit-9/shona-unit-9-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "shona/unit-10/shona-unit-10-lesson-2",
+      "message": "Culture text duplicates shona/unit-10/shona-unit-10-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "shona/unit-11/shona-unit-11-lesson-2",
+      "message": "Culture text duplicates shona/unit-11/shona-unit-11-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "shona/unit-12/shona-unit-12-lesson-2",
+      "message": "Culture text duplicates shona/unit-12/shona-unit-12-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "shona/unit-13/shona-unit-13-lesson-2",
+      "message": "Culture text duplicates shona/unit-13/shona-unit-13-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "shona/unit-14/shona-unit-14-lesson-2",
+      "message": "Culture text duplicates shona/unit-14/shona-unit-14-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "shona/unit-15/shona-unit-15-lesson-2",
+      "message": "Culture text duplicates shona/unit-15/shona-unit-15-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "shona/unit-16/shona-unit-16-lesson-2",
+      "message": "Culture text duplicates shona/unit-16/shona-unit-16-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "shona/unit-17/shona-unit-17-lesson-2",
+      "message": "Culture text duplicates shona/unit-17/shona-unit-17-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "shona/unit-18/shona-unit-18-lesson-2",
+      "message": "Culture text duplicates shona/unit-18/shona-unit-18-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "shona/unit-19/shona-unit-19-lesson-2",
+      "message": "Culture text duplicates shona/unit-19/shona-unit-19-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "shona/unit-20/shona-unit-20-lesson-2",
+      "message": "Culture text duplicates shona/unit-20/shona-unit-20-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "shona/unit-21/shona-unit-21-lesson-2",
+      "message": "Culture text duplicates shona/unit-21/shona-unit-21-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "shona/unit-22/shona-unit-22-lesson-2",
+      "message": "Culture text duplicates shona/unit-22/shona-unit-22-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "shona/unit-23/shona-unit-23-lesson-2",
+      "message": "Culture text duplicates shona/unit-23/shona-unit-23-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "shona/unit-24/shona-unit-24-lesson-2",
+      "message": "Culture text duplicates shona/unit-24/shona-unit-24-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "shona/unit-25/shona-unit-25-lesson-2",
+      "message": "Culture text duplicates shona/unit-25/shona-unit-25-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "shona/unit-26/shona-unit-26-lesson-2",
+      "message": "Culture text duplicates shona/unit-26/shona-unit-26-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "shona/unit-27/shona-unit-27-lesson-2",
+      "message": "Culture text duplicates shona/unit-27/shona-unit-27-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "shona/unit-28/shona-unit-28-lesson-2",
+      "message": "Culture text duplicates shona/unit-28/shona-unit-28-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "ndebele/unit-2/ndebele-unit-2-lesson-2",
+      "message": "Culture text duplicates ndebele/unit-2/ndebele-unit-2-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "ndebele/unit-3/ndebele-unit-3-lesson-2",
+      "message": "Culture text duplicates ndebele/unit-3/ndebele-unit-3-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "ndebele/unit-4/ndebele-unit-4-lesson-2",
+      "message": "Culture text duplicates ndebele/unit-4/ndebele-unit-4-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "ndebele/unit-5/ndebele-unit-5-lesson-2",
+      "message": "Culture text duplicates ndebele/unit-5/ndebele-unit-5-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "ndebele/unit-6/ndebele-unit-6-lesson-2",
+      "message": "Culture text duplicates ndebele/unit-6/ndebele-unit-6-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "ndebele/unit-7/ndebele-unit-7-lesson-2",
+      "message": "Culture text duplicates ndebele/unit-7/ndebele-unit-7-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "ndebele/unit-8/ndebele-unit-8-lesson-2",
+      "message": "Culture text duplicates ndebele/unit-8/ndebele-unit-8-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "ndebele/unit-9/ndebele-unit-9-lesson-2",
+      "message": "Culture text duplicates ndebele/unit-9/ndebele-unit-9-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "ndebele/unit-10/ndebele-unit-10-lesson-2",
+      "message": "Culture text duplicates ndebele/unit-10/ndebele-unit-10-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "ndebele/unit-11/ndebele-unit-11-lesson-2",
+      "message": "Culture text duplicates ndebele/unit-11/ndebele-unit-11-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "ndebele/unit-12/ndebele-unit-12-lesson-2",
+      "message": "Culture text duplicates ndebele/unit-12/ndebele-unit-12-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "ndebele/unit-13/ndebele-unit-13-lesson-2",
+      "message": "Culture text duplicates ndebele/unit-13/ndebele-unit-13-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "ndebele/unit-14/ndebele-unit-14-lesson-2",
+      "message": "Culture text duplicates ndebele/unit-14/ndebele-unit-14-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "ndebele/unit-15/ndebele-unit-15-lesson-2",
+      "message": "Culture text duplicates ndebele/unit-15/ndebele-unit-15-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "ndebele/unit-16/ndebele-unit-16-lesson-2",
+      "message": "Culture text duplicates ndebele/unit-16/ndebele-unit-16-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "ndebele/unit-17/ndebele-unit-17-lesson-2",
+      "message": "Culture text duplicates ndebele/unit-17/ndebele-unit-17-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "ndebele/unit-18/ndebele-unit-18-lesson-2",
+      "message": "Culture text duplicates ndebele/unit-18/ndebele-unit-18-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "ndebele/unit-19/ndebele-unit-19-lesson-2",
+      "message": "Culture text duplicates ndebele/unit-19/ndebele-unit-19-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "ndebele/unit-20/ndebele-unit-20-lesson-2",
+      "message": "Culture text duplicates ndebele/unit-20/ndebele-unit-20-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "ndebele/unit-21/ndebele-unit-21-lesson-2",
+      "message": "Culture text duplicates ndebele/unit-21/ndebele-unit-21-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "ndebele/unit-22/ndebele-unit-22-lesson-2",
+      "message": "Culture text duplicates ndebele/unit-22/ndebele-unit-22-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "ndebele/unit-23/ndebele-unit-23-lesson-2",
+      "message": "Culture text duplicates ndebele/unit-23/ndebele-unit-23-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "ndebele/unit-24/ndebele-unit-24-lesson-2",
+      "message": "Culture text duplicates ndebele/unit-24/ndebele-unit-24-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "ndebele/unit-25/ndebele-unit-25-lesson-2",
+      "message": "Culture text duplicates ndebele/unit-25/ndebele-unit-25-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "ndebele/unit-26/ndebele-unit-26-lesson-2",
+      "message": "Culture text duplicates ndebele/unit-26/ndebele-unit-26-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "ndebele/unit-27/ndebele-unit-27-lesson-2",
+      "message": "Culture text duplicates ndebele/unit-27/ndebele-unit-27-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "ndebele/unit-28/ndebele-unit-28-lesson-2",
+      "message": "Culture text duplicates ndebele/unit-28/ndebele-unit-28-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "zulu/explore/pronoun-mina",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "zulu/explore/pronoun-wena",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "zulu/explore/pronoun-bona",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "zulu/explore/verb-hamba",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "zulu/explore/verb-funda",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "zulu/explore/verb-sebenza",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "zulu/explore/adverb-lapha",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "zulu/explore/adverb-kancane",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "zulu/explore/adverb-masinyane",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "zulu/explore/question-yini",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "zulu/explore/question-kuphi",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "zulu/explore/question-kungani",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "zulu/explore/school-incwadi",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "zulu/explore/school-umfundi",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "zulu/explore/school-uthisha",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "zulu/explore/work-umsebenzi",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "zulu/explore/work-ihhovisi",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "zulu/explore/work-umhlangano",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "zulu/explore/animal-inja",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "zulu/explore/animal-ikati",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "zulu/explore/animal-indlovu",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "zulu/explore/number-kunye",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "zulu/explore/number-ishumi",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "zulu/explore/number-ikhulu",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "bemba/unit-1/bemba-unit-1-lesson-2",
+      "message": "Culture text duplicates bemba/unit-1/bemba-unit-1-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "bemba/unit-2/bemba-unit-2-lesson-2",
+      "message": "Culture text duplicates bemba/unit-2/bemba-unit-2-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "bemba/unit-3/bemba-unit-3-lesson-2",
+      "message": "Culture text duplicates bemba/unit-3/bemba-unit-3-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "bemba/unit-4/bemba-unit-4-lesson-2",
+      "message": "Culture text duplicates bemba/unit-4/bemba-unit-4-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "bemba/unit-5/bemba-unit-5-lesson-2",
+      "message": "Culture text duplicates bemba/unit-5/bemba-unit-5-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "bemba/unit-6/bemba-unit-6-lesson-2",
+      "message": "Culture text duplicates bemba/unit-6/bemba-unit-6-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "bemba/unit-7/bemba-unit-7-lesson-2",
+      "message": "Culture text duplicates bemba/unit-7/bemba-unit-7-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "bemba/unit-8/bemba-unit-8-lesson-2",
+      "message": "Culture text duplicates bemba/unit-8/bemba-unit-8-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "bemba/unit-9/bemba-unit-9-lesson-2",
+      "message": "Culture text duplicates bemba/unit-9/bemba-unit-9-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "bemba/unit-10/bemba-unit-10-lesson-2",
+      "message": "Culture text duplicates bemba/unit-10/bemba-unit-10-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "bemba/unit-11/bemba-unit-11-lesson-2",
+      "message": "Culture text duplicates bemba/unit-11/bemba-unit-11-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "bemba/unit-12/bemba-unit-12-lesson-2",
+      "message": "Culture text duplicates bemba/unit-12/bemba-unit-12-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "bemba/unit-13/bemba-unit-13-lesson-2",
+      "message": "Culture text duplicates bemba/unit-13/bemba-unit-13-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "bemba/unit-14/bemba-unit-14-lesson-2",
+      "message": "Culture text duplicates bemba/unit-14/bemba-unit-14-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "bemba/unit-15/bemba-unit-15-lesson-2",
+      "message": "Culture text duplicates bemba/unit-15/bemba-unit-15-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "bemba/unit-16/bemba-unit-16-lesson-2",
+      "message": "Culture text duplicates bemba/unit-16/bemba-unit-16-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "bemba/unit-17/bemba-unit-17-lesson-2",
+      "message": "Culture text duplicates bemba/unit-17/bemba-unit-17-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "bemba/unit-18/bemba-unit-18-lesson-2",
+      "message": "Culture text duplicates bemba/unit-18/bemba-unit-18-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "bemba/unit-19/bemba-unit-19-lesson-2",
+      "message": "Culture text duplicates bemba/unit-19/bemba-unit-19-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "bemba/unit-20/bemba-unit-20-lesson-2",
+      "message": "Culture text duplicates bemba/unit-20/bemba-unit-20-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "bemba/unit-21/bemba-unit-21-lesson-2",
+      "message": "Culture text duplicates bemba/unit-21/bemba-unit-21-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "bemba/unit-22/bemba-unit-22-lesson-2",
+      "message": "Culture text duplicates bemba/unit-22/bemba-unit-22-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "bemba/unit-23/bemba-unit-23-lesson-2",
+      "message": "Culture text duplicates bemba/unit-23/bemba-unit-23-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "bemba/unit-24/bemba-unit-24-lesson-2",
+      "message": "Culture text duplicates bemba/unit-24/bemba-unit-24-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "bemba/unit-25/bemba-unit-25-lesson-2",
+      "message": "Culture text duplicates bemba/unit-25/bemba-unit-25-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "bemba/unit-26/bemba-unit-26-lesson-2",
+      "message": "Culture text duplicates bemba/unit-26/bemba-unit-26-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "bemba/unit-27/bemba-unit-27-lesson-2",
+      "message": "Culture text duplicates bemba/unit-27/bemba-unit-27-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "bemba/unit-28/bemba-unit-28-lesson-2",
+      "message": "Culture text duplicates bemba/unit-28/bemba-unit-28-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "chichewa/unit-1/chichewa-unit-1-lesson-2",
+      "message": "Culture text duplicates chichewa/unit-1/chichewa-unit-1-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "kinyarwanda/unit-1/kinyarwanda-unit-1-lesson-2",
+      "message": "Culture text duplicates kinyarwanda/unit-1/kinyarwanda-unit-1-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "kinyarwanda/unit-2/kinyarwanda-unit-2-lesson-2",
+      "message": "Culture text duplicates kinyarwanda/unit-2/kinyarwanda-unit-2-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "kinyarwanda/unit-3/kinyarwanda-unit-3-lesson-2",
+      "message": "Culture text duplicates kinyarwanda/unit-3/kinyarwanda-unit-3-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "kinyarwanda/unit-4/kinyarwanda-unit-4-lesson-2",
+      "message": "Culture text duplicates kinyarwanda/unit-4/kinyarwanda-unit-4-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "kinyarwanda/unit-5/kinyarwanda-unit-5-lesson-2",
+      "message": "Culture text duplicates kinyarwanda/unit-5/kinyarwanda-unit-5-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "kinyarwanda/unit-6/kinyarwanda-unit-6-lesson-2",
+      "message": "Culture text duplicates kinyarwanda/unit-6/kinyarwanda-unit-6-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "kinyarwanda/unit-7/kinyarwanda-unit-7-lesson-2",
+      "message": "Culture text duplicates kinyarwanda/unit-7/kinyarwanda-unit-7-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "kinyarwanda/unit-8/kinyarwanda-unit-8-lesson-2",
+      "message": "Culture text duplicates kinyarwanda/unit-8/kinyarwanda-unit-8-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "kinyarwanda/unit-9/kinyarwanda-unit-9-lesson-2",
+      "message": "Culture text duplicates kinyarwanda/unit-9/kinyarwanda-unit-9-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "kinyarwanda/unit-10/kinyarwanda-unit-10-lesson-2",
+      "message": "Culture text duplicates kinyarwanda/unit-10/kinyarwanda-unit-10-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "kinyarwanda/unit-11/kinyarwanda-unit-11-lesson-2",
+      "message": "Culture text duplicates kinyarwanda/unit-11/kinyarwanda-unit-11-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "kinyarwanda/unit-12/kinyarwanda-unit-12-lesson-2",
+      "message": "Culture text duplicates kinyarwanda/unit-12/kinyarwanda-unit-12-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "kinyarwanda/unit-13/kinyarwanda-unit-13-lesson-2",
+      "message": "Culture text duplicates kinyarwanda/unit-13/kinyarwanda-unit-13-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "kinyarwanda/unit-14/kinyarwanda-unit-14-lesson-2",
+      "message": "Culture text duplicates kinyarwanda/unit-14/kinyarwanda-unit-14-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "kinyarwanda/unit-15/kinyarwanda-unit-15-lesson-2",
+      "message": "Culture text duplicates kinyarwanda/unit-15/kinyarwanda-unit-15-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "kinyarwanda/unit-16/kinyarwanda-unit-16-lesson-2",
+      "message": "Culture text duplicates kinyarwanda/unit-16/kinyarwanda-unit-16-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "kinyarwanda/unit-17/kinyarwanda-unit-17-lesson-2",
+      "message": "Culture text duplicates kinyarwanda/unit-17/kinyarwanda-unit-17-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "kinyarwanda/unit-18/kinyarwanda-unit-18-lesson-2",
+      "message": "Culture text duplicates kinyarwanda/unit-18/kinyarwanda-unit-18-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "kinyarwanda/unit-19/kinyarwanda-unit-19-lesson-2",
+      "message": "Culture text duplicates kinyarwanda/unit-19/kinyarwanda-unit-19-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "kinyarwanda/unit-20/kinyarwanda-unit-20-lesson-2",
+      "message": "Culture text duplicates kinyarwanda/unit-20/kinyarwanda-unit-20-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "kinyarwanda/unit-21/kinyarwanda-unit-21-lesson-2",
+      "message": "Culture text duplicates kinyarwanda/unit-21/kinyarwanda-unit-21-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "kinyarwanda/unit-22/kinyarwanda-unit-22-lesson-2",
+      "message": "Culture text duplicates kinyarwanda/unit-22/kinyarwanda-unit-22-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "kinyarwanda/unit-23/kinyarwanda-unit-23-lesson-2",
+      "message": "Culture text duplicates kinyarwanda/unit-23/kinyarwanda-unit-23-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "kinyarwanda/unit-24/kinyarwanda-unit-24-lesson-2",
+      "message": "Culture text duplicates kinyarwanda/unit-24/kinyarwanda-unit-24-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "kinyarwanda/unit-25/kinyarwanda-unit-25-lesson-2",
+      "message": "Culture text duplicates kinyarwanda/unit-25/kinyarwanda-unit-25-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "kinyarwanda/unit-26/kinyarwanda-unit-26-lesson-2",
+      "message": "Culture text duplicates kinyarwanda/unit-26/kinyarwanda-unit-26-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "kinyarwanda/unit-27/kinyarwanda-unit-27-lesson-2",
+      "message": "Culture text duplicates kinyarwanda/unit-27/kinyarwanda-unit-27-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "kinyarwanda/unit-28/kinyarwanda-unit-28-lesson-2",
+      "message": "Culture text duplicates kinyarwanda/unit-28/kinyarwanda-unit-28-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "kirundi/unit-1/kirundi-unit-1-lesson-2",
+      "message": "Culture text duplicates kirundi/unit-1/kirundi-unit-1-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "kirundi/unit-2/kirundi-unit-2-lesson-2",
+      "message": "Culture text duplicates kirundi/unit-2/kirundi-unit-2-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "kirundi/unit-3/kirundi-unit-3-lesson-2",
+      "message": "Culture text duplicates kirundi/unit-3/kirundi-unit-3-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "kirundi/unit-4/kirundi-unit-4-lesson-2",
+      "message": "Culture text duplicates kirundi/unit-4/kirundi-unit-4-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "kirundi/unit-5/kirundi-unit-5-lesson-2",
+      "message": "Culture text duplicates kirundi/unit-5/kirundi-unit-5-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "kirundi/unit-6/kirundi-unit-6-lesson-2",
+      "message": "Culture text duplicates kirundi/unit-6/kirundi-unit-6-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "kirundi/unit-7/kirundi-unit-7-lesson-2",
+      "message": "Culture text duplicates kirundi/unit-7/kirundi-unit-7-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "kirundi/unit-8/kirundi-unit-8-lesson-2",
+      "message": "Culture text duplicates kirundi/unit-8/kirundi-unit-8-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "kirundi/unit-9/kirundi-unit-9-lesson-2",
+      "message": "Culture text duplicates kirundi/unit-9/kirundi-unit-9-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "kirundi/unit-10/kirundi-unit-10-lesson-2",
+      "message": "Culture text duplicates kirundi/unit-10/kirundi-unit-10-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "kirundi/unit-11/kirundi-unit-11-lesson-2",
+      "message": "Culture text duplicates kirundi/unit-11/kirundi-unit-11-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "kirundi/unit-12/kirundi-unit-12-lesson-2",
+      "message": "Culture text duplicates kirundi/unit-12/kirundi-unit-12-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "kirundi/unit-13/kirundi-unit-13-lesson-2",
+      "message": "Culture text duplicates kirundi/unit-13/kirundi-unit-13-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "kirundi/unit-14/kirundi-unit-14-lesson-2",
+      "message": "Culture text duplicates kirundi/unit-14/kirundi-unit-14-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "kirundi/unit-15/kirundi-unit-15-lesson-2",
+      "message": "Culture text duplicates kirundi/unit-15/kirundi-unit-15-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "kirundi/unit-16/kirundi-unit-16-lesson-2",
+      "message": "Culture text duplicates kirundi/unit-16/kirundi-unit-16-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "kirundi/unit-17/kirundi-unit-17-lesson-2",
+      "message": "Culture text duplicates kirundi/unit-17/kirundi-unit-17-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "kirundi/unit-18/kirundi-unit-18-lesson-2",
+      "message": "Culture text duplicates kirundi/unit-18/kirundi-unit-18-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "kirundi/unit-19/kirundi-unit-19-lesson-2",
+      "message": "Culture text duplicates kirundi/unit-19/kirundi-unit-19-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "kirundi/unit-20/kirundi-unit-20-lesson-2",
+      "message": "Culture text duplicates kirundi/unit-20/kirundi-unit-20-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "kirundi/unit-21/kirundi-unit-21-lesson-2",
+      "message": "Culture text duplicates kirundi/unit-21/kirundi-unit-21-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "kirundi/unit-22/kirundi-unit-22-lesson-2",
+      "message": "Culture text duplicates kirundi/unit-22/kirundi-unit-22-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "kirundi/unit-23/kirundi-unit-23-lesson-2",
+      "message": "Culture text duplicates kirundi/unit-23/kirundi-unit-23-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "kirundi/unit-24/kirundi-unit-24-lesson-2",
+      "message": "Culture text duplicates kirundi/unit-24/kirundi-unit-24-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "kirundi/unit-25/kirundi-unit-25-lesson-2",
+      "message": "Culture text duplicates kirundi/unit-25/kirundi-unit-25-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "kirundi/unit-26/kirundi-unit-26-lesson-2",
+      "message": "Culture text duplicates kirundi/unit-26/kirundi-unit-26-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "kirundi/unit-27/kirundi-unit-27-lesson-2",
+      "message": "Culture text duplicates kirundi/unit-27/kirundi-unit-27-lesson-1 and may be intentionally templated."
+    },
+    {
+      "code": "DUPLICATE_CULTURE",
+      "path": "kirundi/unit-28/kirundi-unit-28-lesson-2",
+      "message": "Culture text duplicates kirundi/unit-28/kirundi-unit-28-lesson-1 and may be intentionally templated."
+    }
+  ],
+  "notes": [
+    {
+      "code": "AUDIO_DEFERRED",
+      "path": "all-languages",
+      "message": "Missing audio is intentionally informational while native-speaker recordings are deferred."
+    }
+  ]
+}

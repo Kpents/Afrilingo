@@ -1,0 +1,16 @@
+{
+  "name": "AfriLingo — Learn African Languages",
+  "short_name": "AfriLingo",
+  "description": "Gamified African language learning through lessons, practice, and culture.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#101312",
+  "theme_color": "#F28C28",
+  "orientation": "portrait-primary",
+  "categories": ["education", "language"],
+  "icons": [
+    { "src": "app-icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "maskable-icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
+  ]
+}
