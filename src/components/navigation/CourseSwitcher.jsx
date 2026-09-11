@@ -14,7 +14,7 @@ function courseStats(course, progressByLanguage) {
   return { completed, total: lessons.length, percent: lessons.length ? Math.round((completed / lessons.length) * 100) : 0 };
 }
 
-export default function CourseSwitcher({ dark, activeLanguage, progressByLanguage, onLanguageChange, onContinue, learnerName }) {
+export default function CourseSwitcher({ dark, activeLanguage, startedLanguageIds = [], progressByLanguage, onLanguageChange, onContinue, learnerName }) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const dialogRef = useRef(null);
@@ -24,7 +24,9 @@ export default function CourseSwitcher({ dark, activeLanguage, progressByLanguag
   const comingSoonCount = courses.length - readyCourses.length;
   const active = readyCourses.find(course => course.id === activeLanguage) || readyCourses[0];
   const activeStats = courseStats(active, progressByLanguage);
-  const preview = [active, ...readyCourses.filter(course => course.id !== active.id)].slice(0, 3);
+  const startedIds = new Set([activeLanguage, ...startedLanguageIds]);
+  const myCourses = readyCourses.filter(course => startedIds.has(course.id));
+  const preview = [active, ...myCourses.filter(course => course.id !== active.id)];
   const filtered = useMemo(() => courses.filter(course =>
     `${course.language} ${course.nativeName}`.toLowerCase().includes(query.trim().toLowerCase())
   ), [courses, query]);
@@ -74,9 +76,9 @@ export default function CourseSwitcher({ dark, activeLanguage, progressByLanguag
       <div className="mt-7 flex items-center justify-between">
         <div>
           <h2 className="text-xl font-black">My Courses</h2>
-          <p className={`text-sm font-semibold ${dark ? "text-white/40" : "text-black/40"}`}>Switch courses without losing your place.</p>
+          <p className={`text-sm font-semibold ${dark ? "text-white/40" : "text-black/40"}`}>{myCourses.length === 1 ? "Your learning journey starts here." : "Switch courses without losing your place."}</p>
         </div>
-        <button onClick={() => setOpen(true)} className="min-h-11 rounded-xl px-3 text-sm font-black text-[#F28C28] transition hover:bg-[#F28C28]/10">View all</button>
+        <button onClick={() => setOpen(true)} className="min-h-11 rounded-xl px-3 text-sm font-black text-[#F28C28] transition hover:bg-[#F28C28]/10">{myCourses.length === 1 ? "Add a course" : "View all"}</button>
       </div>
 
       <div className="mt-3 grid gap-3">
@@ -112,7 +114,7 @@ export default function CourseSwitcher({ dark, activeLanguage, progressByLanguag
                 const stats = courseStats(course, progressByLanguage);
                 const selected = course.id === activeLanguage;
                 return <button key={course.id} type="button" disabled={!course.available} onClick={() => choose(course.id)} aria-label={`${course.flag} ${course.language} ${course.nativeName}${course.available ? ` ${stats.percent}% complete` : " Coming Soon"}`} className={`flex min-h-[94px] items-center gap-3 rounded-2xl border p-4 text-left transition ${course.available ? "hover:border-[#F28C28]/50" : "cursor-not-allowed opacity-65"} ${selected ? "border-[#F28C28] bg-[#F28C28]/8" : card}`}>
-                  <span className={`grid h-12 w-12 shrink-0 place-items-center rounded-full text-3xl ${dark ? "bg-white/7" : "bg-[#FFF8EE]"}`}>{course.flag}</span><span className="min-w-0 flex-1"><span className="block font-black">{course.language}</span><span className={`block truncate text-xs font-bold ${dark ? "text-white/42" : "text-black/42"}`}>{course.nativeName}</span>{course.available ? <span className="mt-2 block text-xs font-black text-[#F28C28]">{stats.percent}% complete</span> : <span className={`mt-2 inline-flex rounded-full px-2.5 py-1 text-[10px] font-black uppercase tracking-wider ${dark ? "bg-white/8 text-white/55" : "bg-black/6 text-black/50"}`}>Coming Soon</span>}</span>{selected ? <BookOpen size={19} className="text-[#F28C28]"/> : course.available ? <ChevronRight size={18} className="opacity-25"/> : null}
+                  <span className={`grid h-12 w-12 shrink-0 place-items-center rounded-full text-3xl ${dark ? "bg-white/7" : "bg-[#FFF8EE]"}`}>{course.flag}</span><span className="min-w-0 flex-1"><span className="block font-black">{course.language}</span><span className={`block truncate text-xs font-bold ${dark ? "text-white/42" : "text-black/42"}`}>{course.nativeName}</span>{course.available ? <span className="mt-2 block text-xs font-black text-[#F28C28]">{startedIds.has(course.id) ? `${stats.percent}% complete` : "Start course"}</span> : <span className={`mt-2 inline-flex rounded-full px-2.5 py-1 text-[10px] font-black uppercase tracking-wider ${dark ? "bg-white/8 text-white/55" : "bg-black/6 text-black/50"}`}>Coming Soon</span>}</span>{selected ? <BookOpen size={19} className="text-[#F28C28]"/> : course.available ? <ChevronRight size={18} className="opacity-25"/> : null}
                 </button>;
               })}
             </div>

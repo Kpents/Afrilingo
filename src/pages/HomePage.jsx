@@ -24,6 +24,7 @@ export default function HomePage({
   activeUnit,
   onUnitChange,
   progressByLanguage,
+  startedLanguageIds,
   languageId
   ,learnerName
 }) {
@@ -113,6 +114,7 @@ export default function HomePage({
         <CourseSwitcher
           dark={dark}
           activeLanguage={activeLanguage}
+          startedLanguageIds={startedLanguageIds}
         progressByLanguage={progressByLanguage}
         learnerName={learnerName}
           onLanguageChange={onLanguageChange}

@@ -6,6 +6,8 @@ export default function ProfilePage({ dark, progress, progressByLanguage = {}, l
   const card = dark ? "border-white/10 bg-[#1A201E]" : "border-black/8 bg-white";
   const totals = getAchievementStats(progressByLanguage);
   const persistedAchievements = new Set(Object.values(progressByLanguage).flatMap(item => item?.unlockedAchievementIds || []));
+  const startedIds = new Set(preferences?.startedLanguageIds?.length ? preferences.startedLanguageIds : [language.id]);
+  const startedCourses = availableLanguageList.filter(item => startedIds.has(item.id));
 
   return (
     <div className="mx-auto max-w-3xl">
@@ -41,8 +43,8 @@ export default function ProfilePage({ dark, progress, progressByLanguage = {}, l
         })}
       </div>
 
-      <h2 className="mt-8 text-2xl font-black">Progress by language</h2>
-      <div className="mt-4 space-y-3">{availableLanguageList.map(item => {
+      <h2 className="mt-8 text-2xl font-black">My course progress</h2>
+      <div className="mt-4 space-y-3">{startedCourses.map(item => {
         const course = progressByLanguage[item.id];
         const lessonTotal = item.units.reduce((sum, unit) => sum + unit.lessons.length, 0);
         const percent = Math.round(((course?.completedLessonIds.length || 0) / lessonTotal) * 100);

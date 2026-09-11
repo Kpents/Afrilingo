@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useRef, useState } from "react";
+import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   Flame,
@@ -99,6 +99,16 @@ export default function App() {
   */
   const { progress, setProgress, progressByLanguage } = useCourseProgress(activeLanguage);
 
+  const selectLanguage = useCallback((languageId) => {
+    if (!languages[languageId]) return;
+    setPreferences(previous => ({
+      ...previous,
+      languageId,
+      startedLanguageIds: [...new Set([...(previous.startedLanguageIds || []), languageId])]
+    }));
+    setActiveLanguage(languageId);
+  }, [setPreferences]);
+
   useEffect(() => {
     const earnedIds = getUnlockedAchievementIds(progressByLanguage);
     const persistedIds = new Set(Object.values(progressByLanguage).flatMap(item => item.unlockedAchievementIds || []));
@@ -151,7 +161,7 @@ export default function App() {
     setSearchOpen(false);
     if (result.languageId !== activeLanguage) {
       setPendingSearchResult(result);
-      setActiveLanguage(result.languageId);
+      selectLanguage(result.languageId);
       return;
     }
     if (result.unitIndex != null) setActiveUnit(result.unitIndex);
@@ -409,7 +419,7 @@ export default function App() {
   }
 
   if (!preferences.onboarded) {
-    return <Suspense fallback={<PageLoader dark={dark} languageId={activeLanguage} />}><OnboardingPage dark={dark} initial={preferences} onComplete={next => { setPreferences(next); setActiveLanguage(next.languageId); setScreen("home"); }} /></Suspense>;
+    return <Suspense fallback={<PageLoader dark={dark} languageId={activeLanguage} />}><OnboardingPage dark={dark} initial={preferences} onComplete={next => { const completed = { ...next, startedLanguageIds: [next.languageId] }; setPreferences(completed); setActiveLanguage(next.languageId); setScreen("home"); }} /></Suspense>;
   }
 
   return (
@@ -668,14 +678,13 @@ export default function App() {
                   Enables Twi →
                   Ga switching
                 */
-                onLanguageChange={
-                  setActiveLanguage
-                }
+                onLanguageChange={selectLanguage}
 
                 activeUnit={
                   activeUnit
                 }
                 progressByLanguage={progressByLanguage}
+                startedLanguageIds={preferences.startedLanguageIds}
                 languageId={activeLanguage}
                 learnerName={preferences.name}
 
