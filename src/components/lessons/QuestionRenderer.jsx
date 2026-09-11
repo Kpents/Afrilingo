@@ -3,6 +3,7 @@ import { Image } from "lucide-react";
 import { motion } from "framer-motion";
 import AudioButton from "../ui/AudioButton";
 import ConceptIcon from "../ui/ConceptIcon";
+import LearningVisual from "../ui/LearningVisual";
 
 const choiceTypes = new Set(["multiple-choice", "translate", "native-to-english", "english-to-native", "fill-in-the-blank", "conversation", "mini-conversation", "challenge"]);
 const shuffled = (values = []) => [...values].sort(() => Math.random() - 0.5);
@@ -15,7 +16,7 @@ export default function QuestionRenderer({ question, dark, checked, value, onCha
   if (question.type === "listen-and-select") return <ChoiceGrid question={question} options={options} value={value} onChange={onChange} dark={dark} checked={checked} images header={<AudioButton src={question.audio} label={question.prompt} className="mb-5 bg-[#4338CA] font-black text-white" />} />;
   if (question.type === "image-to-word") return <ChoiceGrid question={question} options={options} value={value} onChange={onChange} dark={dark} checked={checked} header={<ConceptIcon iconId={question.iconId} className="mx-auto mb-6 h-40 w-full max-w-xs" />} />;
   if (question.type === "image-choice") return <ChoiceGrid question={question} options={options} value={value} onChange={onChange} dark={dark} checked={checked} images />;
-  if (choiceTypes.has(question.type) || question.options) return <ChoiceGrid question={question} options={options} value={value} onChange={onChange} dark={dark} checked={checked} />;
+  if (choiceTypes.has(question.type) || question.options) return <ChoiceGrid question={question} options={options} value={value} onChange={onChange} dark={dark} checked={checked} images={question.visualOptions} />;
   return <div className="rounded-2xl border border-[#C95D3A]/30 bg-[#C95D3A]/10 p-5 font-semibold">This exercise type is not available yet.</div>;
 }
 
@@ -26,7 +27,7 @@ function ChoiceGrid({ question, options, value, onChange, dark, checked, header,
     const correct = checked && option === question.answer;
     const wrong = checked && value === option && option !== question.answer;
     return <motion.button key={option} whileTap={{ scale: .98 }} disabled={checked} onClick={() => onChange(option)} className={`min-h-16 rounded-[1.4rem] border-2 p-5 text-left text-lg font-black transition ${correct ? "border-[#24745B] bg-[#24745B]/15" : wrong ? "border-[#C95D3A] bg-[#C95D3A]/12" : value === option ? "border-[#F28C28] bg-[#F28C28]/12" : dark ? "border-white/10 bg-[#1A201E]" : "border-black/8 bg-white"}`}>
-      {images && <div className="mb-3 grid aspect-[4/3] place-items-center overflow-hidden rounded-xl bg-black/5">{raw.iconId ? <ConceptIcon iconId={raw.iconId} label={label} className="h-full w-full" /> : raw.image ? <img src={raw.image} alt="" className="h-full w-full object-cover" /> : raw.emoji ? <span className="text-5xl" aria-hidden="true">{raw.emoji}</span> : <Image className="opacity-30" />}</div>}{label}
+      {images && <div className="mb-3 grid aspect-[4/3] place-items-center overflow-hidden rounded-xl bg-black/5">{raw.iconId || Number.isFinite(raw.number) ? <LearningVisual iconId={raw.iconId} number={raw.number} label={label} className="h-full w-full" /> : raw.image ? <img src={raw.image} alt="" className="h-full w-full object-cover" /> : raw.emoji ? <span className="text-5xl" aria-hidden="true">{raw.emoji}</span> : <Image className="opacity-30" />}</div>}{label}
     </motion.button>;
   })}</div></>;
 }

@@ -6,7 +6,7 @@ export const iconCategories = {
   "home-items": ["house", "chair", "table", "bed", "door", "window", "phone", "laptop", "book", "pen", "cup", "plate", "spoon", "knife", "bag", "key"],
   clothing: ["shirt", "trousers", "dress", "shoe", "hat", "bag", "glasses", "watch", "necklace", "cap", "jacket"],
   transport: ["car", "bus", "bicycle", "motorcycle", "truck", "train", "airplane", "boat", "taxi", "traffic-light", "trotro", "minibus-taxi"],
-  places: ["school", "hospital", "market", "shop", "restaurant", "bank", "church", "mosque", "beach", "farm", "mountain", "home", "market-stall", "compound-house"],
+  places: ["school", "hospital", "market", "shop", "restaurant", "bank", "church", "mosque", "beach", "farm", "mountain", "park", "home", "market-stall", "compound-house"],
   nature: ["sun", "cloud", "rain", "storm", "rainbow", "tree", "flower", "river", "mountain", "moon", "wind"],
   activities: ["eat", "drink", "read", "write", "walk", "run", "sleep", "listen", "speak", "play", "cook", "sit", "stand", "work", "study", "drive"],
   body: ["head", "eye", "ear", "nose", "mouth", "hand", "arm", "leg", "foot", "heart"],
@@ -24,10 +24,10 @@ export const iconCategoryLabels = {
 
 const readyIds = new Set([
   "bread", "fish", "chicken", "egg", "banana", "apple", "orange", "water", "coffee", "tea", "milk", "meat", "soup", "juice",
-  "carrot", "lettuce", "dog", "cat", "bird", "baby", "man", "woman", "child", "father", "mother", "friend", "teacher", "student",
+  "tomato", "carrot", "onion", "pepper", "lettuce", "mango", "pineapple", "plantain", "yam", "cassava", "maize", "dog", "cat", "cow", "goat", "bird", "lion", "elephant", "monkey", "sheep", "pig", "horse", "snake", "spider", "duck", "baby", "man", "woman", "child", "father", "mother", "friend", "teacher", "student",
   "house", "chair", "table", "bed", "door", "window", "phone", "laptop", "book", "pen", "cup", "plate", "spoon", "knife", "bag", "key",
   "shirt", "glasses", "watch", "necklace", "jacket", "car", "bus", "bicycle", "truck", "train", "airplane", "boat", "taxi", "traffic-light",
-  "school", "hospital", "market", "shop", "restaurant", "bank", "church", "farm", "mountain", "home", "sun", "cloud", "rain", "storm", "rainbow",
+  "school", "hospital", "market", "shop", "restaurant", "bank", "church", "mosque", "beach", "farm", "mountain", "park", "home", "sun", "cloud", "rain", "storm", "rainbow",
   "tree", "flower", "river", "moon", "wind", "eat", "drink", "read", "write", "walk", "run", "sleep", "listen", "speak", "play", "cook", "sit",
   "stand", "work", "study", "drive", "head", "eye", "ear", "nose", "mouth", "hand", "foot", "heart", "red", "blue", "green", "yellow",
   "orange-colour", "purple", "pink", "brown", "black", "white", "circle", "square", "triangle", "rectangle", "star", "heart-shape"
@@ -54,11 +54,11 @@ export const iconLibrary = Object.fromEntries([...seen.values()].map(icon => [ic
 const aliases = {
   "bread": "bread", "water": "water", "coffee": "coffee", "tea": "tea", "milk": "milk", "fish": "fish", "meat": "meat", "chicken": "chicken",
   "egg": "egg", "eggs": "egg", "banana": "banana", "bananas": "banana", "apple": "apple", "orange": "orange", "soup": "soup", "juice": "juice",
-  "dog": "dog", "cat": "cat", "bird": "bird", "lion": "lion", "child": "child", "children": "child", "baby": "baby", "teacher": "teacher", "student": "student",
+  "dog": "dog", "cat": "cat", "cow": "cow", "goat": "goat", "bird": "bird", "lion": "lion", "elephant": "elephant", "monkey": "monkey", "sheep": "sheep", "pig": "pig", "horse": "horse", "snake": "snake", "spider": "spider", "duck": "duck", "child": "child", "children": "child", "baby": "baby", "teacher": "teacher", "student": "student",
   "father": "father", "mother": "mother", "friend": "friend", "house": "house", "home": "home", "chair": "chair", "table": "table", "bed": "bed", "door": "door",
   "window": "window", "phone": "phone", "book": "book", "pen": "pen", "cup": "cup", "plate": "plate", "bag": "bag", "key": "key", "shirt": "shirt",
   "car": "car", "bus": "bus", "train": "train", "airplane": "airplane", "boat": "boat", "taxi": "taxi", "school": "school", "hospital": "hospital",
-  "market": "market", "shop": "shop", "restaurant": "restaurant", "bank": "bank", "church": "church", "mountain": "mountain", "sun": "sun", "rain": "rain",
+  "market": "market", "shop": "shop", "restaurant": "restaurant", "bank": "bank", "church": "church", "mosque": "mosque", "beach": "beach", "park": "park", "farm": "farm", "mountain": "mountain", "sun": "sun", "rain": "rain",
   "tree": "tree", "flower": "flower", "river": "river", "moon": "moon", "head": "head", "eye": "eye", "ear": "ear", "nose": "nose", "mouth": "mouth",
   "hand": "hand", "foot": "foot", "heart": "heart", "to eat": "eat", "to drink": "drink", "to read": "read", "to write": "write", "to walk": "walk",
   "to run": "run", "to sleep": "sleep", "to listen": "listen", "to speak": "speak", "to play": "play", "to cook": "cook", "to sit": "sit", "to stand": "stand",
@@ -69,6 +69,7 @@ const aliases = {
 export function findIconId(english = "") {
   const normalized = english.toLowerCase().replace(/[.!?]/g, "").replace(/^(a|an|the)\s+/, "").trim();
   if (aliases[normalized]) return aliases[normalized];
+  if (normalized.endsWith("s") && aliases[normalized.slice(0, -1)]) return aliases[normalized.slice(0, -1)];
   const direct = Object.keys(iconLibrary).find(id => normalized === id.replaceAll("-", " "));
   return direct || null;
 }

@@ -5,6 +5,7 @@ import MiniConversation from "../components/MiniConversation";
 import CultureCard from "../components/CultureCard";
 import QuestionRenderer, { expectedAnswer, normalizeAnswer } from "../components/lessons/QuestionRenderer";
 import Lebo from "../components/ui/Lebo";
+import LearningVisual from "../components/ui/LearningVisual";
 
 export default function LessonPage({ lesson, dark, hearts, languageId, isFirstLesson, isUnitChallenge, onExit, onLoseHeart, onReviewQuestion, onRefillHearts, onComplete }) {
   const [stage, setStage] = useState("conversation");
@@ -33,6 +34,8 @@ export default function LessonPage({ lesson, dark, hearts, languageId, isFirstLe
         </div>
 
         <MiniConversation conversation={lesson.conversation} dark={dark} />
+
+        <VisualWarmup vocabulary={lesson.vocabulary} dark={dark} />
 
         <button
           onClick={() => hearts > 0 ? setStage("quiz") : setStage("hearts")}
@@ -189,6 +192,12 @@ export default function LessonPage({ lesson, dark, hearts, languageId, isFirstLe
       </div>
     </div>
   );
+}
+
+function VisualWarmup({ vocabulary = [], dark }) {
+  const words = vocabulary.filter(word => word.iconId || Number.isFinite(word.number)).slice(0, 10);
+  if (!words.length) return null;
+  return <section className="mt-6" aria-labelledby="visual-warmup-title"><div className="mb-3 flex items-end justify-between gap-3"><div><div className="text-xs font-black uppercase tracking-[.2em] text-[#4338CA]">See it. Say it.</div><h2 id="visual-warmup-title" className="mt-1 text-xl font-black">Visual warm-up</h2></div><span className={`text-xs font-bold ${dark ? "text-white/40" : "text-black/40"}`}>{words.length} words</span></div><div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5">{words.map((word, index) => <motion.article key={`${word.native}-${index}`} initial={{opacity:0,y:8}} animate={{opacity:1,y:0}} transition={{delay:index*.035}} className={`overflow-hidden rounded-2xl border p-2 ${dark ? "border-white/10 bg-[#1A201E]" : "border-black/8 bg-white"}`}><LearningVisual iconId={word.iconId} number={word.number} label={word.english} className="aspect-square w-full"/><div className="px-1 pb-1 pt-2 text-center"><div className="truncate font-black">{word.native}</div><div className={`truncate text-xs font-semibold ${dark ? "text-white/45" : "text-black/45"}`}>{word.english}</div></div></motion.article>)}</div></section>;
 }
 
 function OutOfHearts({ dark, onExit, onRefill }) {
