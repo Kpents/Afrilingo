@@ -9,7 +9,8 @@ export const defaultPreferences = {
   startedLanguageIds: [],
   motivation: "culture",
   dailyTarget: 3,
-  familiarity: "new"
+  familiarity: "new",
+  soundEnabled: true
 };
 
 function readPreferences() {

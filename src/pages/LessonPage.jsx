@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { CheckCircle2, Heart, RotateCcw, Sparkles, X, XCircle } from "lucide-react";
 import MiniConversation from "../components/MiniConversation";
@@ -6,8 +6,10 @@ import CultureCard from "../components/CultureCard";
 import QuestionRenderer, { expectedAnswer, normalizeAnswer } from "../components/lessons/QuestionRenderer";
 import Lebo from "../components/ui/Lebo";
 import LearningVisual from "../components/ui/LearningVisual";
+import ConfettiBurst from "../components/ui/ConfettiBurst";
+import { playUiSound } from "../services/uiSound";
 
-export default function LessonPage({ lesson, dark, hearts, languageId, isFirstLesson, isUnitChallenge, onExit, onLoseHeart, onReviewQuestion, onRefillHearts, onComplete }) {
+export default function LessonPage({ lesson, dark, hearts, languageId, soundEnabled, isFirstLesson, isUnitChallenge, onExit, onLoseHeart, onReviewQuestion, onRefillHearts, onComplete }) {
   const [stage, setStage] = useState("conversation");
   const [queue, setQueue] = useState(() => lesson.questions.map((q) => ({ ...q, retry: false })));
   const [index, setIndex] = useState(0);
@@ -57,6 +59,7 @@ export default function LessonPage({ lesson, dark, hearts, languageId, isFirstLe
         mistakes={mistakes}
         isFirstLesson={isFirstLesson}
         isUnitChallenge={isUnitChallenge}
+        soundEnabled={soundEnabled}
         onContinue={() => onComplete({
           xp: lesson.xp + (isUnitChallenge ? 50 : 0),
           cultureCardId: lesson.cultureCard.id
@@ -86,6 +89,7 @@ export default function LessonPage({ lesson, dark, hearts, languageId, isFirstLe
   const checkAnswer = () => {
     if (selected == null || (Array.isArray(selected) && selected.length === 0)) return;
     setChecked(true);
+    playUiSound(correct ? "correct" : "incorrect", soundEnabled);
 
     if (submittedAnswer === expectedAnswer(current)) {
       setEarned(x => x + (current.retry ? 5 : 10));
@@ -204,10 +208,12 @@ function OutOfHearts({ dark, onExit, onRefill }) {
   return <div className="mx-auto max-w-xl text-center"><motion.div initial={{scale:.7, opacity:0}} animate={{scale:1, opacity:1}} className="mx-auto grid h-24 w-24 place-items-center rounded-[2rem] bg-[#EF5B5B]/15 text-5xl">💔</motion.div><h1 className="mt-6 text-4xl font-black">Out of hearts</h1><p className={`mx-auto mt-3 max-w-md leading-7 ${dark ? "text-white/55" : "text-black/55"}`}>One heart regenerates every 30 minutes. Recover one now with a quick practice refill and continue from the same question.</p><button onClick={onRefill} className="mt-6 flex min-h-14 w-full items-center justify-center gap-2 rounded-[1.4rem] bg-[#24745B] px-5 text-lg font-black text-white"><Sparkles size={20}/>Practice refill · +1 heart</button><button onClick={onExit} className={`mt-3 min-h-12 w-full rounded-[1.2rem] font-black ${dark ? "bg-white/6" : "bg-black/5"}`}>Return to path</button></div>;
 }
 
-function Completion({ dark, lesson, languageId, earned, mistakes, isFirstLesson, isUnitChallenge, onContinue }) {
+function Completion({ dark, lesson, languageId, earned, mistakes, soundEnabled, isFirstLesson, isUnitChallenge, onContinue }) {
   const reduceMotion = useReducedMotion();
+  useEffect(() => playUiSound(isUnitChallenge ? "unit" : "complete", soundEnabled), [isUnitChallenge, soundEnabled]);
   return (
-    <div className="mx-auto max-w-2xl text-center" aria-live="polite">
+    <div className="relative mx-auto max-w-2xl overflow-hidden rounded-[2rem] px-1 pb-2 text-center" aria-live="polite">
+      <ConfettiBurst count={isUnitChallenge ? 42 : 28} />
       <motion.div initial={{ scale: 0.75, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ type: "spring", stiffness: 170, damping: 12 }} className="relative mx-auto h-52 w-52 sm:h-60 sm:w-60">
         <div className="absolute inset-6 rounded-full bg-[#F6C445]/20 blur-sm" />
         {!reduceMotion && <motion.div aria-hidden className="absolute inset-0 rounded-full border-2 border-dashed border-[#F6C445]/45" animate={{rotate:360,scale:[.94,1.03,.94]}} transition={{rotate:{duration:12,repeat:Infinity,ease:"linear"},scale:{duration:2.2,repeat:Infinity,ease:"easeInOut"}}}/>} 

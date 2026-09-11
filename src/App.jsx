@@ -430,7 +430,7 @@ export default function App() {
           : "bg-[#FFF8EE] text-[#252525]"
       }`}
     >
-      <RewardEvent event={rewardEvent} dark={dark} languageId={activeLanguage} onDone={() => setRewardEvent(null)} />
+      <RewardEvent event={rewardEvent} dark={dark} languageId={activeLanguage} soundEnabled={preferences.soundEnabled !== false} onDone={() => setRewardEvent(null)} />
       <AppStatus dark={dark} lifecycle={lifecycle} />
 
       {/* ================================================= */}
@@ -720,6 +720,7 @@ export default function App() {
                     progress.hearts
                   }
                   languageId={activeLanguage}
+                  soundEnabled={preferences.soundEnabled !== false}
 
                   isFirstLesson={progress.completedLessonIds.length === 0}
 
@@ -789,6 +790,7 @@ export default function App() {
                 dark={dark}
                 library={exploreLibraries[activeLanguage]}
                 progress={progress}
+                soundEnabled={preferences.soundEnabled !== false}
                 onLoseHeart={loseHeart}
                 onReviewQuestion={(question, source) => addToReview(question, source)}
                 onComplete={completeExploreSession}
@@ -796,11 +798,11 @@ export default function App() {
             )}
 
             {screen === "review" && (
-              <ReviewPage dark={dark} progress={progress} language={currentLanguage} onLoseHeart={loseHeart} onComplete={completeReview} />
+              <ReviewPage dark={dark} progress={progress} language={currentLanguage} soundEnabled={preferences.soundEnabled !== false} onLoseHeart={loseHeart} onComplete={completeReview} />
             )}
 
             {screen === "practice" && (
-              <PracticePage dark={dark} language={currentLanguage} progress={progress} library={exploreLibraries[activeLanguage]} dailyTarget={preferences.dailyTarget} onLoseHeart={loseHeart} onReviewQuestion={addToReview} onComplete={completePractice} />
+              <PracticePage dark={dark} language={currentLanguage} progress={progress} library={exploreLibraries[activeLanguage]} dailyTarget={preferences.dailyTarget} soundEnabled={preferences.soundEnabled !== false} onLoseHeart={loseHeart} onReviewQuestion={addToReview} onComplete={completePractice} />
             )}
 
             {screen === "immersion" && immersionLibraries[activeLanguage] && (
@@ -839,7 +841,7 @@ export default function App() {
 
             )}
 
-            {screen === "settings" && <SettingsPage dark={dark} language={currentLanguage} />}
+            {screen === "settings" && <SettingsPage dark={dark} language={currentLanguage} preferences={preferences} onPreferencesChange={setPreferences} />}
 
             </Suspense>
 
