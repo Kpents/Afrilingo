@@ -15,7 +15,7 @@ export const initialProgress = {
   reviewQueue: [],
   practice: { date: null, sessions: 0, xp: 0, lastMode: null },
   explore: { masteredEntryIds: [], completedCategoryLevels: [] },
-  immersion: { savedPhrases: [], savedWords: [], completedMissions: [], completedGrammar: [], completedStories: [], claimedDailyPhrases: [] }
+  immersion: { savedPhrases: [], savedWords: [], completedMissions: [], completedGrammar: [], completedStories: [], completedAdventures: [], claimedDailyPhrases: [] }
 };
 
 export const HEART_REGEN_MS = 30 * 60 * 1000;

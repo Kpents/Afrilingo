@@ -810,6 +810,8 @@ export default function App() {
                 dark={dark}
                 data={immersionLibraries[activeLanguage]}
                 progress={progress}
+                soundEnabled={preferences.soundEnabled !== false}
+                onLoseHeart={loseHeart}
                 onReward={updateImmersion}
               />
             )}
