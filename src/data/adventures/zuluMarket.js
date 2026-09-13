@@ -14,8 +14,18 @@ export const zuluMarketPilot = {
   item: { label: "Fruit stall", emoji: "🍊", hint: "Tap the fruit baskets to look closer.", vocabulary: [{ native: "izithelo", english: "fruit" }] },
   characters: ["gogo-nandi", "ama"],
   routes: [
-    { id: "seller", label: "Talk to the seller" },
-    { id: "neighbour", label: "Ask a neighbour first", note: "Gogo Nandi points you toward Ama’s fruit stall." }
+    { id: "seller", label: "Talk to the seller", ending: "You went straight to Ama, made a clear request, chose your fruit, and thanked her." },
+    { id: "neighbour", label: "Ask a neighbour first", note: "Gogo Nandi shares a word about the fruit before you approach Ama.", ending: "Gogo Nandi helped you understand the value before you completed the purchase with Ama.", detour: {
+      id: "neighbour-clue",
+      character: "gogo-nandi",
+      speaker: "Neighbour",
+      native: "Kushibhile.",
+      english: "It is cheap.",
+      prompt: "What does Gogo Nandi say about the fruit?",
+      choices: ["It is cheap.", "It is too expensive.", "I am ill."],
+      answer: "It is cheap.",
+      feedback: "Kushibhile means it is cheap. Now you can speak to Ama with more context."
+    } }
   ],
   steps: [
     {

@@ -18,11 +18,13 @@ export default function SceneMission({ mission, languageId, dark, hearts, comple
   const [route, setRoute] = useState(null);
   const [claimed, setClaimed] = useState(false);
   const [wasCompleted] = useState(completed);
-  const step = mission.steps[stepIndex];
+  const chosenRoute = mission.routes.find(option => option.id === route);
+  const steps = chosenRoute?.detour ? [chosenRoute.detour, ...mission.steps] : mission.steps;
+  const step = steps[stepIndex];
   const correct = choice === step.answer;
   const image = path => `${import.meta.env.BASE_URL}${path}`;
   const surface = dark ? "border-white/10 bg-[#1A201E]/95" : "border-black/10 bg-white/95";
-  const total = mission.steps.length + 1;
+  const total = steps.length + 1;
   const progress = stage === "arrival" ? 0 : stage === "inspect" ? 1 : stepIndex + 2;
 
   const answer = value => {
@@ -35,7 +37,7 @@ export default function SceneMission({ mission, languageId, dark, hearts, comple
   const next = () => {
     if (!correct || claimed) return;
     setChoice(null);
-    if (stepIndex + 1 < mission.steps.length) {
+    if (stepIndex + 1 < steps.length) {
       setStepIndex(index => index + 1);
       return;
     }
@@ -49,7 +51,7 @@ export default function SceneMission({ mission, languageId, dark, hearts, comple
     <ConfettiBurst count={36}/>
     <Lebo pose="celebrate" reaction="celebrate" languageId={languageId} className="mx-auto size-48" decorative/>
     <h1 className="mt-3 text-4xl font-black">{mission.completionTitle}</h1>
-    <p className="mt-3 font-semibold opacity-60">{mission.completionText}</p>
+    <p className="mt-3 font-semibold opacity-60">{chosenRoute?.ending || mission.completionText}</p>
     <div className={`mt-5 rounded-2xl border p-4 text-left text-sm leading-6 ${dark ? "border-[#F6C445]/25 bg-[#F6C445]/10" : "border-[#F6C445]/35 bg-[#F6C445]/15"}`}><strong>Culture note:</strong> {mission.culture}</div>
     <div className="mt-5 text-2xl font-black text-[#F28C28]">{wasCompleted ? "Practice complete" : `+${mission.xp} XP`}</div>
     <button onClick={onExit} className="mt-6 min-h-14 w-full rounded-2xl bg-[#F28C28] font-black text-white">Back to adventures</button>
@@ -80,13 +82,13 @@ export default function SceneMission({ mission, languageId, dark, hearts, comple
       {stage === "dialogue" && <>
         {mission.characters.map((person,index)=><div key={person} className={`absolute size-20 rounded-full border-4 shadow-xl ${index===1 ? "right-[9%] top-[42%] border-[#F28C28] bg-white" : "left-[8%] top-[32%] border-white bg-[#F6C445]"}`}><img src={image(cast[person].image)} alt={cast[person].name} className="h-full w-full object-contain"/></div>)}
         <AnimatePresence mode="wait"><motion.div key={step.id} initial={{opacity:0,y:25}} animate={{opacity:1,y:0}} exit={{opacity:0,y:15}} className={`absolute inset-x-3 bottom-3 z-20 max-h-[59%] overflow-y-auto rounded-[1.5rem] border p-4 shadow-2xl ${surface}`}>
-          <div className="flex items-center justify-between text-xs font-black uppercase tracking-wider text-[#4338CA]"><span>{step.speaker} · {cast[step.character].name}</span><span>{stepIndex+1}/{mission.steps.length}</span></div>
-          {route === mission.routes[1]?.id && stepIndex === 0 && <p className="mt-2 rounded-lg bg-[#F6C445]/15 p-2 text-xs font-semibold">{mission.routes[1].note}</p>}
+          <div className="flex items-center justify-between text-xs font-black uppercase tracking-wider text-[#4338CA]"><span>{step.speaker} · {cast[step.character].name}</span><span>{stepIndex+1}/{steps.length}</span></div>
+          {chosenRoute?.detour && stepIndex === 0 && <p className="mt-2 rounded-lg bg-[#F6C445]/15 p-2 text-xs font-semibold">{chosenRoute.note}</p>}
           <div className="mt-3 text-xl font-black">{step.native}</div><div className="mt-1 text-sm font-semibold opacity-55">{step.english}</div><div className="mt-3 text-sm font-black">{step.prompt}</div>
           <div className="mt-3 grid gap-2">{step.choices.map(value=><button key={value} disabled={correct || hearts <= 0 || choice === value} onClick={()=>answer(value)} className={`min-h-12 rounded-xl border p-3 text-left text-sm font-black disabled:cursor-not-allowed ${choice===value ? correct ? "border-[#24745B] bg-[#24745B]/15" : "border-[#C95D3A] bg-[#C95D3A]/15" : "border-current/10"}`}>{value}</button>)}</div>
           {choice&&<div role="status" className={`mt-3 flex gap-2 rounded-xl p-3 text-sm font-semibold ${correct ? "bg-[#24745B]/15" : "bg-[#C95D3A]/15"}`}>{correct ? <CheckCircle2 className="shrink-0 text-[#53B98A]"/> : <XCircle className="shrink-0 text-[#C95D3A]"/>}<span>{correct ? step.feedback : `Try again. ${step.feedback}`}</span></div>}
           {hearts<=0&&!correct&&<div className="mt-3 rounded-xl bg-[#C95D3A]/15 p-3 text-sm font-bold">Out of hearts. Return after a heart recovers.</div>}
-          {correct&&<button onClick={next} className="mt-3 flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#F28C28] font-black text-white"><Sparkles size={17}/>{stepIndex+1===mission.steps.length ? "Finish mission" : "Continue"}</button>}
+          {correct&&<button onClick={next} className="mt-3 flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#F28C28] font-black text-white"><Sparkles size={17}/>{stepIndex+1===steps.length ? "Finish mission" : "Continue"}</button>}
         </motion.div></AnimatePresence>
       </>}
     </div>

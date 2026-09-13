@@ -14,8 +14,18 @@ export const zuluCafeMission = {
   item: { label: "Serving counter", emoji: "🥘", hint: "Check the counter before placing your order.", vocabulary: [{ native: "amanzi", english: "water" }] },
   characters: ["kofi", "ama"],
   routes: [
-    { id: "counter", label: "Go to the counter" },
-    { id: "friend", label: "Ask Kofi where to order", note: "Kofi points you toward Ama at the serving counter." }
+    { id: "counter", label: "Go to the counter", ending: "You ordered directly from Ama, thanked her, and requested a receipt." },
+    { id: "friend", label: "Ask Kofi where to order", note: "Kofi offers an example request before you join the counter queue.", ending: "Kofi’s example helped you recognise a polite request before ordering from Ama.", detour: {
+      id: "friend-clue",
+      character: "kofi",
+      speaker: "Friend",
+      native: "Ngicela amanzi.",
+      english: "Water, please.",
+      prompt: "What is Kofi politely requesting?",
+      choices: ["Water", "A ticket", "A receipt"],
+      answer: "Water",
+      feedback: "Ngicela amanzi asks for water politely. You can use the same request pattern at the counter."
+    } }
   ],
   steps: [
     {
