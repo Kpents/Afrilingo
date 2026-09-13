@@ -2,11 +2,21 @@
 export const zuluMarketPilot = {
   id: "zulu-market-visit",
   title: "A Visit to the Market",
+  languageName: "Zulu",
+  setting: "market",
   level: "intermediate",
   image: "images/adventures/market-square.jpg",
+  imageAlt: "Illustrated neighbourhood market with a fruit stall",
+  hotspotClass: "left-[9%] top-[38%]",
+  inspectAction: "Inspect fruit",
   xp: 35,
   goal: "Find the fruit stall, ask the seller about fruit, decide what to buy, and thank them.",
-  item: { label: "Fruit stall", hint: "Tap the fruit baskets to look closer.", vocabulary: [{ native: "izithelo", english: "fruit" }] },
+  item: { label: "Fruit stall", emoji: "🍊", hint: "Tap the fruit baskets to look closer.", vocabulary: [{ native: "izithelo", english: "fruit" }] },
+  characters: ["gogo-nandi", "ama"],
+  routes: [
+    { id: "seller", label: "Talk to the seller" },
+    { id: "neighbour", label: "Ask a neighbour first", note: "Gogo Nandi points you toward Ama’s fruit stall." }
+  ],
   steps: [
     {
       id: "ask",
@@ -42,5 +52,7 @@ export const zuluMarketPilot = {
       feedback: "Ngiyabonga is a natural way to thank the seller."
     }
   ],
-  culture: "Market interactions vary from place to place. Greeting first, asking clearly, and thanking the seller matter more than assuming every purchase involves bargaining."
+  culture: "Market interactions vary from place to place. Greeting first, asking clearly, and thanking the seller matter more than assuming every purchase involves bargaining.",
+  completionTitle: "Market mission complete!",
+  completionText: "You found the stall, asked about fruit, made a choice, and thanked the seller."
 };

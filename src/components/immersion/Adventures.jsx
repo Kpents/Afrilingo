@@ -4,8 +4,11 @@ import { ArrowLeft, CheckCircle2, Heart, LockKeyhole, MapPin, MessageCircle, Spa
 import Lebo from "../ui/Lebo";
 import ConfettiBurst from "../ui/ConfettiBurst";
 import { playUiSound } from "../../services/uiSound";
-import MarketPilot from "./MarketPilot";
+import SceneMission from "./SceneMission";
 import { zuluMarketPilot } from "../../data/adventures/zuluMarket";
+import { zuluCafeMission } from "../../data/adventures/zuluCafe";
+
+const featuredMissions = { zulu: [zuluMarketPilot, zuluCafeMission] };
 
 const sceneLooks = [
   { id: "market", emoji: "🛍️", title: "Neighbourhood Market", accent: "#F28C28", image: "images/adventures/market-square.jpg" },
@@ -48,13 +51,14 @@ export default function Adventures({ dark, data, progress, soundEnabled, onLoseH
   const adventures = useMemo(() => buildAdventures(data), [data]);
   const [active, setActive] = useState(null);
   const completed = progress.immersion?.completedAdventures || [];
+  const featured = featuredMissions[data.languageId] || [];
 
-  if (active?.id === zuluMarketPilot.id) return <MarketPilot dark={dark} hearts={progress.hearts} completed={completed.includes(zuluMarketPilot.id)} soundEnabled={soundEnabled} onLoseHeart={onLoseHeart} onReward={onReward} onExit={()=>setActive(null)}/>;
+  if (active && featured.some(mission => mission.id === active.id)) return <SceneMission mission={active} languageId={data.languageId} dark={dark} hearts={progress.hearts} completed={completed.includes(active.id)} soundEnabled={soundEnabled} onLoseHeart={onLoseHeart} onReward={onReward} onExit={()=>setActive(null)}/>;
   if (active) return <AdventureScene adventure={active} languageId={data.languageId} dark={dark} hearts={progress.hearts} completed={completed.includes(active.id)} soundEnabled={soundEnabled} onLoseHeart={onLoseHeart} onExit={() => setActive(null)} onReward={onReward}/>;
 
   return <div>
     <div className="flex items-end justify-between gap-4"><div><div className="text-xs font-black uppercase tracking-[.22em] text-[#F28C28]">Walk in. Look around. Speak.</div><h1 className="mt-2 text-3xl font-black sm:text-4xl">{data.languageName} Adventures</h1><p className="mt-3 max-w-2xl leading-7 opacity-55">Enter everyday settings and talk with the people you meet. Adventures are optional and do not change your course path.</p></div><MapPin className="hidden text-[#F28C28] sm:block" size={38}/></div>
-    {data.languageId === "zulu" && <button onClick={()=>setActive(zuluMarketPilot)} className={`mt-6 flex w-full overflow-hidden rounded-[1.7rem] border text-left transition hover:-translate-y-0.5 ${dark ? "border-[#F6C445]/30 bg-[#1A201E]" : "border-[#F28C28]/30 bg-white"}`}><img src={`${import.meta.env.BASE_URL}${zuluMarketPilot.image}`} alt="" className="h-40 w-32 shrink-0 object-cover sm:w-48"/><div className="flex min-w-0 flex-1 flex-col justify-center p-4 sm:p-5"><div className="text-xs font-black uppercase tracking-wider text-[#F28C28]">Featured · multi-step pilot</div><div className="mt-2 text-xl font-black sm:text-2xl">{zuluMarketPilot.title}</div><p className={`mt-1 line-clamp-2 text-sm font-semibold ${dark ? "text-white/50" : "text-black/50"}`}>{zuluMarketPilot.goal}</p><div className="mt-3 text-xs font-black text-[#24745B]">{completed.includes(zuluMarketPilot.id) ? "Play again" : `Start mission · +${zuluMarketPilot.xp} XP`} →</div></div></button>}
+    {featured.length > 0 && <div className="mt-6 grid gap-3 sm:grid-cols-2">{featured.map((mission,index)=><button key={mission.id} onClick={()=>setActive(mission)} className={`flex w-full overflow-hidden rounded-[1.7rem] border text-left transition hover:-translate-y-0.5 ${dark ? "border-[#F6C445]/30 bg-[#1A201E]" : "border-[#F28C28]/30 bg-white"}`}><img src={`${import.meta.env.BASE_URL}${mission.image}`} alt="" className="h-40 w-28 shrink-0 object-cover sm:w-32"/><div className="flex min-w-0 flex-1 flex-col justify-center p-4"><div className="text-[10px] font-black uppercase tracking-wider text-[#F28C28]">Featured · {index+1} of {featured.length}</div><div className="mt-2 text-lg font-black">{mission.title}</div><p className={`mt-1 line-clamp-2 text-xs font-semibold ${dark ? "text-white/50" : "text-black/50"}`}>{mission.goal}</p><div className="mt-3 text-xs font-black text-[#24745B]">{completed.includes(mission.id) ? "Play again" : `Start mission · +${mission.xp} XP`} →</div></div></button>)}</div>}
     <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{adventures.map((item, index) => {
       const locked = index > 0 && !completed.includes(adventures[index - 1].id);
       const done = completed.includes(item.id);
