@@ -7,8 +7,10 @@ import { playUiSound } from "../../services/uiSound";
 import SceneMission from "./SceneMission";
 import { zuluMarketPilot } from "../../data/adventures/zuluMarket";
 import { zuluCafeMission } from "../../data/adventures/zuluCafe";
+import { gaMarketMission } from "../../data/adventures/gaMarket";
+import { twiMarketMission } from "../../data/adventures/twiMarket";
 
-const featuredMissions = { zulu: [zuluMarketPilot, zuluCafeMission] };
+const featuredMissions = { zulu: [zuluMarketPilot, zuluCafeMission], ga: [gaMarketMission], twi: [twiMarketMission] };
 
 const sceneLooks = [
   { id: "market", emoji: "🛍️", title: "Neighbourhood Market", accent: "#F28C28", image: "images/adventures/market-square.jpg" },
