@@ -27,6 +27,7 @@ const ProfilePage = lazy(() => import("./pages/ProfilePage"));
 const ExplorePage = lazy(() => import("./pages/ExplorePage"));
 const ImmersionPage = lazy(() => import("./pages/ImmersionPage"));
 const IconGalleryPage = lazy(() => import("./pages/IconGalleryPage"));
+const LeboRigPreview = lazy(() => import("./pages/LeboRigPreview"));
 const ReviewPage = lazy(() => import("./pages/ReviewPage"));
 const PracticePage = lazy(() => import("./pages/PracticePage"));
 const OnboardingPage = lazy(() => import("./pages/OnboardingPage"));
@@ -416,6 +417,9 @@ export default function App() {
 
   if (window.location.pathname === "/dev/icons") {
     return <Suspense fallback={<PageLoader dark={dark} languageId={activeLanguage} />}><IconGalleryPage dark={dark} /></Suspense>;
+  }
+  if (new URLSearchParams(window.location.search).get("preview") === "lebo-rig") {
+    return <Suspense fallback={<PageLoader dark={dark} languageId={activeLanguage} />}><LeboRigPreview /></Suspense>;
   }
 
   if (!preferences.onboarded) {
