@@ -8,6 +8,7 @@ import Lebo from "../components/ui/Lebo";
 import LearningVisual from "../components/ui/LearningVisual";
 import ConfettiBurst from "../components/ui/ConfettiBurst";
 import { playUiSound } from "../services/uiSound";
+import { hapticPress } from "../utils/hapticFeedback";
 
 export default function LessonPage({ lesson, dark, hearts, languageId, soundEnabled, isFirstLesson, isUnitChallenge, onExit, onLoseHeart, onReviewQuestion, onRefillHearts, onComplete }) {
   const [stage, setStage] = useState("conversation");
@@ -41,7 +42,8 @@ export default function LessonPage({ lesson, dark, hearts, languageId, soundEnab
 
         <button
           onClick={() => hearts > 0 ? setStage("quiz") : setStage("hearts")}
-          className="mt-6 w-full rounded-[1.4rem] bg-[#F28C28] py-4 text-lg font-black uppercase tracking-wide text-white shadow-lg shadow-orange-500/20"
+          onPointerDown={hapticPress}
+          className="afri-press mt-6 w-full rounded-[1.4rem] bg-[#F28C28] py-4 text-lg font-black uppercase tracking-wide text-white"
         >
           Start lesson
         </button>
@@ -173,7 +175,9 @@ export default function LessonPage({ lesson, dark, hearts, languageId, soundEnab
           <button
             disabled={selected == null || (Array.isArray(selected) && selected.length === 0)}
             onClick={checkAnswer}
-            className={`w-full rounded-[1.4rem] py-4 text-lg font-black uppercase tracking-wide transition ${
+            onPointerDown={hapticPress}
+            data-tone={selected == null || (Array.isArray(selected) && selected.length === 0) ? dark ? "locked-night" : "locked" : "orange"}
+            className={`afri-press w-full rounded-[1.4rem] py-4 text-lg font-black uppercase tracking-wide ${
               selected != null && (!Array.isArray(selected) || selected.length > 0)
                 ? "bg-[#F28C28] text-white shadow-lg shadow-orange-500/20"
                 : dark
@@ -186,7 +190,9 @@ export default function LessonPage({ lesson, dark, hearts, languageId, soundEnab
         ) : (
           <button
             onClick={continueFlow}
-            className={`w-full rounded-[1.4rem] py-4 text-lg font-black uppercase tracking-wide text-white ${
+            onPointerDown={hapticPress}
+            data-tone={correct ? "green" : "clay"}
+            className={`afri-press w-full rounded-[1.4rem] py-4 text-lg font-black uppercase tracking-wide text-white ${
               correct ? "bg-[#24745B]" : "bg-[#C95D3A]"
             }`}
           >
@@ -205,7 +211,7 @@ function VisualWarmup({ vocabulary = [], dark }) {
 }
 
 function OutOfHearts({ dark, onExit, onRefill }) {
-  return <div className="mx-auto max-w-xl text-center"><motion.div initial={{scale:.7, opacity:0}} animate={{scale:1, opacity:1}} className="mx-auto grid h-24 w-24 place-items-center rounded-[2rem] bg-[#EF5B5B]/15 text-5xl">💔</motion.div><h1 className="mt-6 text-4xl font-black">Out of hearts</h1><p className={`mx-auto mt-3 max-w-md leading-7 ${dark ? "text-white/55" : "text-black/55"}`}>One heart regenerates every 30 minutes. Recover one now with a quick practice refill and continue from the same question.</p><button onClick={onRefill} className="mt-6 flex min-h-14 w-full items-center justify-center gap-2 rounded-[1.4rem] bg-[#24745B] px-5 text-lg font-black text-white"><Sparkles size={20}/>Practice refill · +1 heart</button><button onClick={onExit} className={`mt-3 min-h-12 w-full rounded-[1.2rem] font-black ${dark ? "bg-white/6" : "bg-black/5"}`}>Return to path</button></div>;
+  return <div className="mx-auto max-w-xl text-center"><motion.div initial={{scale:.7, opacity:0}} animate={{scale:1, opacity:1}} className="mx-auto grid h-24 w-24 place-items-center rounded-[2rem] bg-[#EF5B5B]/15 text-5xl">💔</motion.div><h1 className="mt-6 text-4xl font-black">Out of hearts</h1><p className={`mx-auto mt-3 max-w-md leading-7 ${dark ? "text-white/55" : "text-black/55"}`}>One heart regenerates every 30 minutes. Recover one now with a quick practice refill and continue from the same question.</p><button onClick={onRefill} onPointerDown={hapticPress} data-tone="green" className="afri-press mt-6 flex min-h-14 w-full items-center justify-center gap-2 rounded-[1.4rem] bg-[#24745B] px-5 text-lg font-black text-white"><Sparkles size={20}/>Practice refill · +1 heart</button><button onClick={onExit} className={`mt-3 min-h-12 w-full rounded-[1.2rem] font-black ${dark ? "bg-white/6" : "bg-black/5"}`}>Return to path</button></div>;
 }
 
 function Completion({ dark, lesson, languageId, earned, mistakes, soundEnabled, isFirstLesson, isUnitChallenge, onContinue }) {
@@ -240,7 +246,8 @@ function Completion({ dark, lesson, languageId, earned, mistakes, soundEnabled, 
 
       <button
         onClick={onContinue}
-        className="mt-6 w-full rounded-[1.4rem] bg-[#F28C28] py-4 text-lg font-black uppercase text-white shadow-lg shadow-orange-500/20"
+        onPointerDown={hapticPress}
+        className="afri-press mt-6 w-full rounded-[1.4rem] bg-[#F28C28] py-4 text-lg font-black uppercase text-white"
       >
         Collect & continue
       </button>

@@ -6,6 +6,7 @@ import ConfettiBurst from "../ui/ConfettiBurst";
 import { playUiSound } from "../../services/uiSound";
 import SidekickPortrait from "../ui/SidekickPortrait";
 import CompanionReaction from "./CompanionReaction";
+import { hapticPress } from "../../utils/hapticFeedback";
 
 const cast = {
   ama: { name: "Ama", image: "images/characters/ama.png" },
@@ -58,7 +59,7 @@ export default function SceneMission({ mission, companion, languageId, dark, hea
     <p className="mt-3 font-semibold opacity-60">{chosenRoute?.ending || mission.completionText}</p>
     <div className={`mt-5 rounded-2xl border p-4 text-left text-sm leading-6 ${dark ? "border-[#F6C445]/25 bg-[#F6C445]/10" : "border-[#F6C445]/35 bg-[#F6C445]/15"}`}><strong>Culture note:</strong> {mission.culture}</div>
     <div className="mt-5 text-2xl font-black text-[#F28C28]">{wasCompleted ? "Practice complete" : `+${mission.xp} XP`}</div>
-    <button onClick={onExit} className="mt-6 min-h-14 w-full rounded-2xl bg-[#F28C28] font-black text-white">Back to adventures</button>
+    <button onClick={onExit} onPointerDown={hapticPress} className="afri-press mt-6 min-h-14 w-full rounded-2xl bg-[#F28C28] font-black text-white">Back to adventures</button>
   </div>;
 
   return <div className="mx-auto max-w-2xl">
@@ -82,7 +83,7 @@ export default function SceneMission({ mission, companion, languageId, dark, hea
         <div className="text-xs font-black uppercase tracking-wider text-[#24745B]">Look closely</div>
         <h2 className="mt-1 text-xl font-black">{mission.item.label}</h2>
         <div className="mt-3 flex gap-3 rounded-xl bg-[#F6C445]/15 p-3"><span className="text-3xl">{mission.item.emoji}</span><div><div className="font-black">{mission.item.vocabulary[0].native}</div><div className="text-sm font-semibold opacity-55">{mission.item.vocabulary[0].english}</div></div></div>
-        {mission.routes.map((option,index)=><button key={option.id} onClick={()=>{setShowTip(false);setStage("dialogue");setRoute(option.id)}} className={`mt-2 min-h-12 w-full rounded-xl px-3 text-sm font-black ${index === 0 ? "bg-[#F28C28] text-white" : dark ? "bg-white/8" : "bg-black/5"}`}>{option.label}</button>)}
+        {mission.routes.map((option,index)=><button key={option.id} onPointerDown={hapticPress} onClick={()=>{setShowTip(false);setStage("dialogue");setRoute(option.id)}} data-tone={index === 0 ? "orange" : dark ? "night" : "surface"} className={`afri-press mt-3 min-h-12 w-full rounded-xl px-3 text-sm font-black ${index === 0 ? "bg-[#F28C28] text-white" : dark ? "bg-white/8" : "bg-black/5"}`}>{option.label}</button>)}
       </motion.div>}
       {stage === "dialogue" && <>
         {mission.characters.map((person,index)=><div key={person} className={`absolute size-20 rounded-full border-4 shadow-xl ${index===1 ? "right-[9%] top-[42%] border-[#F28C28] bg-white" : "left-[8%] top-[32%] border-white bg-[#F6C445]"}`}><img src={image(cast[person].image)} alt={cast[person].name} className="h-full w-full object-contain"/></div>)}
@@ -90,11 +91,11 @@ export default function SceneMission({ mission, companion, languageId, dark, hea
           <div className="flex items-center justify-between text-xs font-black uppercase tracking-wider text-[#4338CA]"><span>{step.speaker} · {cast[step.character].name}</span><span>{stepIndex+1}/{steps.length}</span></div>
           {chosenRoute?.detour && stepIndex === 0 && <p className="mt-2 rounded-lg bg-[#F6C445]/15 p-2 text-xs font-semibold">{chosenRoute.note}</p>}
           <div className="mt-3 text-xl font-black">{step.native}</div><div className="mt-1 text-sm font-semibold opacity-55">{step.english}</div><div className="mt-3 text-sm font-black">{step.prompt}</div>
-          <div className="mt-3 grid gap-2">{step.choices.map(value=><button key={value} disabled={correct || hearts <= 0 || choice === value} onClick={()=>answer(value)} className={`min-h-12 rounded-xl border p-3 text-left text-sm font-black disabled:cursor-not-allowed ${choice===value ? correct ? "border-[#24745B] bg-[#24745B]/15" : "border-[#C95D3A] bg-[#C95D3A]/15" : "border-current/10"}`}>{value}</button>)}</div>
+          <div className="mt-3 grid gap-3">{step.choices.map(value=><button key={value} disabled={correct || hearts <= 0 || choice === value} onPointerDown={hapticPress} onClick={()=>answer(value)} data-tone={choice===value ? correct ? "green" : "clay" : dark ? "night" : "surface"} className={`afri-press min-h-12 rounded-xl border p-3 text-left text-sm font-black disabled:cursor-not-allowed ${choice===value ? correct ? "border-[#24745B] bg-[#24745B]/15" : "border-[#C95D3A] bg-[#C95D3A]/15" : "border-current/10"}`}>{value}</button>)}</div>
           {choice&&<div role="status" className={`mt-3 flex gap-2 rounded-xl p-3 text-sm font-semibold ${correct ? "bg-[#24745B]/15" : "bg-[#C95D3A]/15"}`}>{correct ? <CheckCircle2 className="shrink-0 text-[#53B98A]"/> : <XCircle className="shrink-0 text-[#C95D3A]"/>}<span>{correct ? step.feedback : `Try again. ${step.feedback}`}</span></div>}
           {choice && companion && <CompanionReaction key={`${step.id}:${choice}`} character={companion} correct={correct} question={step.english} hearts={hearts} choice={choice}/>}
           {hearts<=0&&!correct&&<div className="mt-3 rounded-xl bg-[#C95D3A]/15 p-3 text-sm font-bold">Out of hearts. Return after a heart recovers.</div>}
-          {correct&&<button onClick={next} className="mt-3 flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#F28C28] font-black text-white"><Sparkles size={17}/>{stepIndex+1===steps.length ? "Finish mission" : "Continue"}</button>}
+          {correct&&<button onClick={next} onPointerDown={hapticPress} className="afri-press mt-4 flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#F28C28] font-black text-white"><Sparkles size={17}/>{stepIndex+1===steps.length ? "Finish mission" : "Continue"}</button>}
         </motion.div></AnimatePresence>
       </>}
     </div>

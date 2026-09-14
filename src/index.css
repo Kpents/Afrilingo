@@ -58,6 +58,31 @@ button, [role="button"], input, select {
 .glow-orange { box-shadow: 0 12px 40px rgba(242,140,40,.18); }
 .glow-green { box-shadow: 0 12px 40px rgba(36,116,91,.18); }
 
+/* A raised, physical-feeling control. Backgrounds stay owned by each feature. */
+.afri-press {
+  --afri-depth: #c46a1c;
+  box-shadow: 0 5px 0 var(--afri-depth), 0 10px 18px rgba(16,19,18,.13), inset 0 1px 0 rgba(255,255,255,.22);
+  transform: translateY(0);
+  transition: transform .12s ease, box-shadow .12s ease, filter .12s ease;
+}
+.afri-press[data-tone="green"] { --afri-depth: #185641; }
+.afri-press[data-tone="clay"] { --afri-depth: #99432b; }
+.afri-press[data-tone="gold"] { --afri-depth: #c29122; }
+.afri-press[data-tone="surface"] { --afri-depth: #d8cbbb; }
+.afri-press[data-tone="night"] { --afri-depth: #111714; }
+.afri-press[data-tone="locked"] { --afri-depth: #b9b9b9; }
+.afri-press[data-tone="locked-night"] { --afri-depth: #111714; }
+.afri-press:active:not(:disabled),
+.afri-path-button:active:not(:disabled) .afri-press {
+  transform: translateY(5px);
+  box-shadow: 0 0 0 var(--afri-depth), inset 0 2px 4px rgba(0,0,0,.12);
+}
+.afri-press:disabled { cursor: not-allowed; }
+
+@media (prefers-reduced-motion: reduce) {
+  .afri-press { transition: none; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     scroll-behavior: auto !important;

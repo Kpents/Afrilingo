@@ -2,6 +2,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { Check, Lock, Star } from "lucide-react";
 import { isLessonUnlocked } from "../utils/courseProgress";
 import { LeboTip } from "./ui/Lebo";
+import { hapticPress } from "../utils/hapticFeedback";
 
 export default function LessonPath({ lessons, progress, dark, onStart, languageId }) {
   const reduceMotion = useReducedMotion();
@@ -20,12 +21,12 @@ export default function LessonPath({ lessons, progress, dark, onStart, languageI
           <motion.button
             disabled={status === "locked"}
             onClick={() => onStart(lesson)}
+            onPointerDown={hapticPress}
             whileHover={status !== "locked" ? { scale: 1.05 } : {}}
-            whileTap={status !== "locked" ? { scale: 0.96 } : {}}
             style={{ transform: `translateX(${offsets[index] || 0}px)` }}
-            className="relative z-10 flex flex-col items-center"
+            className="afri-path-button relative z-10 flex flex-col items-center"
           >
-            <div className={`relative grid h-24 w-24 place-items-center rounded-full border-[7px] shadow-xl transition ${
+            <div data-tone={status === "done" ? "green" : status === "current" ? "gold" : dark ? "locked-night" : "locked"} className={`afri-press relative grid h-24 w-24 place-items-center rounded-full border-[7px] ${
               status === "done"
                 ? "border-[#F6C445] bg-[#24745B] text-white"
                 : status === "current"
