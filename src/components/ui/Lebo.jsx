@@ -1,28 +1,13 @@
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { getLeboTheme } from "../../data/leboThemes";
 import { assetPath } from "../../utils/assetPath";
+import LeboRive from "./LeboRive";
 
 const poses = {
   wave: "/mascot/lebo-wave.png",
   learn: "/mascot/lebo-learn.png",
   encourage: "/mascot/lebo-encourage.png",
   celebrate: "/mascot/lebo-celebrate.png"
-};
-
-const descriptions = {
-  wave: "Lebo the lion waving hello",
-  learn: "Lebo the lion reading",
-  encourage: "Lebo the lion giving a thumbs-up",
-  celebrate: "Lebo the lion celebrating"
-};
-
-const loops = {
-  idle: { y: [0, -3, 0], rotate: [0, -0.8, 0.8, 0], scale: [1, 1.012, 1] },
-  wave: { rotate: [0, -2, 2, -1, 0], y: [0, -2, 0] },
-  learn: { y: [0, -2, 0], rotate: [0, 0.7, 0] },
-  correct: { y: [0, -10, 0], scale: [1, 1.08, 1], rotate: [0, -2, 2, 0] },
-  encourage: { x: [0, -2, 2, 0], y: [0, 2, 0], rotate: [0, -1, 1, 0] },
-  celebrate: { y: [0, -16, 0, -8, 0], rotate: [0, -4, 4, -2, 0], scale: [1, 1.08, 1] }
 };
 
 const loopTransitions = {
@@ -59,12 +44,12 @@ export default function Lebo({
   const outfitImage = theme.poses?.[pose] || theme.outfit || poses[pose] || poses.wave;
 
   return (
-    <motion.span title={theme.label} className={`relative isolate inline-block ${className}`} initial={shouldMove ? { opacity: 0, y: 10, scale: 0.96 } : false} animate={shouldMove ? { opacity: 1, ...loops[state] } : { opacity: 1 }} transition={shouldMove ? { opacity: { duration: 0.25 }, ...loopTransitions[state] } : undefined} whileHover={shouldMove ? { scale: 1.045, rotate: state === "learn" ? 0 : -1.5 } : undefined} whileTap={shouldMove ? { scale: 0.94 } : undefined}>
+    <motion.span title={shouldMove ? "Lebo, your learning companion" : theme.label} role={decorative ? undefined : "img"} aria-label={decorative ? undefined : "Lebo, your learning companion"} aria-hidden={decorative || undefined} className={`relative isolate inline-block ${className}`} initial={shouldMove ? { opacity: 0 } : false} animate={{ opacity: 1 }} transition={{ duration: .25 }}>
       <motion.span aria-hidden className="absolute inset-[14%] -z-10 rounded-full blur-xl" style={{background:`radial-gradient(circle, ${theme.colors[1]}55 0%, ${theme.colors[0]}22 48%, transparent 72%)`}} animate={shouldMove?{scale:[.92,1.05,.92],opacity:[.55,.82,.55]}:{opacity:.55}} transition={{duration:3.2,repeat:Infinity,ease:"easeInOut"}}/>
       <motion.span aria-hidden className="absolute bottom-[4%] left-[20%] -z-10 h-[11%] w-[60%] rounded-[50%] bg-black/20 blur-sm" animate={shouldMove?{scaleX:[1,.9,1],opacity:[.22,.14,.22]}:{opacity:.2}} transition={{duration:loopTransitions[state]?.duration||3,repeat:Infinity,ease:"easeInOut"}}/>
-      <AnimatePresence mode="sync" initial={false}>
+      {shouldMove ? <LeboRive reaction={state} fallback={<img src={assetPath(outfitImage)} alt={decorative ? "" : "Lebo the lion"} className="h-full w-full object-contain" />} /> : <AnimatePresence mode="sync" initial={false}>
         <motion.img key={outfitImage} src={assetPath(outfitImage)} alt={decorative ? "" : `Lebo the lion in the ${theme.label} course outfit`} aria-hidden={decorative || undefined} initial={shouldMove?{opacity:0,scale:.92,rotate:-2}:false} animate={{opacity:1,scale:1,rotate:0}} exit={shouldMove?{opacity:0,scale:1.04,rotate:2}:undefined} transition={{duration:.32,ease:"easeOut"}} className="relative h-full w-full select-none object-contain drop-shadow-[0_14px_18px_rgba(70,35,10,0.18)]" draggable="false" />
-      </AnimatePresence>
+      </AnimatePresence>}
       {shouldMove && reactionDecor[state]?.length > 0 && <span aria-hidden className="pointer-events-none absolute inset-0">{reactionDecor[state].map((item,index)=><motion.span key={`${state}-${index}`} className="absolute font-black" style={{left:`${item.x}%`,top:`${item.y}%`,color:theme.colors[index%theme.colors.length]}} initial={{opacity:0,scale:.2}} animate={{opacity:[0,1,0],scale:[.2,1.15,.55],y:[8,-8,-18],rotate:[-12,8,24]}} transition={{duration:1.65,repeat:Infinity,repeatDelay:state === "celebrate" ? .15 : .65,delay:item.delay,ease:"easeOut"}}>{item.glyph}</motion.span>)}</span>}
     </motion.span>
   );
