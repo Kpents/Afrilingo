@@ -7,9 +7,10 @@ export const defaultPreferences = {
   name: "",
   languageId: "twi",
   startedLanguageIds: [],
-  motivation: "culture",
+  motivations: ["culture"],
   dailyTarget: 3,
   familiarity: "new",
+  companionId: "zuri",
   soundEnabled: true
 };
 
@@ -17,7 +18,12 @@ function readPreferences() {
   try {
     const saved = localStorage.getItem(storageKey);
     if (saved) {
-      const parsed = { ...defaultPreferences, ...JSON.parse(saved) };
+      const savedPreferences = JSON.parse(saved);
+      const parsed = { ...defaultPreferences, ...savedPreferences };
+      parsed.motivations = Array.isArray(savedPreferences.motivations)
+        ? savedPreferences.motivations
+        : savedPreferences.motivation ? [savedPreferences.motivation] : defaultPreferences.motivations;
+      delete parsed.motivation;
       const progressed = Object.keys(localStorage).filter(key => {
         if (!key.startsWith("afrilingo:") || key.startsWith("afrilingo:recovery:") || key === storageKey) return false;
         try { const value = JSON.parse(localStorage.getItem(key)); return value?.xp > 0 || value?.completedLessonIds?.length > 0; } catch { return false; }

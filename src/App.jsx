@@ -817,6 +817,8 @@ export default function App() {
                 soundEnabled={preferences.soundEnabled !== false}
                 onLoseHeart={loseHeart}
                 onReward={updateImmersion}
+                companionId={preferences.companionId}
+                onCompanionChange={id => setPreferences(previous => ({ ...previous, companionId: id }))}
               />
             )}
 

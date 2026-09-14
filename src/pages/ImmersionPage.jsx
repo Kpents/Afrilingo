@@ -3,8 +3,10 @@ import { ArrowLeft, BookOpenText, CheckCircle2, ChevronRight, Globe2, Graduation
 import AudioButton from "../components/ui/AudioButton";
 import { conversationVoice } from "../services/conversationVoice";
 import Adventures from "../components/immersion/Adventures";
+import MeetTheCast from "../components/immersion/MeetTheCast";
 
 const baseFeatures = [
+  ["cast", "Meet the Cast", "Get to know your learning companions", HeartHandshake, "#F28C28"],
   ["adventures", "Adventures", "Explore settings and talk to people", MapPinned, "#F28C28"],
   ["coach", "Conversation Coach", "Practice real situations", MessageCircle, "#F28C28"],
   ["variations", "Language Variation", "Hear more than one valid form", Globe2, "#24745B"],
@@ -15,15 +17,16 @@ const baseFeatures = [
   ["daily", "Daily Phrase", "Useful language every day", Sparkles, "#F28C28"]
 ];
 
-export default function ImmersionPage({ dark, data, progress, soundEnabled, onLoseHeart, onReward }) {
+export default function ImmersionPage({ dark, data, progress, soundEnabled, onLoseHeart, onReward, companionId, onCompanionChange }) {
   const [feature, setFeature] = useState(null);
   const features = data.pronunciation ? [...baseFeatures, ["pronunciation", "Tone & Pronunciation", "Notice sound patterns safely", Volume2, "#4338CA"]] : baseFeatures;
   const card = dark ? "border-white/10 bg-[#1A201E]" : "border-black/8 bg-white";
-  if (feature) return <div><button onClick={() => setFeature(null)} className={`mb-5 flex min-h-11 items-center gap-2 rounded-xl px-3 font-black ${dark ? "bg-white/6" : "bg-black/5"}`}><ArrowLeft size={18}/> Immersion home</button><Feature feature={feature} dark={dark} data={data} progress={progress} soundEnabled={soundEnabled} onLoseHeart={onLoseHeart} onReward={onReward}/></div>;
+  if (feature) return <div><button onClick={() => setFeature(null)} className={`mb-5 flex min-h-11 items-center gap-2 rounded-xl px-3 font-black ${dark ? "bg-white/6" : "bg-black/5"}`}><ArrowLeft size={18}/> Immersion home</button><Feature feature={feature} dark={dark} data={data} progress={progress} soundEnabled={soundEnabled} onLoseHeart={onLoseHeart} onReward={onReward} companionId={companionId} onCompanionChange={onCompanionChange}/></div>;
   return <div className="mx-auto max-w-5xl"><section className="afri-pattern rounded-[2rem] bg-gradient-to-br from-[#C95D3A] via-[#F28C28] to-[#F6C445] p-7 text-white sm:p-9"><div className="text-xs font-black uppercase tracking-[.25em] text-white/70">{data.languageName} Immersion</div><h1 className="mt-2 max-w-2xl text-4xl font-black sm:text-5xl">Learn how people communicate.</h1><p className="mt-4 max-w-2xl font-semibold leading-7 text-white/80">Practice context, patterns, variation, stories, and real-life decisions—outside the main course path.</p><div className="mt-5 inline-flex rounded-full bg-black/15 px-3 py-2 text-xs font-black">Independent practice · course progress preserved</div></section><div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{features.map(([id,title,subtitle,Icon,color]) => <button key={id} onClick={() => setFeature(id)} className={`group min-h-40 rounded-[1.6rem] border p-5 text-left transition hover:-translate-y-1 ${card}`}><span className="grid size-12 place-items-center rounded-2xl text-white" style={{backgroundColor:color}}><Icon size={23}/></span><div className="mt-4 flex items-start justify-between gap-3"><div><div className="font-black">{title}</div><div className={`mt-1 text-sm font-semibold ${dark ? "text-white/40" : "text-black/40"}`}>{subtitle}</div></div><ChevronRight className="opacity-25 transition group-hover:translate-x-1"/></div></button>)}</div></div>;
 }
 
 function Feature({ feature, ...props }) {
+  if (feature === "cast") return <MeetTheCast {...props}/>;
   if (feature === "adventures") return <Adventures {...props}/>;
   if (feature === "coach") return <Coach {...props}/>;
   if (feature === "variations") return <Variations {...props}/>;
