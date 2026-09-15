@@ -15,12 +15,25 @@ export default function ExplorePage({ dark, library, progress, soundEnabled, onL
   const [category, setCategory] = useState(null);
   const [level, setLevel] = useState("beginner");
   const [session, setSession] = useState(null);
+  const [query, setQuery] = useState("");
   const categories = browseMode === "themes" ? library.themes : library.wordTypes;
   const field = browseMode === "themes" ? "theme" : "wordType";
   const mastery = progress.explore?.masteredEntryIds || [];
 
   const categoryEntries = useMemo(() => category ? library.entries.filter((entry) => entry[field] === category.id) : [], [category, field, library]);
   const levelEntries = categoryEntries.filter((entry) => entry.level === level);
+  const searchText = query.trim().toLocaleLowerCase();
+  const searchResults = useMemo(() => searchText ? library.entries.filter(entry =>
+    entry.native.toLocaleLowerCase().includes(searchText) || entry.english.toLocaleLowerCase().includes(searchText)
+  ).slice(0, 12) : [], [library, searchText]);
+  const openEntry = entry => {
+    const theme = library.themes.find(item => item.id === entry.theme);
+    const wordType = library.wordTypes.find(item => item.id === entry.wordType);
+    setBrowseMode(theme ? "themes" : "wordTypes");
+    setCategory(theme || wordType);
+    setLevel(entry.level);
+    setQuery("");
+  };
 
   if (session) {
     return <ExploreSession dark={dark} entries={session.entries} categoryKey={session.categoryKey} title={session.title} hearts={progress.hearts} soundEnabled={soundEnabled} onLoseHeart={onLoseHeart} onReviewQuestion={onReviewQuestion} onExit={() => setSession(null)} onComplete={(result) => { onComplete(result); setSession(null); }} />;
@@ -47,6 +60,16 @@ export default function ExplorePage({ dark, library, progress, soundEnabled, onL
         <div className="mt-6 flex flex-wrap gap-2 text-xs font-black"><span className="rounded-full bg-white/15 px-3 py-2">{library.entries.length} entries</span><span className="rounded-full bg-white/15 px-3 py-2">{mastery.length} mastered</span><span className="rounded-full bg-white/15 px-3 py-2">Course progress unchanged</span></div>
       </section>
 
+      <div className={`mt-5 rounded-[1.6rem] border p-4 sm:p-5 ${card}`}>
+        <label htmlFor="explore-search" className="text-sm font-black">Find a word you want to learn</label>
+        <div className={`mt-3 flex min-h-14 items-center gap-3 rounded-2xl border px-4 ${dark ? "border-white/10 bg-[#232B28]" : "border-black/10 bg-[#FFF8EE]"}`}>
+          <Search size={20} className="shrink-0 text-[#F28C28]"/>
+          <input id="explore-search" value={query} onChange={event => setQuery(event.target.value)} placeholder={`Search ${library.languageName} or English`} className="min-w-0 flex-1 bg-transparent font-semibold outline-none placeholder:opacity-45"/>
+          {query && <button onClick={() => setQuery("")} className="min-h-10 text-xs font-black text-[#F28C28]">Clear</button>}
+        </div>
+        {searchText && <div className="mt-4"><div className="text-xs font-black uppercase tracking-wider opacity-45">{searchResults.length ? `Matching words · ${searchResults.length}${searchResults.length === 12 ? "+" : ""}` : "No matching words yet"}</div><div className="mt-3 grid gap-3 sm:grid-cols-2">{searchResults.map(entry => <button key={entry.id} onClick={() => openEntry(entry)} onPointerDown={hapticPress} data-tone={dark ? "night" : "surface"} className={`afri-press flex min-h-16 items-center gap-3 rounded-xl p-3 text-left ${dark ? "bg-[#232B28]" : "bg-[#FFF8EE]"}`}><span className="grid size-11 shrink-0 place-items-center rounded-xl bg-[#F6C445]/20 text-xl">{entry.iconId ? <ConceptIcon iconId={entry.iconId} className="size-10"/> : "🔤"}</span><span className="min-w-0 flex-1"><span className="block truncate font-black">{entry.native}</span><span className="block truncate text-xs font-semibold opacity-55">{entry.english} · {levelLabels[entry.level]}</span></span><ChevronRight size={18} className="shrink-0 opacity-35"/></button>)}</div></div>}
+      </div>
+
       <div className={`mt-5 grid grid-cols-2 gap-2 rounded-2xl border p-2 ${card}`}>
         <ModeButton active={browseMode === "themes"} onClick={() => { setBrowseMode("themes"); setCategory(null); }} icon={<Layers3 size={18}/>} label="Browse by theme" />
         <ModeButton active={browseMode === "wordTypes"} onClick={() => { setBrowseMode("wordTypes"); setCategory(null); }} icon={<BookOpen size={18}/>} label="Browse by word type" />
@@ -54,12 +77,12 @@ export default function ExplorePage({ dark, library, progress, soundEnabled, onL
 
       {!category ? (
         <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-          {categories.map((item) => {
+          {categories.map((item, index) => {
             const entries = library.entries.filter((entry) => entry[field] === item.id);
             const mastered = entries.filter((entry) => mastery.includes(entry.id)).length;
             const percent = entries.length ? Math.round(mastered / entries.length * 100) : 0;
-            return <button key={item.id} onClick={() => setCategory(item)} className={`min-h-36 rounded-[1.5rem] border p-4 text-left transition hover:-translate-y-0.5 hover:border-[#F28C28]/45 ${card}`}>
-              <div className="flex items-start justify-between"><span className="text-3xl">{item.emoji}</span><ChevronRight size={18} className="opacity-30"/></div>
+            return <button key={item.id} onClick={() => setCategory(item)} onPointerDown={hapticPress} data-tone={dark ? "night" : "surface"} className={`afri-press min-h-36 rounded-[1.5rem] border p-4 text-left hover:border-[#F28C28]/45 ${card}`}>
+              <div className="flex items-start justify-between"><span className="grid size-12 place-items-center rounded-2xl text-3xl" style={{backgroundColor:`${["#F28C28","#24745B","#4338CA","#C95D3A"][index % 4]}22`}}>{item.emoji}</span><ChevronRight size={18} className="opacity-30"/></div>
               <div className="mt-4 font-black leading-tight">{item.label}</div><div className={`mt-1 text-xs font-bold ${dark ? "text-white/40" : "text-black/40"}`}>{entries.length} words · {percent}%</div>
               <div className={`mt-3 h-1.5 overflow-hidden rounded-full ${dark ? "bg-white/10" : "bg-black/8"}`}><div className="h-full rounded-full bg-[#F28C28]" style={{ width: `${percent}%` }}/></div>
             </button>;

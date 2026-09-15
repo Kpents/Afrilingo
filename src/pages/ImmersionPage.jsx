@@ -4,6 +4,9 @@ import AudioButton from "../components/ui/AudioButton";
 import { conversationVoice } from "../services/conversationVoice";
 import Adventures from "../components/immersion/Adventures";
 import MeetTheCast from "../components/immersion/MeetTheCast";
+import SidekickPortrait from "../components/ui/SidekickPortrait";
+import { sidekicks } from "../data/sidekicks";
+import { hapticPress } from "../utils/hapticFeedback";
 
 const baseFeatures = [
   ["cast", "Meet the Cast", "Get to know your learning companions", HeartHandshake, "#F28C28"],
@@ -21,8 +24,32 @@ export default function ImmersionPage({ dark, data, progress, soundEnabled, onLo
   const [feature, setFeature] = useState(null);
   const features = data.pronunciation ? [...baseFeatures, ["pronunciation", "Tone & Pronunciation", "Notice sound patterns safely", Volume2, "#4338CA"]] : baseFeatures;
   const card = dark ? "border-white/10 bg-[#1A201E]" : "border-black/8 bg-white";
+  const companion = sidekicks.find(item => item.id === companionId) || sidekicks[0];
+  const immersion = progress.immersion || {};
+  const quickLinks = [
+    { id: "adventures", label: "Go on an Adventure", detail: `${immersion.completedAdventures?.length || 0} completed`, Icon: MapPinned },
+    { id: "stories", label: "Read a Story", detail: `${immersion.completedStories?.length || 0} completed`, Icon: BookOpenText },
+    { id: "daily", label: "Try a Daily Phrase", detail: `${immersion.claimedDailyPhrases?.length || 0} practiced`, Icon: Sparkles }
+  ];
+  const featureCount = {
+    adventures: immersion.completedAdventures?.length,
+    stories: immersion.completedStories?.length,
+    missions: immersion.completedMissions?.length,
+    grammar: immersion.completedGrammar?.length
+  };
   if (feature) return <div><button onClick={() => setFeature(null)} className={`mb-5 flex min-h-11 items-center gap-2 rounded-xl px-3 font-black ${dark ? "bg-white/6" : "bg-black/5"}`}><ArrowLeft size={18}/> Immersion home</button><Feature feature={feature} dark={dark} data={data} progress={progress} soundEnabled={soundEnabled} onLoseHeart={onLoseHeart} onReward={onReward} companionId={companionId} onCompanionChange={onCompanionChange}/></div>;
-  return <div className="mx-auto max-w-5xl"><section className="afri-pattern rounded-[2rem] bg-gradient-to-br from-[#C95D3A] via-[#F28C28] to-[#F6C445] p-7 text-white sm:p-9"><div className="text-xs font-black uppercase tracking-[.25em] text-white/70">{data.languageName} Immersion</div><h1 className="mt-2 max-w-2xl text-4xl font-black sm:text-5xl">Learn how people communicate.</h1><p className="mt-4 max-w-2xl font-semibold leading-7 text-white/80">Practice context, patterns, variation, stories, and real-life decisions—outside the main course path.</p><div className="mt-5 inline-flex rounded-full bg-black/15 px-3 py-2 text-xs font-black">Independent practice · course progress preserved</div></section><div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{features.map(([id,title,subtitle,Icon,color]) => <button key={id} onClick={() => setFeature(id)} className={`group min-h-40 rounded-[1.6rem] border p-5 text-left transition hover:-translate-y-1 ${card}`}><span className="grid size-12 place-items-center rounded-2xl text-white" style={{backgroundColor:color}}><Icon size={23}/></span><div className="mt-4 flex items-start justify-between gap-3"><div><div className="font-black">{title}</div><div className={`mt-1 text-sm font-semibold ${dark ? "text-white/40" : "text-black/40"}`}>{subtitle}</div></div><ChevronRight className="opacity-25 transition group-hover:translate-x-1"/></div></button>)}</div></div>;
+  return <div className="mx-auto max-w-5xl">
+    <section className="afri-pattern rounded-[2rem] bg-gradient-to-br from-[#C95D3A] via-[#F28C28] to-[#F6C445] p-7 text-white sm:p-9"><div className="text-xs font-black uppercase tracking-[.25em] text-white/70">{data.languageName} Immersion</div><h1 className="mt-2 max-w-2xl text-4xl font-black sm:text-5xl">Learn how people communicate.</h1><p className="mt-4 max-w-2xl font-semibold leading-7 text-white/80">Practice context, patterns, variation, stories, and real-life decisions—outside the main course path.</p><div className="mt-5 inline-flex rounded-full bg-black/15 px-3 py-2 text-xs font-black">Independent practice · course progress preserved</div></section>
+    <div className="mt-5 grid gap-4 md:grid-cols-[1.2fr_1fr]">
+      <section className="overflow-hidden rounded-[1.7rem] bg-gradient-to-br from-[#24745B] to-[#4338CA] p-5 text-white sm:p-6">
+        <div className="grid grid-cols-[minmax(0,1fr)_6rem] items-center gap-2 sm:grid-cols-[minmax(0,1fr)_8rem]"><div><div className="text-xs font-black uppercase tracking-[.2em] text-white/65">Your Adventure companion</div><h2 className="mt-2 text-2xl font-black sm:text-3xl">{companion.name} is ready to explore.</h2><p className="mt-2 text-sm font-semibold leading-6 text-white/75">Step into a scene, meet people, and practice a real-life exchange.</p></div><SidekickPortrait character={companion} className="size-24 rounded-2xl bg-white/10 sm:size-32" eager/></div>
+        <button onClick={() => setFeature("adventures")} onPointerDown={hapticPress} className="afri-press mt-5 flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#F28C28] px-4 font-black text-white">Explore Adventures <ChevronRight size={18}/></button>
+      </section>
+      <section className={`rounded-[1.7rem] border p-5 sm:p-6 ${card}`}><div className="text-xs font-black uppercase tracking-[.2em] text-[#F28C28]">Pick your next moment</div><h2 className="mt-2 text-xl font-black">A little language, every day.</h2><div className="mt-4 space-y-2">{quickLinks.map(({id,label,detail,Icon}) => <button key={id} onClick={() => setFeature(id)} className={`flex min-h-14 w-full items-center gap-3 rounded-xl px-3 text-left transition ${dark ? "bg-white/5 hover:bg-white/10" : "bg-[#FFF8EE] hover:bg-[#F6C445]/15"}`}><span className="grid size-9 shrink-0 place-items-center rounded-lg bg-[#F28C28]/15 text-[#F28C28]"><Icon size={18}/></span><span className="min-w-0 flex-1"><span className="block truncate text-sm font-black">{label}</span><span className="block text-xs font-semibold opacity-45">{detail}</span></span><ChevronRight size={17} className="shrink-0 opacity-35"/></button>)}</div></section>
+    </div>
+    <div className="mt-8 flex items-end justify-between"><div><div className="text-xs font-black uppercase tracking-[.2em] text-[#F28C28]">Choose your way in</div><h2 className="mt-1 text-2xl font-black">More to explore</h2></div><span className="text-xs font-bold opacity-40">{features.length} activities</span></div>
+    <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{features.map(([id,title,subtitle,Icon,color]) => <button key={id} onClick={() => setFeature(id)} onPointerDown={hapticPress} data-tone={dark ? "night" : "surface"} className={`afri-press group min-h-40 rounded-[1.6rem] border p-5 text-left hover:border-[#F28C28]/45 ${card}`}><span className="grid size-12 place-items-center rounded-2xl text-white" style={{backgroundColor:color}}><Icon size={23}/></span><div className="mt-4 flex items-start justify-between gap-3"><div><div className="font-black">{title}</div><div className={`mt-1 text-sm font-semibold ${dark ? "text-white/45" : "text-black/45"}`}>{subtitle}</div></div><ChevronRight className="shrink-0 opacity-35 transition group-hover:translate-x-1"/></div>{featureCount[id] != null && <div className="mt-3 text-xs font-black" style={{color}}>{featureCount[id]} completed</div>}</button>)}</div>
+  </div>;
 }
 
 function Feature({ feature, ...props }) {
