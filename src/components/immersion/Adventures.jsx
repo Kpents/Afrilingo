@@ -9,12 +9,13 @@ import { zuluMarketPilot } from "../../data/adventures/zuluMarket";
 import { zuluCafeMission } from "../../data/adventures/zuluCafe";
 import { gaMarketMission } from "../../data/adventures/gaMarket";
 import { twiMarketMission } from "../../data/adventures/twiMarket";
+import { twiCafeMission, twiHomeMission, twiTaxiMission } from "../../data/adventures/twiScenes";
 import { sidekicks } from "../../data/sidekicks";
 import SidekickPortrait from "../ui/SidekickPortrait";
 import CompanionReaction from "./CompanionReaction";
 import { hapticPress } from "../../utils/hapticFeedback";
 
-const featuredMissions = { zulu: [zuluMarketPilot, zuluCafeMission], ga: [gaMarketMission], twi: [twiMarketMission] };
+const featuredMissions = { zulu: [zuluMarketPilot, zuluCafeMission], ga: [gaMarketMission], twi: [twiMarketMission, twiCafeMission, twiTaxiMission, twiHomeMission] };
 
 const sceneLooks = [
   { id: "market", emoji: "🛍️", title: "Neighbourhood Market", accent: "#F28C28", image: "images/adventures/market-square.jpg" },

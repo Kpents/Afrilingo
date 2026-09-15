@@ -71,7 +71,10 @@ export function twiLesson({ id, title, emoji, words, culture, xp = 55 }) {
 }
 
 export function twiUnit({ id, title, subtitle, emoji, color, lessons, culture }) {
-  const built = lessons.map((lesson,index)=>twiLesson({...lesson,id:`${id}-lesson-${index+1}`,culture:lesson.culture||culture}));
+  const built = lessons.map((lesson,index) => {
+    const spiralReview = lessons.slice(0,index).flatMap(item => item.words).slice(-2).map(([native,english,metadata={}]) => [native,english,{...metadata,spiralReview:true}]);
+    return twiLesson({...lesson,words:[...lesson.words,...spiralReview],id:`${id}-lesson-${index+1}`,culture:lesson.culture||culture});
+  });
   built.push(twiLesson({id:`${id}-challenge`,title:`${title} Challenge`,emoji:"🏆",xp:100,words:lessons.flatMap(x=>x.words).slice(0,9),culture}));
   return { id, title, subtitle, emoji, color, lessons:built };
 }
