@@ -8,10 +8,10 @@ import SidekickPortrait from "../ui/SidekickPortrait";
 import CompanionReaction from "./CompanionReaction";
 import { hapticPress } from "../../utils/hapticFeedback";
 
-const cast = {
-  ama: { name: "Ama", image: "images/characters/ama.png" },
-  "gogo-nandi": { name: "Gogo Nandi", image: "images/characters/gogo-nandi.png" },
-  kofi: { name: "Kofi", image: "images/characters/kofi.png" }
+const crewCast = {
+  ama: { id:"kobby", name:"Kobby", species:"Monkey", image:"images/sidekicks/kobby.png", color:"#24745B", framed:true },
+  "gogo-nandi": { id:"zuri", name:"Zuri", species:"Elephant", image:"images/sidekicks/zuri.png", color:"#F6C445" },
+  kofi: { id:"nia", name:"Taffy", species:"Giraffe", image:"images/sidekicks/nia.png", color:"#4338CA" }
 };
 
 export default function SceneMission({ mission, companion, languageId, dark, hearts, completed, soundEnabled, onLoseHeart, onReward, onExit }) {
@@ -86,9 +86,9 @@ export default function SceneMission({ mission, companion, languageId, dark, hea
         {mission.routes.map((option,index)=><button key={option.id} onPointerDown={hapticPress} onClick={()=>{setShowTip(false);setStage("dialogue");setRoute(option.id)}} data-tone={index === 0 ? "orange" : dark ? "night" : "surface"} className={`afri-press mt-3 min-h-12 w-full rounded-xl px-3 text-sm font-black ${index === 0 ? "bg-[#F28C28] text-white" : dark ? "bg-white/8" : "bg-black/5"}`}>{option.label}</button>)}
       </motion.div>}
       {stage === "dialogue" && <>
-        {mission.characters.map((person,index)=><div key={person} className={`absolute size-20 rounded-full border-4 shadow-xl ${index===1 ? "right-[9%] top-[42%] border-[#F28C28] bg-white" : "left-[8%] top-[32%] border-white bg-[#F6C445]"}`}><img src={image(cast[person].image)} alt={cast[person].name} className="h-full w-full object-contain"/></div>)}
+        {mission.characters.map((person,index)=>{const character=crewCast[person];return <div key={`${person}-${index}`} className={`absolute size-20 rounded-full border-4 shadow-xl ${index===1 ? "right-[9%] top-[42%] border-[#F28C28] bg-white" : "left-[8%] top-[32%] border-white bg-[#F6C445]"}`}><SidekickPortrait character={character} className="h-full w-full" eager/></div>})}
         <AnimatePresence mode="wait"><motion.div key={step.id} initial={{opacity:0,y:25}} animate={{opacity:1,y:0}} exit={{opacity:0,y:15}} className={`absolute inset-x-3 bottom-3 z-20 max-h-[59%] overflow-y-auto rounded-[1.5rem] border p-4 shadow-2xl ${surface}`}>
-          <div className="flex items-center justify-between text-xs font-black uppercase tracking-wider text-[#4338CA]"><span>{step.speaker} · {cast[step.character].name}</span><span>{stepIndex+1}/{steps.length}</span></div>
+          <div className="flex items-center justify-between gap-3 text-xs font-black uppercase tracking-wider text-[#4338CA]"><span className="flex items-center gap-2"><SidekickPortrait character={crewCast[step.character]} className="size-9 rounded-full bg-[#F6C445]/20" eager/>{crewCast[step.character].name} · {step.speaker}</span><span>{stepIndex+1}/{steps.length}</span></div>
           {chosenRoute?.detour && stepIndex === 0 && <p className="mt-2 rounded-lg bg-[#F6C445]/15 p-2 text-xs font-semibold">{chosenRoute.note}</p>}
           <div className="mt-3 text-xl font-black">{step.native}</div><div className="mt-1 text-sm font-semibold opacity-55">{step.english}</div><div className="mt-3 text-sm font-black">{step.prompt}</div>
           <div className="mt-3 grid gap-3">{step.choices.map(value=><button key={value} disabled={correct || hearts <= 0 || choice === value} onPointerDown={hapticPress} onClick={()=>answer(value)} data-tone={choice===value ? correct ? "green" : "clay" : dark ? "night" : "surface"} className={`afri-press min-h-12 rounded-xl border p-3 text-left text-sm font-black disabled:cursor-not-allowed ${choice===value ? correct ? "border-[#24745B] bg-[#24745B]/15" : "border-[#C95D3A] bg-[#C95D3A]/15" : "border-current/10"}`}>{value}</button>)}</div>

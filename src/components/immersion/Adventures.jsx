@@ -26,11 +26,13 @@ const sceneLooks = [
   { id: "plans", emoji: "⚽", title: "Plans With Friends", accent: "#F6C445", image: "images/adventures/community-park.jpg" }
 ];
 
-const cast = [
-  { id: "gogo-nandi", name: "Gogo Nandi", image: "images/characters/gogo-nandi.png" },
-  { id: "ama", name: "Ama", image: "images/characters/ama.png" },
-  { id: "kofi", name: "Kofi", image: "images/characters/kofi.png" }
-];
+const sceneLead = { market:"kobby", cafe:"taji", taxi:"nia", home:"zuri", work:"zuri", plans:"kobby" };
+
+function crewForScene(setting, index) {
+  const lead = sidekicks.find(character => character.id === sceneLead[setting]) || sidekicks[index % sidekicks.length];
+  const others = sidekicks.filter(character => character.id !== lead.id);
+  return [others[index % others.length], lead, others[(index + 1) % others.length]];
+}
 
 function buildAdventures(data) {
   return data.conversations.slice(0, 6).map((conversation, index) => {
@@ -50,7 +52,7 @@ function buildAdventures(data) {
     turn: conversation.turns[0],
     xp: 20 + index * 5,
     companion: sidekicks[index % sidekicks.length],
-    people: [cast[index % 3], cast[(index + 1) % 3], cast[(index + 2) % 3]]
+    people: crewForScene(setting, index)
   });
   });
 }
@@ -97,13 +99,13 @@ function AdventureScene({ adventure, languageId, dark, hearts, completed, soundE
   return <div className="mx-auto max-w-2xl"><div className="mb-4 flex items-center gap-3"><button onClick={onExit} aria-label="Exit adventure" className={`grid size-11 place-items-center rounded-xl ${dark?"bg-white/6":"bg-black/5"}`}><ArrowLeft size={20}/></button><div><div className="text-xs font-black uppercase tracking-wider text-[#F28C28]">{adventure.level} adventure</div><div className="font-black">{adventure.title}</div></div></div>
     <div className="relative mx-auto aspect-[3/5] w-full max-w-[28rem] overflow-hidden rounded-[2rem] border border-black/10 bg-[#F6C445]/20 shadow-2xl"><img src={`${import.meta.env.BASE_URL}${adventure.image}`} alt={`Illustrated ${adventure.title} setting`} className="absolute inset-0 h-full w-full object-cover object-center"/>
       <div className="absolute inset-x-4 top-4 rounded-2xl bg-black/65 p-4 text-white backdrop-blur"><div className="text-xs font-black uppercase tracking-wider text-[#F6C445]">Your mission</div><p className="mt-1 text-sm font-semibold">{step==="explore"?"Find the person with the orange conversation marker.":adventure.context}</p></div>
-      {adventure.people.map((person,index)=><motion.button key={person.id} whileTap={{scale:.92}} onClick={()=>{ if (index===1) { setMetPerson(null); setShowTip(false); setStep("talk"); } else { setMetPerson(person); setShowTip(false); } }} aria-label={index===1?`Talk to ${adventure.turn.speaker}`:`Meet ${person.name}`} className={`absolute grid size-20 place-items-end overflow-visible rounded-full border-4 shadow-xl sm:size-24 ${index===1?"border-[#F28C28] bg-white":"border-white/80 bg-[#F6C445]"}`} style={{left:["10%","58%","31%"][index],top:["32%","47%","68%"][index]}}><img src={`${import.meta.env.BASE_URL}${person.image}`} alt="" className="h-[130%] w-[130%] max-w-none object-contain object-bottom drop-shadow-lg"/>{index===1&&step==="explore"&&<motion.span animate={{y:[0,-6,0]}} transition={{repeat:Infinity,duration:1.1}} className="absolute -right-2 -top-3 grid size-8 place-items-center rounded-full bg-[#F28C28] text-white"><MessageCircle size={17}/></motion.span>}</motion.button>)}
+      {adventure.people.map((person,index)=><motion.button key={person.id} whileTap={{scale:.92}} onClick={()=>{ if (index===1) { setMetPerson(null); setShowTip(false); setStep("talk"); } else { setMetPerson(person); setShowTip(false); } }} aria-label={index===1?`Talk to ${person.name}`:`Meet ${person.name}`} className={`absolute grid size-20 place-items-end overflow-visible rounded-full border-4 shadow-xl sm:size-24 ${index===1?"border-[#F28C28] bg-white":"border-white/80 bg-[#F6C445]"}`} style={{left:["10%","58%","31%"][index],top:["32%","47%","68%"][index]}}><SidekickPortrait character={person} className="h-[130%] w-[130%] max-w-none object-contain object-bottom drop-shadow-lg" eager/>{index===1&&step==="explore"&&<motion.span animate={{y:[0,-6,0]}} transition={{repeat:Infinity,duration:1.1}} className="absolute -right-2 -top-3 grid size-8 place-items-center rounded-full bg-[#F28C28] text-white"><MessageCircle size={17}/></motion.span>}</motion.button>)}
       {step === "explore" && metPerson && <div role="status" className="absolute inset-x-3 bottom-28 z-10 flex items-center justify-between gap-3 rounded-2xl bg-white p-3 text-sm font-semibold text-[#252525] shadow-xl"><span>Meet {metPerson.name}. Find the orange marker to begin your conversation.</span><button onClick={()=>setMetPerson(null)} aria-label="Close character introduction" className="grid size-10 shrink-0 place-items-center rounded-xl bg-black/5"><XCircle size={20}/></button></div>}
       {step === "explore" && <><button onClick={() => setShowTip(value => !value)} aria-label={`Ask ${adventure.companion.name} for a tip`} aria-expanded={showTip} className="absolute bottom-3 right-3 z-10 grid size-20 place-items-center overflow-hidden rounded-full border-4 border-[#F6C445] bg-white shadow-xl"><SidekickPortrait character={adventure.companion} className="h-full w-full" eager/></button>{showTip && <div role="status" className="absolute bottom-24 right-3 z-10 max-w-[15rem] rounded-2xl bg-white p-3 text-sm font-bold text-[#252525] shadow-xl"><span className="text-[#C95D3A]">{adventure.companion.name} says:</span> {adventure.companion.tip}</div>}</>}
       {step === "talk" && <><button onClick={() => setShowTip(value => !value)} aria-label={`Ask ${adventure.companion.name} for a tip`} aria-expanded={showTip} className="absolute right-3 top-40 z-30 grid size-14 place-items-center overflow-hidden rounded-full border-4 border-[#F6C445] bg-white shadow-xl"><SidekickPortrait character={adventure.companion} className="h-full w-full" eager/></button>{showTip && <div role="status" className="absolute right-3 top-56 z-30 max-w-[min(15rem,75%)] rounded-2xl bg-white p-3 text-sm font-bold text-[#252525] shadow-xl"><span className="text-[#C95D3A]">{adventure.companion.name} says:</span> {adventure.companion.tip}</div>}</>}
       <Lebo pose="explore" reaction="idle" languageId={languageId} className="absolute bottom-3 left-3 size-24 drop-shadow-xl" decorative/>
       <AnimatePresence>{step === "talk" && <motion.div ref={dialogueRef} initial={{opacity:0,y:30}} animate={{opacity:1,y:0}} className={`absolute inset-x-3 bottom-3 z-20 max-h-[58%] overflow-y-auto rounded-[1.6rem] border p-4 shadow-2xl ${dark ? "border-white/10 bg-[#1A201E]/95" : "border-black/10 bg-white/95"}`}>
-        <div className="text-xs font-black uppercase tracking-wider text-[#4338CA]">{adventure.turn.speaker} says</div>
+        <div className="flex items-center gap-2 text-xs font-black uppercase tracking-wider text-[#4338CA]"><SidekickPortrait character={adventure.people[1]} className="size-9 rounded-full bg-[#F6C445]/20" eager/>{adventure.people[1].name} · {adventure.turn.speaker}</div>
         <div className="mt-2 text-xl font-black">{adventure.turn.native}</div>
         <div className="mt-1 text-sm font-semibold opacity-50">{adventure.turn.english}</div>
         <div className="mt-4 grid gap-3">{adventure.turn.choices.map(item => <button key={item} disabled={correct || hearts <= 0} onPointerDown={hapticPress} onClick={() => choose(item)} data-tone={choice === item ? correct ? "green" : "clay" : dark ? "night" : "surface"} className={`afri-press min-h-12 rounded-xl border p-3 text-left text-sm font-black disabled:cursor-not-allowed ${choice === item ? correct ? "border-[#24745B] bg-[#24745B]/15" : "border-[#C95D3A] bg-[#C95D3A]/15" : "border-current/10"}`}>{item}</button>)}</div>
