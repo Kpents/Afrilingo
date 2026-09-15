@@ -21,6 +21,15 @@ body {
   background: var(--sand);
 }
 
+.afri-shelf {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.afri-shelf::-webkit-scrollbar {
+  display: none;
+}
+
 button, input { font: inherit; }
 button { touch-action: manipulation; }
 

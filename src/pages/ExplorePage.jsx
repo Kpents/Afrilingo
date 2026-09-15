@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowLeft, BookOpen, CheckCircle2, ChevronRight, Heart, Info, Layers3, Search, Sparkles, XCircle } from "lucide-react";
+import { ArrowLeft, CheckCircle2, ChevronRight, Dices, Heart, Info, Search, SlidersHorizontal, Sparkles, XCircle } from "lucide-react";
 import AudioButton from "../components/ui/AudioButton";
 import QuestionRenderer, { expectedAnswer, normalizeAnswer } from "../components/lessons/QuestionRenderer";
 import ConceptIcon from "../components/ui/ConceptIcon";
@@ -16,7 +16,6 @@ export default function ExplorePage({ dark, library, progress, soundEnabled, onL
   const [level, setLevel] = useState("beginner");
   const [session, setSession] = useState(null);
   const [query, setQuery] = useState("");
-  const categories = browseMode === "themes" ? library.themes : library.wordTypes;
   const field = browseMode === "themes" ? "theme" : "wordType";
   const mastery = progress.explore?.masteredEntryIds || [];
 
@@ -33,6 +32,29 @@ export default function ExplorePage({ dark, library, progress, soundEnabled, onL
     setCategory(theme || wordType);
     setLevel(entry.level);
     setQuery("");
+  };
+
+  const themeShelves = [
+    { title: "Useful today", subtitle: "Words for getting around and getting things done", ids: ["market-shopping", "transport", "health", "places-directions"] },
+    { title: "Food & home", subtitle: "The language of everyday life", ids: ["food-drinks", "restaurant", "home", "clothing"] },
+    { title: "People & relationships", subtitle: "Connect with the people around you", ids: ["family", "relationships", "school", "work"] },
+    { title: "Your world", subtitle: "Describe what you see, feel, and enjoy", ids: ["animals", "weather", "sports", "body", "colours"] }
+  ];
+  const themeStats = item => {
+    const entries = library.entries.filter(entry => entry.theme === item.id);
+    const mastered = entries.filter(entry => mastery.includes(entry.id)).length;
+    return { entries, mastered, percent: entries.length ? Math.round(mastered / entries.length * 100) : 0 };
+  };
+  const recommended = library.themes.find(item => {
+    const stats = themeStats(item);
+    return stats.entries.length && stats.mastered < stats.entries.length;
+  }) || library.themes[0];
+  const surprise = () => {
+    const unmastered = library.entries.filter(entry => !mastery.includes(entry.id));
+    const pool = unmastered.length >= 6 ? unmastered : library.entries;
+    const offset = mastery.length % Math.max(pool.length, 1);
+    const entries = [...pool.slice(offset), ...pool.slice(0, offset)].slice(0, 6);
+    if (entries.length) setSession({ entries, categoryKey: "surprise-mix", title: "Surprise mix" });
   };
 
   if (session) {
@@ -70,23 +92,25 @@ export default function ExplorePage({ dark, library, progress, soundEnabled, onL
         {searchText && <div className="mt-4"><div className="text-xs font-black uppercase tracking-wider opacity-45">{searchResults.length ? `Matching words · ${searchResults.length}${searchResults.length === 12 ? "+" : ""}` : "No matching words yet"}</div><div className="mt-3 grid gap-3 sm:grid-cols-2">{searchResults.map(entry => <button key={entry.id} onClick={() => openEntry(entry)} onPointerDown={hapticPress} data-tone={dark ? "night" : "surface"} className={`afri-press flex min-h-16 items-center gap-3 rounded-xl p-3 text-left ${dark ? "bg-[#232B28]" : "bg-[#FFF8EE]"}`}><span className="grid size-11 shrink-0 place-items-center rounded-xl bg-[#F6C445]/20 text-xl">{entry.iconId ? <ConceptIcon iconId={entry.iconId} className="size-10"/> : "🔤"}</span><span className="min-w-0 flex-1"><span className="block truncate font-black">{entry.native}</span><span className="block truncate text-xs font-semibold opacity-55">{entry.english} · {levelLabels[entry.level]}</span></span><ChevronRight size={18} className="shrink-0 opacity-35"/></button>)}</div></div>}
       </div>
 
-      <div className={`mt-5 grid grid-cols-2 gap-2 rounded-2xl border p-2 ${card}`}>
-        <ModeButton active={browseMode === "themes"} onClick={() => { setBrowseMode("themes"); setCategory(null); }} icon={<Layers3 size={18}/>} label="Browse by theme" />
-        <ModeButton active={browseMode === "wordTypes"} onClick={() => { setBrowseMode("wordTypes"); setCategory(null); }} icon={<BookOpen size={18}/>} label="Browse by word type" />
-      </div>
-
       {!category ? (
-        <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-          {categories.map((item, index) => {
-            const entries = library.entries.filter((entry) => entry[field] === item.id);
-            const mastered = entries.filter((entry) => mastery.includes(entry.id)).length;
-            const percent = entries.length ? Math.round(mastered / entries.length * 100) : 0;
-            return <button key={item.id} onClick={() => setCategory(item)} onPointerDown={hapticPress} data-tone={dark ? "night" : "surface"} className={`afri-press min-h-36 rounded-[1.5rem] border p-4 text-left hover:border-[#F28C28]/45 ${card}`}>
-              <div className="flex items-start justify-between"><span className="grid size-12 place-items-center rounded-2xl text-3xl" style={{backgroundColor:`${["#F28C28","#24745B","#4338CA","#C95D3A"][index % 4]}22`}}>{item.emoji}</span><ChevronRight size={18} className="opacity-30"/></div>
-              <div className="mt-4 font-black leading-tight">{item.label}</div><div className={`mt-1 text-xs font-bold ${dark ? "text-white/40" : "text-black/40"}`}>{entries.length} words · {percent}%</div>
-              <div className={`mt-3 h-1.5 overflow-hidden rounded-full ${dark ? "bg-white/10" : "bg-black/8"}`}><div className="h-full rounded-full bg-[#F28C28]" style={{ width: `${percent}%` }}/></div>
-            </button>;
+        <div className="mt-5 space-y-8">
+          {recommended && <section className="relative overflow-hidden rounded-[1.8rem] bg-gradient-to-r from-[#24745B] to-[#1f5f4c] p-5 text-white sm:p-7">
+            <div className="absolute -right-5 -top-8 text-[9rem] opacity-15">{recommended.emoji}</div>
+            <div className="relative max-w-xl"><div className="text-xs font-black uppercase tracking-[.22em] text-white/65">Continue exploring</div><h2 className="mt-2 text-2xl font-black sm:text-3xl">Keep building your {recommended.label.toLowerCase()} vocabulary</h2><p className="mt-2 text-sm font-semibold text-white/70">{themeStats(recommended).mastered} of {themeStats(recommended).entries.length} words mastered</p><div className="mt-4 h-2 overflow-hidden rounded-full bg-black/20"><div className="h-full rounded-full bg-[#F6C445]" style={{width:`${themeStats(recommended).percent}%`}}/></div><button onClick={() => { setBrowseMode("themes"); setCategory(recommended); }} onPointerDown={hapticPress} className="afri-press mt-5 min-h-12 rounded-xl bg-white px-5 font-black text-[#24745B]">Continue collection</button></div>
+          </section>}
+
+          <div className="flex flex-col gap-3 sm:flex-row">
+            <button onClick={surprise} onPointerDown={hapticPress} className="afri-press flex min-h-20 flex-1 items-center gap-4 rounded-[1.4rem] bg-gradient-to-r from-[#F28C28] to-[#C95D3A] px-5 text-left text-white"><span className="grid size-11 shrink-0 place-items-center rounded-xl bg-white/15"><Dices/></span><span><span className="block font-black">Surprise me</span><span className="block text-xs font-semibold text-white/70">A fresh six-word mix</span></span></button>
+            <details className={`group flex-1 rounded-[1.4rem] border ${card}`}><summary className="flex min-h-20 cursor-pointer list-none items-center gap-4 px-5"><span className="grid size-11 shrink-0 place-items-center rounded-xl bg-[#4338CA]/15 text-[#4338CA]"><SlidersHorizontal/></span><span className="flex-1"><span className="block font-black">Browse word types</span><span className="block text-xs font-semibold opacity-45">Nouns, verbs, expressions, and more</span></span><ChevronRight className="opacity-35 transition group-open:rotate-90"/></summary><div className="flex flex-wrap gap-2 border-t border-current/10 p-4">{library.wordTypes.map(item => <button key={item.id} onClick={() => { setBrowseMode("wordTypes"); setCategory(item); }} className={`min-h-11 rounded-full px-4 text-sm font-black ${dark ? "bg-white/7" : "bg-black/5"}`}>{item.emoji} {item.label}</button>)}</div></details>
+          </div>
+
+          {themeShelves.map(shelf => {
+            const items = shelf.ids.map(id => library.themes.find(item => item.id === id)).filter(Boolean);
+            if (!items.length) return null;
+            return <section key={shelf.title}><div className="flex items-end justify-between gap-3"><div><h2 className="text-2xl font-black">{shelf.title}</h2><p className={`mt-1 text-sm font-semibold ${dark ? "text-white/45" : "text-black/45"}`}>{shelf.subtitle}</p></div><span className="hidden text-xs font-black uppercase tracking-wider opacity-35 sm:block">Explore →</span></div><div className="afri-shelf mt-4 flex snap-x gap-3 overflow-x-auto pb-3">{items.map((item,index) => { const stats=themeStats(item); const colors=["#F28C28","#24745B","#4338CA","#C95D3A"]; return <button key={item.id} onClick={() => { setBrowseMode("themes"); setCategory(item); }} onPointerDown={hapticPress} className="afri-press relative min-h-40 min-w-[15rem] snap-start overflow-hidden rounded-[1.6rem] p-5 text-left text-white sm:min-w-[17rem]" style={{background:`linear-gradient(135deg, ${colors[index%colors.length]}, ${colors[(index+1)%colors.length]})`}}><span className="absolute -bottom-5 -right-3 text-[7rem] opacity-20">{item.emoji}</span><span className="relative block text-4xl">{item.emoji}</span><span className="relative mt-5 block text-xl font-black">{item.label}</span><span className="relative mt-1 block text-xs font-bold text-white/70">{stats.entries.length} words · {stats.percent}% mastered</span></button>; })}</div></section>;
           })}
+
+          {!!mastery.length && <section><h2 className="text-2xl font-black">Recently mastered</h2><div className="afri-shelf mt-4 flex gap-3 overflow-x-auto pb-3">{library.entries.filter(entry => mastery.includes(entry.id)).slice(-8).reverse().map(entry => <button key={entry.id} onClick={() => openEntry(entry)} className={`flex min-w-[13rem] items-center gap-3 rounded-2xl border p-3 text-left ${card}`}>{entry.iconId ? <ConceptIcon iconId={entry.iconId} className="size-12 shrink-0"/> : <span className="text-2xl">✨</span>}<span><span className="block font-black">{entry.native}</span><span className="block text-xs font-semibold opacity-45">{entry.english}</span></span></button>)}</div></section>}
         </div>
       ) : (
         <section className="mt-5">
@@ -112,15 +136,11 @@ export default function ExplorePage({ dark, library, progress, soundEnabled, onL
   );
 }
 
-function ModeButton({ active, onClick, icon, label }) {
-  return <button onClick={onClick} className={`flex min-h-12 items-center justify-center gap-2 rounded-xl text-sm font-black transition ${active ? "bg-[#F28C28] text-white" : "opacity-55 hover:opacity-100"}`}>{icon}{label}</button>;
-}
-
 function ExploreSession({ dark, entries, categoryKey, title, hearts, soundEnabled, onLoseHeart, onReviewQuestion, onExit, onComplete }) {
   const [stage, setStage] = useState("study");
   const [studyIndex, setStudyIndex] = useState(0);
   const [reveal, setReveal] = useState(0);
-  const questions = useMemo(() => entries.map((entry, index) => entry.iconId && index % 2 === 0 ? ({ id: `explore-${entry.id}`, type: "image-to-word", iconId: entry.iconId, prompt: "Which Zulu word matches this image?", answer: entry.native, options: [...new Set([entry.native, ...entries.filter((item, i) => i !== index && item.iconId).map((item) => item.native)])].slice(0, 4), explanation: `${entry.native} means “${entry.english}.”` }) : ({ id: `explore-${entry.id}`, type: "native-to-english", prompt: `What does “${entry.native}” mean?`, answer: entry.english, options: [...new Set([entry.english, ...entries.filter((_, i) => i !== index).map((item) => item.english)])].slice(0, 4), explanation: `${entry.native} means “${entry.english}.”` })), [entries]);
+  const questions = useMemo(() => entries.map((entry, index) => entry.iconId && index % 2 === 0 ? ({ id: `explore-${entry.id}`, type: "image-to-word", iconId: entry.iconId, prompt: "Which word matches this image?", answer: entry.native, options: [...new Set([entry.native, ...entries.filter((item, i) => i !== index && item.iconId).map((item) => item.native)])].slice(0, 4), explanation: `${entry.native} means “${entry.english}.”` }) : ({ id: `explore-${entry.id}`, type: "native-to-english", prompt: `What does “${entry.native}” mean?`, answer: entry.english, options: [...new Set([entry.english, ...entries.filter((_, i) => i !== index).map((item) => item.english)])].slice(0, 4), explanation: `${entry.native} means “${entry.english}.”` })), [entries]);
   const [queue, setQueue] = useState(questions);
   const [quizIndex, setQuizIndex] = useState(0);
   const [selected, setSelected] = useState(null);
