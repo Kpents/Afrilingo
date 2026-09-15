@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowLeft, CheckCircle2, Eye, Heart, Sparkles, XCircle } from "lucide-react";
 import SidekickPortrait from "../ui/SidekickPortrait";
@@ -7,6 +7,7 @@ import { hapticPress } from "../../utils/hapticFeedback";
 import { playUiSound } from "../../services/uiSound";
 
 export default function StoryQuest({ dark, quest, companion, hearts, completed, soundEnabled, onLoseHeart, onReward, onExit }) {
+  const wasCompleted = useRef(completed);
   const [nodeId,setNodeId]=useState(quest.start);
   const [choice,setChoice]=useState(null);
   const [translation,setTranslation]=useState(false);
@@ -16,9 +17,9 @@ export default function StoryQuest({ dark, quest, companion, hearts, completed, 
   const selected=node.choices?.find(item=>item.text===choice);
   const correct=selected?.correct;
   const choose=item=>{if(choice&&correct)return;setChoice(item.text);playUiSound(item.correct?"correct":"incorrect",soundEnabled);if(!item.correct)onLoseHeart?.();};
-  const next=()=>{if(!selected?.correct)return;if(selected.next==="complete"){if(!completed)onReward({field:"completedWorldStories",id:quest.id,xp:quest.xp});playUiSound("complete",soundEnabled);setFinished(true);return;}setNodeId(selected.next);setChoice(null);setTranslation(false);setWord(null);};
+  const next=()=>{if(!selected?.correct)return;if(selected.next==="complete"){if(!completed)onReward({field:"completedWorldStories",id:quest.id,xp:quest.xp});if(quest.cultureCardId)onReward({field:"unlockedWorldCultureCards",id:quest.cultureCardId,xp:0});playUiSound("complete",soundEnabled);setFinished(true);return;}setNodeId(selected.next);setChoice(null);setTranslation(false);setWord(null);};
 
-  if(finished)return <div className="relative mx-auto max-w-xl overflow-hidden py-8 text-center"><ConfettiBurst count={40}/><SidekickPortrait character={companion} className="mx-auto size-44 rounded-[2rem] bg-[#F6C445]/20" eager/><h1 className="mt-4 text-4xl font-black">Story complete!</h1><p className="mt-2 font-semibold opacity-55">You guided Ama through a complete Twi exchange.</p><div className="mt-3 text-2xl font-black text-[#F28C28]">{completed?"Replay complete":`+${quest.xp} XP`}</div><button onClick={onExit} onPointerDown={hapticPress} className="afri-press mt-6 min-h-14 w-full rounded-2xl bg-[#F28C28] font-black text-white">Return to Twi world</button></div>;
+  if(finished)return <div className="relative mx-auto max-w-xl overflow-hidden py-8 text-center"><ConfettiBurst count={40}/><SidekickPortrait character={companion} className="mx-auto size-44 rounded-[2rem] bg-[#F6C445]/20" eager/><h1 className="mt-4 text-4xl font-black">Story complete!</h1><p className="mt-2 font-semibold opacity-55">You completed “{quest.title}” through meaningful choices.</p>{quest.cultureCardId&&!wasCompleted.current&&<div className="mx-auto mt-4 max-w-sm rounded-2xl bg-[#F6C445]/20 p-4 font-black text-[#C95D3A]">🕷️ New Culture Card unlocked</div>}<div className="mt-3 text-2xl font-black text-[#F28C28]">{wasCompleted.current?"Replay complete":`+${quest.xp} XP`}</div><button onClick={onExit} onPointerDown={hapticPress} className="afri-press mt-6 min-h-14 w-full rounded-2xl bg-[#F28C28] font-black text-white">Return to Twi world</button></div>;
 
   const surface=dark?"border-white/10 bg-[#1A201E]":"border-black/8 bg-white";
   return <div className="mx-auto max-w-2xl"><header className="flex items-center gap-3"><button onClick={onExit} className={`grid size-11 place-items-center rounded-xl ${dark?"bg-white/6":"bg-black/5"}`} aria-label="Exit story"><ArrowLeft/></button><div className="min-w-0 flex-1"><div className="text-xs font-black uppercase tracking-[.18em] text-[#F28C28]">{quest.provenance}</div><h1 className="truncate text-xl font-black">{quest.title}</h1></div><span className="flex items-center gap-1 font-black text-[#EF5B5B]"><Heart size={19} fill="currentColor"/> {hearts}</span></header>

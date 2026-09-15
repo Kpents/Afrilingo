@@ -37,6 +37,13 @@ export const twiWorld = {
         { id: "daily-phrase", type: "phrase", label: "Carry a phrase with you", detail: "Practice today’s useful expression", feature: "daily" }
         ,{ id: "ama-market-story", type: "storyQuest", label: "Ama’s Market Morning", detail: "Choose your way through an interactive story", storyQuestId: "ama-market-morning" }
       ]
+    },
+    {
+      id: "story-fire", number: 5, title: "The story fire", subtitle: "Meet Ananse and explore why stories travel", color: "#7C3F18", image: "images/adventures/family-home.jpg",
+      activities: [
+        { id: "anansi-stories", type: "storyQuest", label: "All Stories Are Ananse’s", detail: "A sourced interactive learning adaptation", storyQuestId: "all-stories-ananses" },
+        { id: "anansi-context", type: "culture", label: "Ananse, the many-sided trickster", detail: "Meet a major figure in Akan storytelling", note: "Smithsonian Folkways describes Ananse as a popular Ashanti trickster who may appear as hero, villain, moral inspiration, or comic relief. Stories vary across tellers, communities, and the wider African diaspora." }
+      ]
     }
   ],
   storyQuests: {
@@ -48,8 +55,21 @@ export const twiWorld = {
         price: { location:"At the counter", image:"images/adventures/market-square.jpg", narration:"The seller shows Ama the bananas.", speaker:"Ama", native:"Ɛyɛ ahe?", english:"How much is it?", vocabulary:[{native:"Ɛyɛ ahe?",english:"How much is it?"}], prompt:"The price feels high. Which response fits?", choices:[{text:"Ne boɔ yɛ den.",correct:true,next:"close",feedback:"Ama says that the price is expensive."},{text:"Wo din de sɛn?",correct:false,feedback:"That asks someone’s name, not about the price."},{text:"Fa nifa.",correct:false,feedback:"That is a direction: turn right."}] },
         close: { location:"Leaving the stall", image:"images/adventures/market-square.jpg", narration:"Ama has finished the exchange and is ready to leave.", speaker:"Seller", native:"Yɛbɛhyia bio.", english:"We shall meet again.", vocabulary:[{native:"Yɛbɛhyia bio",english:"we shall meet again"}], prompt:"Choose Ama’s polite closing.", choices:[{text:"Meda wo ase.",correct:true,next:"complete",feedback:"Ama thanks the seller and closes the exchange politely."},{text:"Mennim.",correct:false,feedback:"That means ‘I do not know.’"},{text:"Ɛkɔm de me.",correct:false,feedback:"That means ‘I am hungry.’"}] }
       }
+    },
+    "all-stories-ananses": {
+      id: "all-stories-ananses", title: "All Stories Are Ananse’s", provenance: "Sourced learning adaptation · Smithsonian Folkways", start: "greeting", xp: 40, cultureCardId: "twi-ananses-stories",
+      source: { title:"Smithsonian Folkways — All Stories Are Anansi’s", url:"https://folkways.si.edu/harold-courlander/all-stories-are-anansis/childrens-prose/track/smithsonian" },
+      nodes: {
+        greeting: { location:"At the beginning of the tale", image:"images/adventures/family-home.jpg", narration:"In this Ashanti tale, the stories are held by Nyame. Ananse approaches with a bold plan to earn them.", speaker:"Ananse", native:"Maakye.", english:"Good morning.", vocabulary:[{native:"Maakye",english:"good morning"}], prompt:"How should Ananse open the encounter?", choices:[{text:"Maakye.",correct:true,next:"tasks",feedback:"The familiar morning greeting opens the exchange before the request."},{text:"Ɛyɛ ahe?",correct:false,feedback:"That asks a price and does not fit this opening."},{text:"Da yie.",correct:false,feedback:"That is used for good night, not this morning greeting."}] },
+        tasks: { location:"Nyame sets the challenge", image:"images/adventures/community-park.jpg", narration:"Nyame names difficult tasks. Ananse listens, but wants to make sure he understands what has been asked.", speaker:"Ananse", native:"Wobɛtumi aka no bio?", english:"Can you repeat it?", vocabulary:[{native:"aka no bio",english:"say it again"}], prompt:"Which response keeps Ananse honestly engaged?", choices:[{text:"Wobɛtumi aka no bio?",correct:true,next:"help",feedback:"Asking for repetition is an active communication strategy."},{text:"Merekɔ fie.",correct:false,feedback:"That says ‘I am going home’ and abandons the challenge."},{text:"Ne boɔ yɛ den.",correct:false,feedback:"That comments that something is expensive."}] },
+        help: { location:"Planning the tasks", image:"images/adventures/community-park.jpg", narration:"Ananse is known for wit and planning. Before acting, he considers the help and resources he will need.", speaker:"Ananse", native:"Wobɛtumi aboa me?", english:"Can you help me?", vocabulary:[{native:"aboa me",english:"help me"}], prompt:"Choose the useful request.", choices:[{text:"Wobɛtumi aboa me?",correct:true,next:"stories",feedback:"This directly asks, ‘Can you help me?’"},{text:"Wo din de sɛn?",correct:false,feedback:"That asks someone’s name."},{text:"Fa benkum.",correct:false,feedback:"That gives the direction ‘Turn left.’"}] },
+        stories: { location:"Stories reach the people", image:"images/adventures/family-home.jpg", narration:"After Ananse completes the challenges, the stories are released. The tale explains why stories are associated with Ananse and shared among people.", speaker:"Ananse", native:"Meda wo ase.", english:"Thank you.", vocabulary:[{native:"Meda wo ase",english:"thank you"}], prompt:"How should Ananse close the exchange?", choices:[{text:"Meda wo ase.",correct:true,next:"complete",feedback:"The story journey closes with the course’s full expression of thanks."},{text:"Mennim.",correct:false,feedback:"That means ‘I do not know.’"},{text:"Mabrɛ.",correct:false,feedback:"That means ‘I am tired.’"}] }
+      }
     }
   },
+  cultureCards: [
+    { id:"twi-ananses-stories", title:"Why stories belong to Ananse", emoji:"🕷️", category:"Storytelling", language:"Twi", region:"Akan storytelling traditions · Ghana and the wider diaspora", text:"Ananse is a many-sided spider trickster in Akan storytelling. Smithsonian Folkways records him as hero, villain, moral inspiration, and comic figure; one Ashanti tale explains how he earns stories from Nyame and how those stories come to be shared. Individual tellers and communities preserve many versions.", sourceTitle:"Smithsonian Folkways — Ashanti: Folk Tales from Ghana", sourceUrl:"https://folkways.si.edu/harold-courlander/ashanti-folk-tales-from-ghana/childrens-prose/album/smithsonian" }
+  ],
   games: {
     "market-dash": {
       title: "Market Dash", xp: 20,
