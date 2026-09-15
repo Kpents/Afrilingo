@@ -51,6 +51,13 @@ export const twiWorld = {
         { id: "crew-community-visit", type: "storyQuest", label: "The Crew’s Community Visit", detail: "Four friends, one practical Twi mission", storyQuestId: "crew-community-visit" },
         { id: "crew-culture", type: "culture", label: "People before the plan", detail: "Reflect on the language habit you practised", note: "In these scenes, the crew greet, ask clearly, request help, and give thanks. The social details of a visit vary by family and community, so learners should observe and follow their hosts rather than assume one fixed custom." }
       ]
+    },
+    {
+      id:"trotro-day", number:7, title:"Across town", subtitle:"Ride with the crew and follow the route", color:"#4338CA", image:"images/adventures/taxi-rank.jpg",
+      activities:[
+        { id:"crew-trotro-story", type:"storyQuest", label:"Taffy Finds the Way", detail:"Make a short journey using practical Twi", storyQuestId:"taffy-finds-the-way" },
+        { id:"route-rush", type:"game", label:"Route Rush", detail:"Match directions to visual signs", gameId:"route-rush" }
+      ]
     }
   ],
   storyQuests: {
@@ -82,6 +89,14 @@ export const twiWorld = {
         help: { companionId:"zuri", location:"Arriving together", image:"images/adventures/family-home.jpg", narration:"Zuri is carrying books and asks for a hand at the door.", speaker:"Zuri", native:"Wobɛtumi aboa me?", english:"Can you help me?", vocabulary:[{native:"aboa me",english:"help me"}], prompt:"Choose a clear positive response.", choices:[{text:"Aane.",correct:true,next:"thanks",feedback:"Aane means ‘Yes.’ You agree to help Zuri."},{text:"Merekɔ adwuma.",correct:false,feedback:"That says ‘I am going to work.’"},{text:"Mente aseɛ.",correct:false,feedback:"That says ‘I do not understand.’"}] },
         thanks: { companionId:"zuri", location:"The visit begins", image:"images/adventures/family-home.jpg", narration:"Everyone is ready. Zuri thanks you for helping the crew arrive together.", speaker:"Zuri", native:"Meda wo ase.", english:"Thank you.", vocabulary:[{native:"Meda wo ase",english:"thank you"}], prompt:"Close the exchange politely.", choices:[{text:"Yoo.",correct:true,next:"complete",feedback:"Yoo acknowledges what was said and closes this short exchange naturally."},{text:"Fa benkum.",correct:false,feedback:"That means ‘Turn left.’"},{text:"Mabrɛ.",correct:false,feedback:"That means ‘I am tired.’"}] }
       }
+    },
+    "taffy-finds-the-way": {
+      id:"taffy-finds-the-way", title:"Taffy Finds the Way", provenance:"Original AfriLingo crew story", start:"ask", xp:35,
+      nodes:{
+        ask:{ companionId:"nia", location:"At the station", image:"images/adventures/taxi-rank.jpg", narration:"Taffy checks the map, then asks where you are going.", speaker:"Taffy", native:"Worekɔ he?", english:"Where are you going?", vocabulary:[{native:"Worekɔ he?",english:"Where are you going?"}], prompt:"Tell Taffy you are going home.", choices:[{text:"Merekɔ fie.",correct:true,next:"right",feedback:"You state your destination clearly."},{text:"Merekɔ adwuma.",correct:false,feedback:"That means ‘I am going to work.’"},{text:"Mennim.",correct:false,feedback:"That means ‘I do not know.’"}]},
+        right:{ companionId:"kobby", location:"First turn", image:"images/adventures/taxi-rank.jpg", narration:"Kobby spots the first sign and points to the right.", speaker:"Kobby", native:"Fa nifa.", english:"Turn right.", vocabulary:[{native:"Fa nifa",english:"turn right"}], prompt:"Which phrase repeats Kobby’s direction?", choices:[{text:"Fa nifa.",correct:true,next:"straight",feedback:"Nifa is the right-hand direction in this course phrase."},{text:"Fa benkum.",correct:false,feedback:"That means ‘Turn left.’"},{text:"Kɔ w’anim.",correct:false,feedback:"That means ‘Go straight ahead.’"}]},
+        straight:{ companionId:"taji", location:"The final road", image:"images/adventures/community-park.jpg", narration:"Chidi sees the destination ahead and gives the final direction.", speaker:"Chidi", native:"Kɔ w’anim.", english:"Go straight ahead.", vocabulary:[{native:"Kɔ w’anim",english:"go straight ahead"}], prompt:"Acknowledge Chidi before you continue.", choices:[{text:"Yoo.",correct:true,next:"complete",feedback:"You acknowledge the direction and continue the journey."},{text:"Da yie.",correct:false,feedback:"That is a good-night leave-taking expression."},{text:"Ɛyɛ ahe?",correct:false,feedback:"That asks a price."}]}
+      }
     }
   },
   cultureCards: [
@@ -95,6 +110,14 @@ export const twiWorld = {
         { prompt: "The seller shows you the item. Ask the price.", options: ["Ɛyɛ ahe?", "Wo din de sɛn?", "Fa nifa."], answer: "Ɛyɛ ahe?", explanation: "Ɛyɛ ahe? is the course’s price question." },
         { prompt: "The price feels high. What can you say?", options: ["Ne boɔ yɛ den.", "Mabrɛ.", "Mɛsan aba."], answer: "Ne boɔ yɛ den.", explanation: "Ne boɔ yɛ den means ‘It is expensive.’" },
         { prompt: "Close the exchange with thanks.", options: ["Meda wo ase.", "Mennim.", "Worekɔ he?"], answer: "Meda wo ase.", explanation: "Meda wo ase is the full written thank-you expression." }
+      ]
+    },
+    "route-rush": {
+      title:"Route Rush", xp:25,
+      questions:[
+        { prompt:"Tap the sign for ‘Fa nifa.’", options:["Right","Left","Straight"], answer:"Right", visuals:{Right:"➡️",Left:"⬅️",Straight:"⬆️"}, explanation:"Fa nifa means ‘Turn right.’" },
+        { prompt:"Tap the sign for ‘Fa benkum.’", options:["Straight","Right","Left"], answer:"Left", visuals:{Right:"➡️",Left:"⬅️",Straight:"⬆️"}, explanation:"Fa benkum means ‘Turn left.’" },
+        { prompt:"Tap the sign for ‘Kɔ w’anim.’", options:["Left","Straight","Right"], answer:"Straight", visuals:{Right:"➡️",Left:"⬅️",Straight:"⬆️"}, explanation:"Kɔ w’anim means ‘Go straight ahead.’" }
       ]
     }
   }

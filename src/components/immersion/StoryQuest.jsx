@@ -1,13 +1,13 @@
 import { useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowLeft, CheckCircle2, Eye, Heart, Sparkles, XCircle } from "lucide-react";
+import { ArrowLeft, CheckCircle2, Eye, Heart, Save, Sparkles, XCircle } from "lucide-react";
 import SidekickPortrait from "../ui/SidekickPortrait";
 import ConfettiBurst from "../ui/ConfettiBurst";
 import { sidekicks } from "../../data/sidekicks";
 import { hapticPress } from "../../utils/hapticFeedback";
 import { playUiSound } from "../../services/uiSound";
 
-export default function StoryQuest({ dark, quest, companion, hearts, completed, soundEnabled, onLoseHeart, onReward, onExit }) {
+export default function StoryQuest({ dark, quest, companion, hearts, completed, savedWords=[], soundEnabled, onLoseHeart, onReward, onExit }) {
   const wasCompleted = useRef(completed);
   const [nodeId,setNodeId]=useState(quest.start);
   const [choice,setChoice]=useState(null);
@@ -16,6 +16,7 @@ export default function StoryQuest({ dark, quest, companion, hearts, completed, 
   const [finished,setFinished]=useState(false);
   const node=quest.nodes[nodeId];
   const sceneCharacter=sidekicks.find(item=>item.id===node.companionId);
+  const wordId=word?`${quest.id}:${word.native}`:null;
   const selected=node.choices?.find(item=>item.text===choice);
   const correct=selected?.correct;
   const choose=item=>{if(choice&&correct)return;setChoice(item.text);playUiSound(item.correct?"correct":"incorrect",soundEnabled);if(!item.correct)onLoseHeart?.();};
@@ -28,7 +29,7 @@ export default function StoryQuest({ dark, quest, companion, hearts, completed, 
     <div className={`mt-5 overflow-hidden rounded-[2rem] border ${surface}`}><div className="relative h-64 overflow-hidden"><img src={`${import.meta.env.BASE_URL}${node.image}`} alt="" className="h-full w-full object-cover"/><div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent"/><div className="absolute bottom-4 left-4 right-4 text-white"><div className="text-xs font-black uppercase tracking-wider text-[#F6C445]">{node.location}</div><div className="mt-1 text-lg font-bold">{node.narration}</div></div></div>
       <div className="p-5 sm:p-6"><div className="flex items-start gap-3">{sceneCharacter&&<SidekickPortrait character={sceneCharacter} className="size-16 shrink-0 rounded-2xl bg-[#F6C445]/15" eager/>}<div className="min-w-0 flex-1"><div className="text-xs font-black uppercase tracking-wider text-[#4338CA]">{node.speaker}</div><div className="mt-2 text-2xl font-black">{node.native}</div>{translation&&<motion.div initial={{opacity:0,y:-5}} animate={{opacity:1,y:0}} className="mt-1 font-semibold opacity-55">{node.english}</motion.div>}</div><button onClick={()=>setTranslation(value=>!value)} aria-label="Reveal translation" className="grid size-11 shrink-0 place-items-center rounded-xl bg-[#4338CA]/10 text-[#4338CA]"><Eye/></button></div>
         {!!node.vocabulary?.length&&<div className="mt-4 flex flex-wrap gap-2">{node.vocabulary.map(item=><button key={item.native} onClick={()=>setWord(word?.native===item.native?null:item)} className={`rounded-full px-3 py-2 text-sm font-black ${word?.native===item.native?"bg-[#F6C445] text-[#1A201E]":dark?"bg-white/7":"bg-black/5"}`}>{item.native}</button>)}</div>}
-        <AnimatePresence>{word&&<motion.div initial={{opacity:0,height:0}} animate={{opacity:1,height:"auto"}} exit={{opacity:0,height:0}} className="overflow-hidden"><div className="mt-3 rounded-xl bg-[#F6C445]/15 p-3 text-sm"><strong>{word.native}</strong> · {word.english}</div></motion.div>}</AnimatePresence>
+        <AnimatePresence>{word&&<motion.div initial={{opacity:0,height:0}} animate={{opacity:1,height:"auto"}} exit={{opacity:0,height:0}} className="overflow-hidden"><div className="mt-3 flex items-center justify-between gap-3 rounded-xl bg-[#F6C445]/15 p-3 text-sm"><span><strong>{word.native}</strong> · {word.english}</span><button onClick={()=>onReward({field:"savedWorldWords",id:wordId,xp:0})} className="flex min-h-10 shrink-0 items-center gap-1 rounded-lg bg-[#24745B] px-3 font-black text-white"><Save size={15}/>{savedWords.includes(wordId)?"Saved":"Save"}</button></div></motion.div>}</AnimatePresence>
         <div className="mt-5 text-sm font-black">{node.prompt}</div><div className="mt-3 space-y-3">{node.choices.map(item=><button key={item.text} disabled={(choice&&correct)||hearts<=0} onClick={()=>choose(item)} onPointerDown={hapticPress} className={`afri-press min-h-14 w-full rounded-2xl border p-4 text-left font-black ${choice===item.text?(item.correct?"border-[#24745B] bg-[#24745B]/15":"border-[#C95D3A] bg-[#C95D3A]/15"):dark?"border-white/10 bg-white/5":"border-black/8 bg-[#FFF8EE]"}`}>{item.text}</button>)}</div>
         {selected&&<div className={`mt-4 flex gap-3 rounded-2xl p-4 text-sm font-semibold ${correct?"bg-[#24745B]/15":"bg-[#C95D3A]/15"}`}>{correct?<CheckCircle2 className="shrink-0 text-[#24745B]"/>:<XCircle className="shrink-0 text-[#C95D3A]"/>}<span>{selected.feedback}</span></div>}
         {hearts<=0&&!correct&&<div className="mt-3 rounded-xl bg-[#C95D3A]/15 p-3 text-sm font-bold">Out of hearts. Return after recovering a heart.</div>}
