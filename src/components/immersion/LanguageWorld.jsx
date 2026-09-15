@@ -6,25 +6,29 @@ import ConfettiBurst from "../ui/ConfettiBurst";
 import { sidekicks } from "../../data/sidekicks";
 import { hapticPress } from "../../utils/hapticFeedback";
 import { playUiSound } from "../../services/uiSound";
+import StoryQuest from "./StoryQuest";
 
-const icons = { adventure: MapPinned, story: BookOpenText, culture: Globe2, game: Gamepad2, conversation: MessageCircle, phrase: Sparkles };
+const icons = { adventure: MapPinned, story: BookOpenText, storyQuest: BookOpenText, culture: Globe2, game: Gamepad2, conversation: MessageCircle, phrase: Sparkles };
 
-export default function LanguageWorld({ dark, world, progress, companionId, soundEnabled, onReward, onOpenActivity }) {
+export default function LanguageWorld({ dark, world, progress, companionId, soundEnabled, onLoseHeart, onReward, onOpenActivity }) {
   const [culture, setCulture] = useState(null);
   const [gameId, setGameId] = useState(null);
+  const [storyQuestId, setStoryQuestId] = useState(null);
   const companion = sidekicks.find(item => item.id === companionId) || sidekicks[0];
   const immersion = progress.immersion || {};
   const completedGames = immersion.completedWorldGames || [];
-  const isDone = activity => activity.type === "game" ? completedGames.includes(activity.gameId) : activity.type === "culture" ? (immersion.completedWorldMoments || []).includes(activity.id) : activity.progressField ? (immersion[activity.progressField] || []).includes(activity.missionId || activity.progressId || activity.id) : false;
-  const trackable = world.chapters.flatMap(chapter => chapter.activities).filter(activity => activity.type === "game" || activity.type === "culture" || activity.progressField);
+  const isDone = activity => activity.type === "game" ? completedGames.includes(activity.gameId) : activity.type === "storyQuest" ? (immersion.completedWorldStories || []).includes(activity.storyQuestId) : activity.type === "culture" ? (immersion.completedWorldMoments || []).includes(activity.id) : activity.progressField ? (immersion[activity.progressField] || []).includes(activity.missionId || activity.progressId || activity.id) : false;
+  const trackable = world.chapters.flatMap(chapter => chapter.activities).filter(activity => ["game","culture","storyQuest"].includes(activity.type) || activity.progressField);
   const completed = trackable.filter(isDone).length;
   const total = trackable.length;
 
   if (gameId) return <WorldGame dark={dark} game={world.games[gameId]} gameId={gameId} completed={completedGames.includes(gameId)} soundEnabled={soundEnabled} onReward={onReward} onExit={() => setGameId(null)}/>;
+  if (storyQuestId) return <StoryQuest dark={dark} quest={world.storyQuests[storyQuestId]} companion={companion} hearts={progress.hearts} completed={(immersion.completedWorldStories||[]).includes(storyQuestId)} soundEnabled={soundEnabled} onLoseHeart={onLoseHeart} onReward={onReward} onExit={()=>setStoryQuestId(null)}/>;
 
   const open = activity => {
     if (activity.type === "culture") { if (!(immersion.completedWorldMoments || []).includes(activity.id)) onReward({field:"completedWorldMoments",id:activity.id,xp:0}); return setCulture(culture === activity.id ? null : activity.id); }
     if (activity.type === "game") return setGameId(activity.gameId);
+    if (activity.type === "storyQuest") return setStoryQuestId(activity.storyQuestId);
     onOpenActivity(activity);
   };
 

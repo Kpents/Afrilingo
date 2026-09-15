@@ -35,9 +35,21 @@ export const twiWorld = {
         { id: "conversation-coach", type: "conversation", label: "Conversation Coach", detail: "Respond in practical situations", feature: "coach" },
         { id: "learner-story", type: "story", label: "I Speak a Little Twi", detail: "Use repair phrases inside a story", feature: "stories", storyId: "learner-story", progressField: "completedStories", progressId: "learner-story" },
         { id: "daily-phrase", type: "phrase", label: "Carry a phrase with you", detail: "Practice today’s useful expression", feature: "daily" }
+        ,{ id: "ama-market-story", type: "storyQuest", label: "Ama’s Market Morning", detail: "Choose your way through an interactive story", storyQuestId: "ama-market-morning" }
       ]
     }
   ],
+  storyQuests: {
+    "ama-market-morning": {
+      id: "ama-market-morning", title: "Ama’s Market Morning", provenance: "Original AfriLingo learning story", start: "arrival", xp: 30,
+      nodes: {
+        arrival: { location:"Morning · neighbourhood market", image:"images/adventures/market-square.jpg", narration:"Ama arrives while sellers are preparing their stalls.", speaker:"Seller", native:"Maakye.", english:"Good morning.", vocabulary:[{native:"Maakye",english:"good morning"}], prompt:"How should Ama respond?", choices:[{text:"Maakye.",correct:true,next:"fruit",feedback:"Ama returns the morning greeting before asking for anything."},{text:"Ɛyɛ ahe?",correct:false,feedback:"That asks a price immediately. Begin with the greeting in this scene."},{text:"Da yie.",correct:false,feedback:"That is a night-time leave-taking expression, not the morning response."}] },
+        fruit: { location:"The fruit stall", image:"images/adventures/market-square.jpg", narration:"Ama sees fruit but cannot spot the bananas.", speaker:"Ama", native:"Merehwehwɛ kwadu.", english:"I am looking for bananas.", vocabulary:[{native:"Merehwehwɛ",english:"I am looking for"},{native:"kwadu",english:"banana"}], prompt:"What should Ama ask next?", choices:[{text:"Wowɔ kwadu?",correct:true,next:"price",feedback:"Ama asks whether the seller has bananas."},{text:"Merekɔ fie.",correct:false,feedback:"That says ‘I am going home’ and does not help find the bananas."},{text:"Ka no brɛoo.",correct:false,feedback:"That asks someone to speak slowly; it does not ask about the fruit."}] },
+        price: { location:"At the counter", image:"images/adventures/market-square.jpg", narration:"The seller shows Ama the bananas.", speaker:"Ama", native:"Ɛyɛ ahe?", english:"How much is it?", vocabulary:[{native:"Ɛyɛ ahe?",english:"How much is it?"}], prompt:"The price feels high. Which response fits?", choices:[{text:"Ne boɔ yɛ den.",correct:true,next:"close",feedback:"Ama says that the price is expensive."},{text:"Wo din de sɛn?",correct:false,feedback:"That asks someone’s name, not about the price."},{text:"Fa nifa.",correct:false,feedback:"That is a direction: turn right."}] },
+        close: { location:"Leaving the stall", image:"images/adventures/market-square.jpg", narration:"Ama has finished the exchange and is ready to leave.", speaker:"Seller", native:"Yɛbɛhyia bio.", english:"We shall meet again.", vocabulary:[{native:"Yɛbɛhyia bio",english:"we shall meet again"}], prompt:"Choose Ama’s polite closing.", choices:[{text:"Meda wo ase.",correct:true,next:"complete",feedback:"Ama thanks the seller and closes the exchange politely."},{text:"Mennim.",correct:false,feedback:"That means ‘I do not know.’"},{text:"Ɛkɔm de me.",correct:false,feedback:"That means ‘I am hungry.’"}] }
+      }
+    }
+  },
   games: {
     "market-dash": {
       title: "Market Dash", xp: 20,
