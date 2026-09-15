@@ -55,10 +55,10 @@ function buildAdventures(data) {
   });
 }
 
-export default function Adventures({ dark, data, progress, soundEnabled, onLoseHeart, onReward, companionId }) {
+export default function Adventures({ dark, data, progress, soundEnabled, onLoseHeart, onReward, companionId, initialMissionId }) {
   const adventures = useMemo(() => buildAdventures(data), [data]);
   const companion = sidekicks.find(item => item.id === companionId) || sidekicks[0];
-  const [active, setActive] = useState(null);
+  const [active, setActive] = useState(() => (featuredMissions[data.languageId] || []).find(mission => mission.id === initialMissionId) || null);
   const completed = progress.immersion?.completedAdventures || [];
   const featured = featuredMissions[data.languageId] || [];
 
