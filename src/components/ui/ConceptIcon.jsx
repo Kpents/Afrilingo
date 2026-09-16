@@ -34,6 +34,7 @@ const emojiArt = {
   bread: "🍞", rice: "🍚", fish: "🐟", chicken: "🍗", egg: "🥚", banana: "🍌", apple: "🍎", orange: "🍊", water: "💧", coffee: "☕", tea: "🍵", milk: "🥛", meat: "🥩", soup: "🍲", juice: "🧃",
   tomato: "🍅", carrot: "🥕", onion: "🧅", pepper: "🫑", lettuce: "🥬", mango: "🥭", pineapple: "🍍", plantain: "🍌", yam: "🍠", cassava: "🌱", maize: "🌽",
   dog: "🐕", cat: "🐈", cow: "🐄", goat: "🐐", bird: "🐦", lion: "🦁", elephant: "🐘", monkey: "🐒", sheep: "🐑", pig: "🐖", horse: "🐎", snake: "🐍", spider: "🕷️", duck: "🦆",
+  football: "⚽", cloth: "🧵",
   school: "🏫", hospital: "🏥", market: "🛒", shop: "🏪", restaurant: "🍽️", bank: "🏦", church: "⛪", mosque: "🕌", beach: "🏖️", farm: "🚜", mountain: "⛰️", park: "🌳", home: "🏠"
 };
 

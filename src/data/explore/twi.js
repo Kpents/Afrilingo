@@ -1,4 +1,5 @@
 import { twiUnits } from "../twi/course";
+import { findIconId } from "../iconLibrary";
 
 const levels=["beginner","intermediate","advanced"];
 const wordTypes=[["nouns","Nouns","📦"],["verbs","Verbs","🏃🏾"],["adjectives","Adjectives","✨"],["pronouns","Pronouns","👥"],["adverbs","Adverbs","⚡"],["question-words","Question Words","❓"],["numbers","Numbers","🔢"],["common-expressions","Common Expressions","💬"]].map(([id,label,emoji])=>({id,label,emoji}));
@@ -8,6 +9,7 @@ const question=/^(what|who|where|how|which)|\?$/i, number=/one|two|three|four|fi
 function infer(native,english){if(question.test(english))return"question-words";if(number.test(english))return"numbers";if(adverb.test(english))return"adverbs";if(adjective.test(english))return"adjectives";if(/^to /i.test(english))return"verbs";if(!/[.!?]/.test(native)&&native.split(/\s+/).length<=2)return"nouns";return"common-expressions";}
 const courseEntries=twiUnits.flatMap((unit,ui)=>unit.lessons.flatMap((lesson,li)=>(lesson.vocabulary||[]).map((word,wi)=>({
   id:`twi-${unit.id}-${lesson.id}-${wi}`,native:word.native,english:word.english,audio:word.audio||"",
+  iconId:word.iconId||findIconId(word.english),
   exampleNative:lesson.conversation?.[0]?.native||word.native,exampleEnglish:lesson.conversation?.[0]?.english||word.english,
   level:levels[(li+wi)%3],wordType:infer(word.native,word.english),theme:unitThemes[ui]||"relationships",
   contextNote:lesson.cultureCard?.text,source:"Twi course",verificationStatus:"source-aligned",linguistic:word.linguistic||{}
@@ -26,6 +28,6 @@ const supplements=[
   ["restaurant-place","Adidibea","restaurant or eating place","nouns","restaurant","Akan (Twi) Dictionary · Adidibea","This entry names a place where people eat."],
   ["restaurant-food","Aduane","food","nouns","restaurant","Peace Corps Ghana · Twi For All","Pair this high-frequency word with a polite request."],
   ["restaurant-water","Nsuo","water","nouns","restaurant","Peace Corps Ghana · Twi For All","A practical word for ordering or asking for a drink."]
-].flatMap(([id,native,english,wordType,theme,source="course reference",contextNote="Optional linguistic detail will expand after editorial review."])=>levels.map(level=>({id:`${id}-${level}`,native,english,wordType,theme,level,audio:"",exampleNative:native,exampleEnglish:english,source,verificationStatus:"source-aligned",contextNote,linguistic:{}})));
+].flatMap(([id,native,english,wordType,theme,source="course reference",contextNote="Optional linguistic detail will expand after editorial review."])=>levels.map(level=>({id:`${id}-${level}`,native,english,wordType,theme,level,audio:"",iconId:findIconId(english),exampleNative:native,exampleEnglish:english,source,verificationStatus:"source-aligned",contextNote,linguistic:{}})));
 const seen=new Set();
 export const twiExploreLibrary={languageId:"twi",languageName:"Twi",nativeName:"Twi",levels,wordTypes,themes,entries:[...supplements,...courseEntries].filter(item=>{const key=`${item.native}|${item.english}|${item.theme}|${item.level}`;if(seen.has(key))return false;seen.add(key);return true;})};

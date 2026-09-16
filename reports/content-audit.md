@@ -1,15 +1,15 @@
 # AfriLingo Content Audit
 
-Generated: 2026-09-16T09:24:02.722Z
+Generated: 2026-09-16T09:32:52.228Z
 
 ## Summary
 
 - 14 languages
 - 392 units
 - 1611 lessons
-- 6809 questions
+- 6812 questions
 - 1611 culture cards
-- 4844 Explore entries
+- 4900 Explore entries
 - 379 Immersion items
 - 0 blocking errors
 - 314 editorial warnings

@@ -1,14 +1,92 @@
+import { findIconId } from "../iconLibrary";
+
 const normalized = value => String(value ?? "").trim().toLocaleLowerCase();
+
+const visualEmoji = [
+  [/straight ahead|north/i, "⬆️"], [/turn right|\bright\b|east/i, "↪️"], [/turn left|\bleft\b|west/i, "↩️"], [/south/i, "⬇️"],
+  [/morning/i, "🌅"], [/afternoon/i, "☀️"], [/evening/i, "🌆"], [/night/i, "🌙"],
+  [/expensive|price|how much|money/i, "🏷️"], [/shopping/i, "🛍️"], [/police/i, "👮🏾"], [/thief/i, "🥷🏾"]
+];
+
+function withVisualMetadata(word) {
+  const iconId = word.iconId || findIconId(word.english);
+  const emoji = word.emoji || visualEmoji.find(([pattern]) => pattern.test(word.english))?.[1];
+  return { ...word, ...(iconId ? { iconId } : {}), ...(emoji ? { visualEmoji: emoji } : {}) };
+}
 
 function uniqueVocabulary(items) {
   const seen = new Set();
-  return items.filter(item => {
+  return items.map(withVisualMetadata).filter(item => {
     if (!item?.native || !item?.english) return false;
     const key = `${normalized(item.native)}::${normalized(item.english)}`;
     if (seen.has(key)) return false;
     seen.add(key);
     return true;
   });
+}
+
+function visualQuestion(items, id, offset = 0) {
+  const seenValues = new Set();
+  const seenVisuals = new Set();
+  const visualItems = items.filter(item => {
+    const visualKey = item.iconId ? `icon:${item.iconId}` : Number.isFinite(item.number) ? `number:${item.number}` : item.visualEmoji ? `emoji:${item.visualEmoji}` : "";
+    const valueKey = normalized(item.native);
+    if (!visualKey || seenValues.has(valueKey) || seenVisuals.has(visualKey)) return false;
+    seenValues.add(valueKey);
+    seenVisuals.add(visualKey);
+    return true;
+  });
+  if (visualItems.length < 3) return null;
+  const answer = visualItems[offset % visualItems.length];
+  const choices = [answer, ...visualItems.filter(item => item !== answer)].slice(0, 4);
+  return {
+    id,
+    type: "image-choice",
+    prompt: `Choose the picture that best represents “${answer.native}”.`,
+    options: choices.map(item => ({
+      value: item.native,
+      label: item.native,
+      visualLabel: item.english,
+      showLabel: false,
+      iconId: item.iconId,
+      number: item.number,
+      emoji: item.visualEmoji
+    })),
+    answer: answer.native,
+    explanation: `${answer.native} means “${answer.english}.”`
+  };
+}
+
+function numberChoices(items, values) {
+  return values.map(value => items.find(item => item.number === value)).filter(Boolean);
+}
+
+function visualMathQuestion(numberItems) {
+  const choices = numberChoices(numberItems, [1, 2, 3, 4]);
+  const answer = choices.find(item => item.number === 3);
+  if (!answer || choices.length < 4) return null;
+  return {
+    id: "visual-math-review",
+    type: "image-choice",
+    prompt: "Visual maths: 🍌🍌 + 🍌. Choose the Twi total.",
+    options: choices.map(item => ({ value: item.native, label: item.native, visualLabel: `${item.number} items`, showLabel: false, number: item.number })),
+    answer: answer.native,
+    explanation: `Two plus one is three. ${answer.native} means “three.”`
+  };
+}
+
+function marketPriceQuestion(numberItems) {
+  const choices = numberChoices(numberItems, [2, 5, 10, 20]);
+  const answer = choices.find(item => item.number === 5);
+  if (!answer || choices.length < 4) return null;
+  return {
+    id: "market-price-visual",
+    type: "image-choice",
+    prompt: `The price is “${answer.native}”. Choose the matching number card.`,
+    options: choices.map(item => ({ value: item.native, label: item.native, visualLabel: `Price: ${item.number}`, showLabel: false, number: item.number })),
+    answer: answer.native,
+    explanation: `${answer.native} is five, so the matching price card is 5.`
+  };
 }
 
 function vocabularyForLesson(lesson) {
@@ -93,6 +171,13 @@ function deepenLesson(lesson, pool, target, checkpoint = false) {
 
   const questions = [...lesson.questions];
   const prompts = new Set(questions.map(question => normalized(question.prompt)));
+  if (!questions.some(question => question.type === "image-choice")) {
+    const visual = visualQuestion(vocabulary, `depth-visual`, questions.length);
+    if (visual) {
+      prompts.add(normalized(visual.prompt));
+      questions.push(visual);
+    }
+  }
   let attempt = 0;
 
   while (questions.length < target && attempt < target * 10) {
@@ -104,10 +189,11 @@ function deepenLesson(lesson, pool, target, checkpoint = false) {
     questions.push(question);
   }
 
-  return { ...lesson, questions };
+  return { ...lesson, vocabulary: vocabularyForLesson(lesson), questions };
 }
 
 export function deepenTwiCourse(units) {
+  const numberItems = uniqueVocabulary(units.flatMap(unit => unit.lessons.flatMap(vocabularyForLesson))).filter(item => Number.isFinite(item.number));
   return units.map((unit, unitIndex) => {
     const unitPool = uniqueVocabulary(unit.lessons.flatMap(vocabularyForLesson));
     const checkpoint = (unitIndex + 1) % 4 === 0;
@@ -118,7 +204,16 @@ export function deepenTwiCourse(units) {
       ...unit,
       lessons: unit.lessons.map((lesson, lessonIndex) => {
         const isChallenge = lessonIndex === unit.lessons.length - 1;
-        if (!isChallenge) return deepenLesson(lesson, unitPool, 12);
+        if (!isChallenge) {
+          const enriched = deepenLesson(lesson, unitPool, 12);
+          const specialVisual = unitIndex === 1 && lessonIndex === 3
+            ? visualMathQuestion(numberItems)
+            : /market|shopping/i.test(unit.title) && lessonIndex === 0
+              ? marketPriceQuestion(numberItems)
+              : null;
+          if (!specialVisual || enriched.questions.some(question => question.id === specialVisual.id)) return enriched;
+          return { ...enriched, questions: [...enriched.questions, specialVisual] };
+        }
 
         const target = checkpoint ? 20 : 16;
         return {

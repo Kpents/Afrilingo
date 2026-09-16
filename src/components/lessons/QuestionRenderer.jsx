@@ -25,10 +25,12 @@ function ChoiceGrid({ question, options, value, onChange, dark, checked, header,
   return <>{header}<div className="grid gap-3 sm:grid-cols-2">{options.map((raw) => {
     const option = typeof raw === "object" ? raw.value ?? raw.label : raw;
     const label = typeof raw === "object" ? raw.label ?? raw.value : raw;
+    const visualLabel = typeof raw === "object" ? raw.visualLabel ?? label : label;
+    const showLabel = typeof raw !== "object" || raw.showLabel !== false;
     const correct = checked && option === question.answer;
     const wrong = checked && value === option && option !== question.answer;
     return <motion.button key={option} disabled={checked} onPointerDown={hapticPress} onClick={() => onChange(option)} data-tone={correct ? "green" : wrong ? "clay" : dark ? "night" : "surface"} className={`afri-press min-h-16 rounded-[1.4rem] border-2 p-5 text-left text-lg font-black ${correct ? "border-[#24745B] bg-[#24745B]/15" : wrong ? "border-[#C95D3A] bg-[#C95D3A]/12" : value === option ? "border-[#F28C28] bg-[#F28C28]/12" : dark ? "border-white/10 bg-[#1A201E]" : "border-black/8 bg-white"}`}>
-      {images && <div className="mb-3 grid aspect-[4/3] place-items-center overflow-hidden rounded-xl bg-black/5">{raw.iconId || Number.isFinite(raw.number) ? <LearningVisual iconId={raw.iconId} number={raw.number} label={label} className="h-full w-full" /> : raw.image ? <img src={raw.image} alt="" className="h-full w-full object-cover" /> : raw.emoji ? <span className="text-5xl" aria-hidden="true">{raw.emoji}</span> : <Image className="opacity-30" />}</div>}{label}
+      {images && <div className="mb-3 grid aspect-[4/3] place-items-center overflow-hidden rounded-xl bg-black/5">{raw.iconId || Number.isFinite(raw.number) ? <LearningVisual iconId={raw.iconId} number={raw.number} label={visualLabel} className="h-full w-full" /> : raw.image ? <img src={raw.image} alt={visualLabel} className="h-full w-full object-cover" /> : raw.emoji ? <span role="img" aria-label={visualLabel} className="text-5xl">{raw.emoji}</span> : <Image aria-label={visualLabel} className="opacity-30" />}</div>}<span className={showLabel ? "" : "sr-only"}>{label}</span>
     </motion.button>;
   })}</div></>;
 }

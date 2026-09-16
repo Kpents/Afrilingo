@@ -10,6 +10,7 @@ export const iconCategories = {
   nature: ["sun", "cloud", "rain", "storm", "rainbow", "tree", "flower", "river", "mountain", "moon", "wind"],
   activities: ["eat", "drink", "read", "write", "walk", "run", "sleep", "listen", "speak", "play", "cook", "sit", "stand", "work", "study", "drive"],
   body: ["head", "eye", "ear", "nose", "mouth", "hand", "arm", "leg", "foot", "heart"],
+  sports: ["football"],
   colours: ["red", "blue", "green", "yellow", "orange-colour", "purple", "pink", "brown", "black", "white"],
   shapes: ["circle", "square", "triangle", "rectangle", "star", "heart-shape"],
   "african-context": ["jollof-rice", "fufu", "banku", "kenkey", "ugali", "pap", "braai", "calabash"]
@@ -19,14 +20,14 @@ export const iconCategoryLabels = {
   "food-drinks": "Food & Drinks", "fruits-vegetables": "Fruits & Vegetables", animals: "Animals",
   "people-family": "People & Family", "home-items": "Home & Everyday Items", clothing: "Clothing & Accessories",
   transport: "Transport", places: "Places & Buildings", nature: "Nature & Weather", activities: "Activities & Verbs",
-  body: "Body", colours: "Colours", shapes: "Shapes", "african-context": "African Context"
+  body: "Body", sports: "Sports", colours: "Colours", shapes: "Shapes", "african-context": "African Context"
 };
 
 const readyIds = new Set([
   "bread", "fish", "chicken", "egg", "banana", "apple", "orange", "water", "coffee", "tea", "milk", "meat", "soup", "juice",
   "tomato", "carrot", "onion", "pepper", "lettuce", "mango", "pineapple", "plantain", "yam", "cassava", "maize", "dog", "cat", "cow", "goat", "bird", "lion", "elephant", "monkey", "sheep", "pig", "horse", "snake", "spider", "duck", "baby", "man", "woman", "child", "father", "mother", "friend", "teacher", "student",
   "house", "chair", "table", "bed", "door", "window", "phone", "laptop", "book", "pen", "cup", "plate", "spoon", "knife", "bag", "key",
-  "shirt", "glasses", "watch", "necklace", "jacket", "car", "bus", "bicycle", "truck", "train", "airplane", "boat", "taxi", "traffic-light",
+  "shirt", "cloth", "glasses", "watch", "necklace", "jacket", "football", "car", "bus", "bicycle", "truck", "train", "airplane", "boat", "taxi", "traffic-light",
   "school", "hospital", "market", "shop", "restaurant", "bank", "church", "mosque", "beach", "farm", "mountain", "park", "home", "sun", "cloud", "rain", "storm", "rainbow",
   "tree", "flower", "river", "moon", "wind", "eat", "drink", "read", "write", "walk", "run", "sleep", "listen", "speak", "play", "cook", "sit",
   "stand", "work", "study", "drive", "head", "eye", "ear", "nose", "mouth", "hand", "foot", "heart", "red", "blue", "green", "yellow",
@@ -63,7 +64,8 @@ const aliases = {
   "hand": "hand", "foot": "foot", "heart": "heart", "to eat": "eat", "to drink": "drink", "to read": "read", "to write": "write", "to walk": "walk",
   "to run": "run", "to sleep": "sleep", "to listen": "listen", "to speak": "speak", "to play": "play", "to cook": "cook", "to sit": "sit", "to stand": "stand",
   "to work": "work", "to study": "study", "to drive": "drive", "jollof rice": "jollof-rice", "fufu": "fufu",
-  "trotro": "trotro", "tro tro": "trotro", "calabash": "calabash"
+  "football": "football", "football or soccer": "football", "play football": "football", "cloth": "cloth", "hand or arm": "hand",
+  "restaurant or eating place": "restaurant", "trotro": "trotro", "tro tro": "trotro", "calabash": "calabash"
 };
 
 export function findIconId(english = "") {
