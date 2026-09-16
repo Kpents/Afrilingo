@@ -9,6 +9,7 @@ import { sidekicks } from "../data/sidekicks";
 import { hapticPress } from "../utils/hapticFeedback";
 import LanguageWorld from "../components/immersion/LanguageWorld";
 import { languageWorlds } from "../data/worlds";
+import PronunciationRecorder from "../components/ui/PronunciationRecorder";
 
 const baseFeatures = [
   ["cast", "Meet the Cast", "Get to know your learning companions", HeartHandshake, "#F28C28"],
@@ -100,6 +101,23 @@ function LevelTabs({value,onChange,values=["beginner","intermediate","advanced"]
 function Info({label,value}) { return <div className="rounded-xl bg-[#4338CA]/10 p-3"><div className="text-[10px] font-black uppercase tracking-wider text-[#7067FF]">{label}</div><div className="mt-1 text-sm font-bold">{value}</div></div>; }
 function Pattern({value}) { return <div className="rounded-2xl bg-[#F28C28]/12 p-4 text-xl font-black text-[#F28C28]">{value}</div>; }
 
-function Pronunciation({ dark, data }) { return <div><SectionTitle eyebrow="Sound awareness · verified recordings pending" title={`${data.languageName} Tone & Pronunciation`} text={data.pronunciation.intro}/><div className="mt-5 space-y-3">{data.pronunciation.items.map(item=><div key={item.id} className={`rounded-[1.5rem] border p-5 ${surface(dark)}`}><div className="flex items-start justify-between gap-3"><div><div className="text-xs font-black uppercase tracking-wider text-[#4338CA]">{item.focus}</div><div className="mt-2 text-2xl font-black">{item.native}</div><div className="mt-1 opacity-50">{item.english}</div></div><AudioButton src={item.audio} label={item.native} compact className="bg-[#4338CA] text-white"/></div><p className="mt-4 text-sm leading-6 opacity-65">{item.note}</p><div className="mt-3 rounded-xl bg-[#F6C445]/15 p-3 text-xs font-bold">Verified native-speaker audio pending.</div></div>)}</div></div>; }
+function Pronunciation({ dark, data, progress, onReward }) {
+  const [index, setIndex] = useState(0);
+  const item = data.pronunciation.items[index];
+  const completed = progress.immersion?.completedPronunciation || [];
+  const done = completed.includes(item.id);
+  return <div><SectionTitle eyebrow="Hear it · notice it · say it" title={`${data.languageName} Tone & Pronunciation`} text={data.pronunciation.intro}/>
+    <div className="mt-5 flex gap-2 overflow-x-auto pb-2" aria-label="Pronunciation topics">{data.pronunciation.items.map((topic, topicIndex) => <button key={topic.id} onClick={() => setIndex(topicIndex)} aria-current={topicIndex === index ? "step" : undefined} className={`min-h-11 shrink-0 rounded-xl px-4 text-sm font-black ${topicIndex === index ? "bg-[#4338CA] text-white" : dark ? "bg-white/7" : "bg-black/5"}`}>{completed.includes(topic.id) ? "✓ " : ""}{topicIndex + 1}. {topic.shortLabel || topic.focus}</button>)}</div>
+    <article className={`mt-3 overflow-hidden rounded-[1.7rem] border ${surface(dark)}`}>
+      <div className="bg-gradient-to-br from-[#4338CA] to-[#24745B] p-5 text-white sm:p-7"><div className="text-xs font-black uppercase tracking-[.2em] text-white/65">Practice {index + 1} of {data.pronunciation.items.length} · {item.focus}</div><div className="mt-4 text-4xl font-black sm:text-5xl">{item.native}</div><div className="mt-2 text-lg font-semibold text-white/65">{item.english}</div>{item.chunks?.length > 0 && <div className="mt-5 flex flex-wrap gap-2" aria-label="Phrase chunks">{item.chunks.map(chunk => <span key={chunk} className="rounded-xl bg-white/15 px-3 py-2 text-lg font-black">{chunk}</span>)}</div>}</div>
+      <div className="p-5 sm:p-7"><div className="grid gap-3 sm:grid-cols-2"><Info label="Notice" value={item.note}/><Info label="Practice tip" value={item.practiceTip || "Say the complete form slowly, then repeat it at a comfortable pace."}/></div>
+        <div className="mt-4 flex items-center justify-between gap-4 rounded-2xl bg-[#F6C445]/15 p-4"><div><div className="text-xs font-black uppercase tracking-wider text-[#C95D3A]">Reference audio</div><div className="mt-1 text-sm font-semibold opacity-60">{item.audio ? "Listen before recording yourself." : "Awaiting a licensed, verified Twi speaker recording."}</div></div><AudioButton src={item.audio} label={item.native} compact className="shrink-0 bg-[#4338CA] text-white"/></div>
+        <PronunciationRecorder key={item.id} label={item.native} dark={dark}/>
+        <div className="mt-5 flex flex-wrap items-center justify-between gap-3"><p className="max-w-xl text-xs font-semibold leading-5 opacity-45">Completion records practice—not pronunciation accuracy. Tone feedback will only be enabled with verified reference audio and a tested scoring model.</p>{!done ? <button onClick={() => onReward({field:"completedPronunciation",id:item.id,xp:5})} onPointerDown={hapticPress} className="afri-press min-h-11 rounded-xl bg-[#24745B] px-4 font-black text-white">Mark practiced · +5 XP</button> : <span className="flex min-h-11 items-center gap-2 rounded-xl bg-[#24745B]/15 px-4 font-black text-[#24745B]"><CheckCircle2 size={18}/>Practiced</span>}</div>
+      </div>
+    </article>
+    <div className="mt-4 flex justify-between gap-3"><button disabled={index === 0} onClick={() => setIndex(value => value - 1)} className="min-h-11 rounded-xl px-4 font-black disabled:opacity-30">Previous</button><button disabled={index === data.pronunciation.items.length - 1} onClick={() => setIndex(value => value + 1)} className="min-h-11 rounded-xl bg-[#F28C28] px-5 font-black text-white disabled:opacity-30">Next practice</button></div>
+  </div>;
+}
 
 
