@@ -64,6 +64,11 @@ export default function LessonPath({ lessons, progress, dark, onStart }) {
               </motion.div>
               <div className="mt-3 text-center">
                 <div className="text-sm font-black">{lesson.title}</div>
+                {lesson.reviewLabel && (
+                  <div className="mt-1 text-[10px] font-black uppercase tracking-[0.12em] text-[#F28C28]">
+                    {lesson.reviewLabel}
+                  </div>
+                )}
                 <div className={`mt-1 text-xs font-bold ${dark ? "text-white/45" : "text-black/45"}`}>
                   {done ? "Completed" : status === "locked" ? "Locked" : `+${lesson.xp} XP`}
                 </div>

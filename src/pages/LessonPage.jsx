@@ -32,7 +32,12 @@ export default function LessonPage({ lesson, dark, hearts, languageId, soundEnab
           <button aria-label="Exit lesson" onClick={onExit} className={`grid h-11 w-11 place-items-center rounded-xl ${dark ? "bg-white/6" : "bg-black/5"}`}>
             <X size={22} />
           </button>
-          <div className="text-sm font-black uppercase tracking-[0.2em] text-[#F28C28]">{lesson.title}</div>
+          <div className="text-center">
+            <div className="text-sm font-black uppercase tracking-[0.2em] text-[#F28C28]">{lesson.title}</div>
+            <div className={`mt-1 text-[10px] font-black uppercase tracking-[0.14em] ${dark ? "text-white/40" : "text-black/40"}`}>
+              {lesson.reviewLabel ? `${lesson.reviewLabel} · ` : ""}{lesson.questions.length} questions
+            </div>
+          </div>
           <div className="w-10" />
         </div>
 

@@ -87,6 +87,7 @@ export function twiUnit({ id, title, subtitle, emoji, color, lessons, culture })
     culture[2],
     `${culture[3]} The ${title} challenge brings the unit’s language together in one mixed review.`
   ];
-  built.push(twiLesson({id:`${id}-challenge`,title:`${title} Challenge`,emoji:"🏆",xp:100,words:lessons.flatMap(x=>x.words).slice(0,9),culture:challengeCulture}));
+  const challengeTitle = /challenge$/i.test(title) ? title : `${title} Challenge`;
+  built.push(twiLesson({id:`${id}-challenge`,title:challengeTitle,emoji:"🏆",xp:100,words:lessons.flatMap(x=>x.words).slice(0,9),culture:challengeCulture}));
   return { id, title, subtitle, emoji, color, lessons:built };
 }

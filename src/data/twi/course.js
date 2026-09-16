@@ -5,6 +5,18 @@ import { unit4 } from "./unit4";
 import { twiExtendedUnits } from "./extendedUnits";
 import { twiSourceNotes } from "./sourceNotes";
 import { twiAdvancedUnits } from "./advancedUnits";
+import { deepenTwiCourse } from "./courseDepth";
+
+const rawTwiUnits = [
+  unit1,
+  unit2,
+  unit3,
+  unit4,
+  ...twiExtendedUnits,
+  ...twiAdvancedUnits
+];
+
+export const twiUnits = deepenTwiCourse(rawTwiUnits);
 
 export const twiCourse = {
   id: "twi",
@@ -19,23 +31,7 @@ export const twiCourse = {
       id: "foundations",
       title: "Foundations",
 
-      units: [
-        unit1,
-        unit2,
-        unit3,
-        unit4,
-        ...twiExtendedUnits,
-        ...twiAdvancedUnits
-      ]
+      units: twiUnits
     }
   ]
 };
-
-export const twiUnits = [
-  unit1,
-  unit2,
-  unit3,
-  unit4,
-  ...twiExtendedUnits,
-  ...twiAdvancedUnits
-];
