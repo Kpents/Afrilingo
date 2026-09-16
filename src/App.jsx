@@ -317,16 +317,18 @@ export default function App() {
     setProgress((p) => ({ ...p, hearts: Math.max(0, p.hearts - 1), heartUpdatedAt: p.hearts >= 5 || !p.heartUpdatedAt ? Date.now() : p.heartUpdatedAt }));
   };
 
-  const completeExploreSession = ({ categoryKey, masteredEntryIds, xp }) => {
+  const completeExploreSession = ({ categoryKey, categoryEntryIds = [], masteredEntryIds, xp }) => {
     showReward({ kind: "xp", label: `+${xp} Explore XP` });
     setProgress((p) => {
       const existing = p.explore || { masteredEntryIds: [], completedCategoryLevels: [] };
+      const nextMastery = [...new Set([...existing.masteredEntryIds, ...masteredEntryIds])];
+      const completedLevel = categoryEntryIds.length > 0 && categoryEntryIds.every(id => nextMastery.includes(id));
       return {
         ...p,
         xp: p.xp + xp,
         explore: {
-          masteredEntryIds: [...new Set([...existing.masteredEntryIds, ...masteredEntryIds])],
-          completedCategoryLevels: [...new Set([...existing.completedCategoryLevels, categoryKey])]
+          masteredEntryIds: nextMastery,
+          completedCategoryLevels: completedLevel ? [...new Set([...existing.completedCategoryLevels, categoryKey])] : existing.completedCategoryLevels
         }
       };
     });

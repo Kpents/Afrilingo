@@ -16,6 +16,7 @@ export default function ExplorePage({ dark, library, progress, soundEnabled, onL
   const [level, setLevel] = useState("beginner");
   const [session, setSession] = useState(null);
   const [query, setQuery] = useState("");
+  const [listExpanded, setListExpanded] = useState(false);
   const field = browseMode === "themes" ? "theme" : "wordType";
   const mastery = progress.explore?.masteredEntryIds || [];
 
@@ -54,18 +55,21 @@ export default function ExplorePage({ dark, library, progress, soundEnabled, onL
     const pool = unmastered.length >= 6 ? unmastered : library.entries;
     const offset = mastery.length % Math.max(pool.length, 1);
     const entries = [...pool.slice(offset), ...pool.slice(0, offset)].slice(0, 6);
-    if (entries.length) setSession({ entries, categoryKey: "surprise-mix", title: "Surprise mix" });
+    if (entries.length) setSession({ entries, categoryKey: "surprise-mix", categoryEntryIds: [], title: "Surprise mix" });
   };
 
   if (session) {
-    return <ExploreSession dark={dark} entries={session.entries} categoryKey={session.categoryKey} title={session.title} hearts={progress.hearts} soundEnabled={soundEnabled} onLoseHeart={onLoseHeart} onReviewQuestion={onReviewQuestion} onExit={() => setSession(null)} onComplete={(result) => { onComplete(result); setSession(null); }} />;
+    return <ExploreSession dark={dark} entries={session.entries} categoryKey={session.categoryKey} categoryEntryIds={session.categoryEntryIds} title={session.title} hearts={progress.hearts} soundEnabled={soundEnabled} onLoseHeart={onLoseHeart} onReviewQuestion={onReviewQuestion} onExit={() => setSession(null)} onComplete={(result) => { onComplete(result); setSession(null); }} />;
   }
 
   const start = () => {
     if (!levelEntries.length) return;
+    const unmastered = levelEntries.filter(entry => !mastery.includes(entry.id));
+    const sessionEntries = (unmastered.length ? unmastered : levelEntries).slice(0, 6);
     setSession({
-      entries: levelEntries.slice(0, 6),
+      entries: sessionEntries,
       categoryKey: `${browseMode}:${category.id}:${level}`,
+      categoryEntryIds: levelEntries.map(entry => entry.id),
       title: `${category.label} · ${levelLabels[level]}`
     });
   };
@@ -114,21 +118,22 @@ export default function ExplorePage({ dark, library, progress, soundEnabled, onL
         </div>
       ) : (
         <section className="mt-5">
-          <button onClick={() => setCategory(null)} className={`flex min-h-11 items-center gap-2 rounded-xl px-3 font-black ${dark ? "bg-white/6" : "bg-black/5"}`}><ArrowLeft size={18}/> All categories</button>
+          <button onClick={() => {setCategory(null);setListExpanded(false)}} className={`flex min-h-11 items-center gap-2 rounded-xl px-3 font-black ${dark ? "bg-white/6" : "bg-black/5"}`}><ArrowLeft size={18}/> All categories</button>
           <div className="mt-5 flex items-center gap-4"><span className="text-5xl">{category.emoji}</span><div><div className="text-xs font-black uppercase tracking-[0.2em] text-[#F28C28]">Explore category</div><h2 className="text-3xl font-black">{category.label}</h2></div></div>
           <div className="mt-5 grid grid-cols-3 gap-2">
             {library.levels.map((item) => {
               const entries = categoryEntries.filter((entry) => entry.level === item);
               const completed = entries.filter((entry) => mastery.includes(entry.id)).length;
-              return <button key={item} onClick={() => setLevel(item)} disabled={!entries.length} className={`min-h-20 rounded-2xl border p-3 text-left transition disabled:cursor-not-allowed disabled:opacity-35 ${level === item ? "border-[#F28C28] bg-[#F28C28] text-white" : card}`}><span className="block text-sm font-black">{levelLabels[item]}</span><span className="mt-1 block text-[11px] font-bold opacity-60">{completed}/{entries.length}</span></button>;
+              return <button key={item} onClick={() => {setLevel(item);setListExpanded(false)}} disabled={!entries.length} className={`min-h-20 rounded-2xl border p-3 text-left transition disabled:cursor-not-allowed disabled:opacity-35 ${level === item ? "border-[#F28C28] bg-[#F28C28] text-white" : card}`}><span className="block text-sm font-black">{levelLabels[item]}</span><span className="mt-1 block text-[11px] font-bold opacity-60">{completed}/{entries.length}</span></button>;
             })}
           </div>
           <div className={`mt-4 rounded-[1.6rem] border p-4 ${card}`}>
             <div className="flex items-center justify-between"><div><div className="text-xs font-black uppercase tracking-wider text-[#4338CA]">{levelLabels[level]}</div><div className="mt-1 text-xl font-black">{levelEntries.length} vocabulary entries</div></div><Search className="opacity-25"/></div>
             <div className="mt-4 grid gap-2 sm:grid-cols-2">
-              {levelEntries.slice(0, 8).map((entry) => <div key={entry.id} className={`flex min-h-16 items-center gap-3 rounded-xl p-3 ${dark ? "bg-white/5" : "bg-black/[0.035]"}`}>{entry.iconId && <ConceptIcon iconId={entry.iconId} className="size-12 shrink-0"/>}<AudioButton src={entry.audio} label={entry.native} compact className={dark ? "bg-white/8" : "bg-white"}/><div className="min-w-0"><div className="truncate font-black">{entry.native}</div><div className={`truncate text-xs font-semibold ${dark ? "text-white/45" : "text-black/45"}`}>{entry.english}</div></div>{mastery.includes(entry.id) && <CheckCircle2 size={17} className="ml-auto shrink-0 text-[#53B98A]"/>}</div>)}
+              {levelEntries.slice(0, listExpanded ? levelEntries.length : 8).map((entry) => <div key={entry.id} className={`flex min-h-16 items-center gap-3 rounded-xl p-3 ${dark ? "bg-white/5" : "bg-black/[0.035]"}`}>{entry.iconId && <ConceptIcon iconId={entry.iconId} className="size-12 shrink-0"/>}<AudioButton src={entry.audio} label={entry.native} compact className={dark ? "bg-white/8" : "bg-white"}/><div className="min-w-0"><div className="truncate font-black">{entry.native}</div><div className={`truncate text-xs font-semibold ${dark ? "text-white/45" : "text-black/45"}`}>{entry.english}</div></div>{mastery.includes(entry.id) && <CheckCircle2 size={17} className="ml-auto shrink-0 text-[#53B98A]"/>}</div>)}
             </div>
-            {!levelEntries.length ? <p className={`mt-4 text-sm font-semibold ${dark ? "text-white/45" : "text-black/45"}`}>This level is awaiting editorial vocabulary.</p> : <button onClick={start} onPointerDown={hapticPress} className="afri-press mt-5 flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-[#F28C28] px-5 font-black text-white"><Sparkles size={19}/> Start vocabulary session</button>}
+            {levelEntries.length > 8 && <button onClick={()=>setListExpanded(value=>!value)} className="mt-3 min-h-11 w-full rounded-xl text-sm font-black text-[#4338CA]">{listExpanded ? "Show fewer words" : `Browse all ${levelEntries.length} words`}</button>}
+            {!levelEntries.length ? <p className={`mt-4 text-sm font-semibold ${dark ? "text-white/45" : "text-black/45"}`}>This level is awaiting editorial vocabulary.</p> : <button onClick={start} onPointerDown={hapticPress} className="afri-press mt-5 flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-[#F28C28] px-5 font-black text-white"><Sparkles size={19}/>{levelEntries.some(entry=>!mastery.includes(entry.id)) ? "Learn next words" : "Review mastered words"}</button>}
           </div>
         </section>
       )}
@@ -136,7 +141,7 @@ export default function ExplorePage({ dark, library, progress, soundEnabled, onL
   );
 }
 
-function ExploreSession({ dark, entries, categoryKey, title, hearts, soundEnabled, onLoseHeart, onReviewQuestion, onExit, onComplete }) {
+function ExploreSession({ dark, entries, categoryKey, categoryEntryIds, title, hearts, soundEnabled, onLoseHeart, onReviewQuestion, onExit, onComplete }) {
   const [stage, setStage] = useState("study");
   const [studyIndex, setStudyIndex] = useState(0);
   const [reveal, setReveal] = useState(0);
@@ -148,7 +153,7 @@ function ExploreSession({ dark, entries, categoryKey, title, hearts, soundEnable
   const [mistakes, setMistakes] = useState(0);
   const entry = entries[studyIndex];
 
-  if (stage === "complete") return <div className="relative mx-auto max-w-xl overflow-hidden rounded-[2rem] px-2 pb-2 text-center"><ConfettiBurst/><motion.div initial={{scale:0}} animate={{scale:1}} className="mx-auto grid size-28 place-items-center rounded-[2rem] bg-[#F6C445] text-6xl">🏆</motion.div><h1 className="mt-6 text-4xl font-black">Vocabulary mastered!</h1><p className={`mt-3 ${dark ? "text-white/55" : "text-black/55"}`}>{entries.length} entries practiced · {mistakes} mistakes · +{entries.length * 5} XP</p><button onClick={() => onComplete({ categoryKey, masteredEntryIds: entries.map((item) => item.id), xp: entries.length * 5 })} onPointerDown={hapticPress} className="afri-press mt-6 min-h-14 w-full rounded-2xl bg-[#F28C28] font-black text-white">Collect XP & return</button></div>;
+  if (stage === "complete") return <div className="relative mx-auto max-w-xl overflow-hidden rounded-[2rem] px-2 pb-2 text-center"><ConfettiBurst/><motion.div initial={{scale:0}} animate={{scale:1}} className="mx-auto grid size-28 place-items-center rounded-[2rem] bg-[#F6C445] text-6xl">🏆</motion.div><h1 className="mt-6 text-4xl font-black">Vocabulary mastered!</h1><p className={`mt-3 ${dark ? "text-white/55" : "text-black/55"}`}>{entries.length} entries practiced · {mistakes} mistakes · +{entries.length * 5} XP</p><button onClick={() => onComplete({ categoryKey, categoryEntryIds, masteredEntryIds: entries.map((item) => item.id), xp: entries.length * 5 })} onPointerDown={hapticPress} className="afri-press mt-6 min-h-14 w-full rounded-2xl bg-[#F28C28] font-black text-white">Collect XP & return</button></div>;
 
   if (stage === "study") {
     const details = entry.linguistic && Object.keys(entry.linguistic).length > 0;
