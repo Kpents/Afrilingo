@@ -192,6 +192,37 @@ function deepenLesson(lesson, pool, target, checkpoint = false) {
   return { ...lesson, vocabulary: vocabularyForLesson(lesson), questions };
 }
 
+function cultureCategory(unitTitle, currentCategory = "") {
+  const context = `${unitTitle} ${currentCategory}`;
+  if (/food|restaurant/i.test(context)) return "Food & Hospitality";
+  if (/family|kinship/i.test(context)) return "Family & Community";
+  if (/market|shopping|money|number/i.test(context)) return "Markets & Daily Life";
+  if (/work|school|daily life|home/i.test(context)) return "Everyday Life";
+  if (/travel|direction|transport|place/i.test(context)) return "Travel & Places";
+  if (/weather|environment/i.test(context)) return "Environment";
+  if (/health|safety|need/i.test(context)) return "Wellbeing & Safety";
+  if (/time|plan|calendar/i.test(context)) return "Time & Plans";
+  if (/grammar|sentence|pronoun|negation|question/i.test(context)) return "Language Patterns";
+  if (/greeting|identity|social|respect|etiquette|conversation|communication/i.test(context)) return "Social Connection";
+  if (/challenge|milestone|advanced practice/i.test(context)) return "Milestones";
+  return "Expressions & Ideas";
+}
+
+function withCultureMetadata(lesson, unit, unitIndex) {
+  if (!lesson.cultureCard) return lesson;
+  return {
+    ...lesson,
+    cultureCard: {
+      ...lesson.cultureCard,
+      category: cultureCategory(unit.title, lesson.cultureCard.category),
+      unitNumber: unitIndex + 1,
+      unitTitle: unit.title,
+      lessonTitle: lesson.title,
+      provenance: "AfriLingo course context · source-aligned"
+    }
+  };
+}
+
 export function deepenTwiCourse(units) {
   const numberItems = uniqueVocabulary(units.flatMap(unit => unit.lessons.flatMap(vocabularyForLesson))).filter(item => Number.isFinite(item.number));
   return units.map((unit, unitIndex) => {
@@ -222,7 +253,7 @@ export function deepenTwiCourse(units) {
           reviewUnitIds: reviewUnits.map(reviewUnit => reviewUnit.id),
           reviewLabel: checkpoint ? `Checkpoint · Units ${unitIndex - 2}–${unitIndex + 1}` : "Unit review"
         };
-      })
+      }).map(lesson => withCultureMetadata(lesson, unit, unitIndex))
     };
   });
 }
