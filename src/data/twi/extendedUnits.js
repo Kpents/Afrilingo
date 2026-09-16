@@ -9,17 +9,17 @@ const culture = {
 
 const specs = [
   [5,"Food & Drink","Order, identify, and talk about everyday foods.","🍲","#F28C28",[
-    ["Meals",[["Aduane","food"],["Anɔpa aduane","breakfast"],["Awia aduane","lunch"]]],
-    ["Fruit & Produce",[["Ankaa","orange"],["Kwadu","banana"],["Aborɔbɛ","pineapple"]]],
-    ["Staples",[["Nsuo","water"],["Paano","bread"],["Nsuomnam","fish"]]]]],
+    ["Meals",[["Aduane","food"],["Anɔpa aduane","breakfast"],["Awia aduane","lunch"]],["Meals in context","🍲","Food","Meal names become more useful when learners connect them with the time of day and a complete request."]],
+    ["Fruit & Produce",[["Ankaa","orange"],["Kwadu","banana"],["Aborɔbɛ","pineapple"]],["Produce words","🍍","Food","Fruit vocabulary supports practical exchanges about identifying, choosing, and buying food."]],
+    ["Staples",[["Nsuo","water"],["Paano","bread"],["Nsuomnam","fish"]],["Everyday staples","💧","Food","Water, bread, and fish are introduced as high-frequency words for simple meal and shopping conversations."]]]],
   [6,"Home & Daily Life","Use practical expressions for everyday routines.","🏠","#F6C445",[
-    ["Daily Needs",[["Mepɛ sɛ medware.","I want to bathe."],["Ɛkɔm de me.","I am hungry."],["Nsukɔm de me.","I am thirsty."]]],
-    ["Energy & Study",[["Mabrɛ.","I am tired."],["Ɛsɛ sɛ mesua adeɛ.","I need to study."],["Mepɛ sɛ mesi nneɛma.","I want to wash clothes."]]],
-    ["Help at Home",[["Boa me.","Help me."],["Mente aseɛ.","I do not understand."],["Mennim.","I do not know."]]]]],
+    ["Daily Needs",[["Mepɛ sɛ medware.","I want to bathe."],["Ɛkɔm de me.","I am hungry."],["Nsukɔm de me.","I am thirsty."]],["Expressing daily needs","🏠","Daily life","Direct expressions for hunger, thirst, and routines help learners communicate immediate everyday needs."]],
+    ["Energy & Study",[["Mabrɛ.","I am tired."],["Ɛsɛ sɛ mesua adeɛ.","I need to study."],["Mepɛ sɛ mesi nneɛma.","I want to wash clothes."]],["A busy day","📚","Daily life","Study, tiredness, and household tasks often appear together when people describe how their day is going."]],
+    ["Help at Home",[["Boa me.","Help me."],["Mente aseɛ.","I do not understand."],["Mennim.","I do not know."]],["Ask instead of guessing","🤝","Communication","Short help and clarification phrases let a learner participate honestly when something is unclear."]]]],
   [7,"Describing Things","Describe cost, quantity, and preference.","✨","#4338CA",[
-    ["Cost",[["Ne boɔ yɛ den.","It is expensive."],["Ɛyɛ sɛn?","How much is it?"],["Ɛyɛ ahe?","How much is it?"]]],
-    ["Preference",[["Mepɛ.","I like it."],["Mempɛ.","I do not like it."],["Merehwehwɛ.","I am looking for it."]]],
-    ["Amount",[["Pii","a lot or many"],["Kakra","a little"],["Biara","every or any"]]]]],
+    ["Cost",[["Ne boɔ yɛ den.","It is expensive."],["Ɛyɛ sɛn?","How much is it?"],["Ɛyɛ ahe?","How much is it?"]],["Talking about cost","💰","Shopping","Price questions and cost descriptions work together in practical buying conversations."]],
+    ["Preference",[["Mepɛ.","I like it."],["Mempɛ.","I do not like it."],["Merehwehwɛ.","I am looking for it."]],["Make your choice clear","❤️","Expressions","Preference phrases help learners accept, decline, or explain what they are seeking."]],
+    ["Amount",[["Pii","a lot or many"],["Kakra","a little"],["Biara","every or any"]],["Small words, useful distinctions","⚖️","Expressions","Quantity words make requests more precise by distinguishing a little, many, and unrestricted choices."]]]],
   [8,"Asking Questions","Ask what, where, and how in useful exchanges.","❓","#C95D3A",[
     ["What",[["Ɛdeɛn nie?","What is this?"],["Wo din de sɛn?","What is your name?"],["Ɛyɛ nokorɛ?","Is it true?"]]],
     ["Where",[["Wo fire he?","Where do you come from?"],["Worekɔ he?","Where are you going?"],["Baabi a ɛwɔ he?","Where is the place?"]]],
@@ -77,5 +77,5 @@ const specs = [
 export const twiExtendedUnits = specs.map(([number,title,subtitle,emoji,color,lessons],index)=>twiUnit({
   id:`twi-unit-${number}`,title,subtitle,emoji,color,
   culture:index%3===0?culture.food:index%3===1?culture.life:index%3===2?culture.talk:culture.travel,
-  lessons:lessons.map(([lessonTitle,words],i)=>({title:lessonTitle,emoji:["🗣️","🧠","✨"][i],words}))
+  lessons:lessons.map(([lessonTitle,words,lessonCulture],i)=>({title:lessonTitle,emoji:["🗣️","🧠","✨"][i],words,culture:lessonCulture}))
 }));

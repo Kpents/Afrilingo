@@ -17,9 +17,15 @@ const supplements=[
   ["animal-akraman","Ɔkraman","dog","nouns","animals"],["animal-ɔkra","Ɔkra","cat","nouns","animals"],
   ["body-ani","Ani","eye","nouns","body"],["body-nsa","Nsa","hand or arm","nouns","body"],
   ["cloth-ntoma","Ntoma","cloth","nouns","clothing"],
-  ["pending-sports","Verification pending","Sports vocabulary awaiting native-speaker review","nouns","sports"],
-  ["pending-colours","Verification pending","Colour vocabulary awaiting native-speaker review","nouns","colours"],
-  ["pending-restaurant","Verification pending","Restaurant vocabulary awaiting native-speaker review","nouns","restaurant"]
-].flatMap(([id,native,english,wordType,theme])=>levels.map(level=>({id:`${id}-${level}`,native,english,wordType,theme,level,audio:"",exampleNative:native,exampleEnglish:english,source:native==="Verification pending"?"editorial placeholder":"course reference",verificationStatus:native==="Verification pending"?"verification-pending":"source-aligned",contextNote:native==="Verification pending"?"This category stays visible without teaching an uncertain translation.":"Optional linguistic detail will expand after editorial review.",linguistic:{}})));
+  ["sport-football","Fótbɔɔl","football or soccer","nouns","sports","FSI Twi Basic Course · Unit 19","A widely understood football term documented in a complete match-going dialogue."],
+  ["sport-ball","Bɔɔl","ball","nouns","sports","FSI Twi Basic Course · Unit 19","The FSI dialogue distinguishes the ball from the football match."],
+  ["sport-play","Bɔ bɔɔl","play football","verbs","sports","FSI Twi Basic Course · Unit 19","Use this as an action phrase for playing football."],
+  ["colour-red","Kɔkɔɔ","red","adjectives","colours","FSI Twi Basic Course · Unit 13","Twi colour adjectives normally follow the noun they describe."],
+  ["colour-black","Tuntum","black","adjectives","colours","FSI Twi Basic Course · Unit 13","Twi colour adjectives normally follow the noun they describe."],
+  ["colour-white","Fitaa","white","adjectives","colours","FSI Twi Basic Course · Unit 13","Twi colour adjectives normally follow the noun they describe."],
+  ["restaurant-place","Adidibea","restaurant or eating place","nouns","restaurant","Akan (Twi) Dictionary · Adidibea","This entry names a place where people eat."],
+  ["restaurant-food","Aduane","food","nouns","restaurant","Peace Corps Ghana · Twi For All","Pair this high-frequency word with a polite request."],
+  ["restaurant-water","Nsuo","water","nouns","restaurant","Peace Corps Ghana · Twi For All","A practical word for ordering or asking for a drink."]
+].flatMap(([id,native,english,wordType,theme,source="course reference",contextNote="Optional linguistic detail will expand after editorial review."])=>levels.map(level=>({id:`${id}-${level}`,native,english,wordType,theme,level,audio:"",exampleNative:native,exampleEnglish:english,source,verificationStatus:"source-aligned",contextNote,linguistic:{}})));
 const seen=new Set();
 export const twiExploreLibrary={languageId:"twi",languageName:"Twi",nativeName:"Twi",levels,wordTypes,themes,entries:[...supplements,...courseEntries].filter(item=>{const key=`${item.native}|${item.english}|${item.theme}|${item.level}`;if(seen.has(key))return false;seen.add(key);return true;})};

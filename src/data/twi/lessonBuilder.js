@@ -73,8 +73,20 @@ export function twiLesson({ id, title, emoji, words, culture, xp = 55 }) {
 export function twiUnit({ id, title, subtitle, emoji, color, lessons, culture }) {
   const built = lessons.map((lesson,index) => {
     const spiralReview = lessons.slice(0,index).flatMap(item => item.words).slice(-2).map(([native,english,metadata={}]) => [native,english,{...metadata,spiralReview:true}]);
-    return twiLesson({...lesson,words:[...lesson.words,...spiralReview],id:`${id}-lesson-${index+1}`,culture:lesson.culture||culture});
+    const lessonCulture = lesson.culture || [
+      culture[0],
+      culture[1],
+      culture[2],
+      `${culture[3]} “${lesson.title}” focuses that context on the expressions practiced in this lesson.`
+    ];
+    return twiLesson({...lesson,words:[...lesson.words,...spiralReview],id:`${id}-lesson-${index+1}`,culture:lessonCulture});
   });
-  built.push(twiLesson({id:`${id}-challenge`,title:`${title} Challenge`,emoji:"🏆",xp:100,words:lessons.flatMap(x=>x.words).slice(0,9),culture}));
+  const challengeCulture = [
+    `${culture[0]} · Unit review`,
+    "🏆",
+    culture[2],
+    `${culture[3]} The ${title} challenge brings the unit’s language together in one mixed review.`
+  ];
+  built.push(twiLesson({id:`${id}-challenge`,title:`${title} Challenge`,emoji:"🏆",xp:100,words:lessons.flatMap(x=>x.words).slice(0,9),culture:challengeCulture}));
   return { id, title, subtitle, emoji, color, lessons:built };
 }

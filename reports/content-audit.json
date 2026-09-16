@@ -1,81 +1,16 @@
 {
-  "generatedAt": "2026-09-13T22:12:56.166Z",
+  "generatedAt": "2026-09-16T09:15:45.246Z",
   "stats": {
     "languages": 14,
     "units": 392,
     "lessons": 1611,
-    "questions": 5746,
+    "questions": 6130,
     "cultureCards": 1611,
-    "exploreEntries": 4747,
-    "immersionItems": 362
+    "exploreEntries": 4844,
+    "immersionItems": 379
   },
   "errors": [],
   "warnings": [
-    {
-      "code": "DUPLICATE_CULTURE",
-      "path": "twi/unit-5/twi-unit-5-lesson-2",
-      "message": "Culture text duplicates twi/unit-5/twi-unit-5-lesson-1 and may be intentionally templated."
-    },
-    {
-      "code": "DUPLICATE_CULTURE",
-      "path": "twi/unit-6/twi-unit-6-lesson-2",
-      "message": "Culture text duplicates twi/unit-6/twi-unit-6-lesson-1 and may be intentionally templated."
-    },
-    {
-      "code": "DUPLICATE_CULTURE",
-      "path": "twi/unit-7/twi-unit-7-lesson-2",
-      "message": "Culture text duplicates twi/unit-7/twi-unit-7-lesson-1 and may be intentionally templated."
-    },
-    {
-      "code": "DUPLICATE_CULTURE",
-      "path": "twi/unit-21/twi-unit-21-lesson-2",
-      "message": "Culture text duplicates twi/unit-21/twi-unit-21-lesson-1 and may be intentionally templated."
-    },
-    {
-      "code": "EDITORIAL_REVIEW",
-      "path": "twi/explore/pending-sports-beginner",
-      "message": "Entry is explicitly marked for editorial verification."
-    },
-    {
-      "code": "EDITORIAL_REVIEW",
-      "path": "twi/explore/pending-sports-intermediate",
-      "message": "Entry is explicitly marked for editorial verification."
-    },
-    {
-      "code": "EDITORIAL_REVIEW",
-      "path": "twi/explore/pending-sports-advanced",
-      "message": "Entry is explicitly marked for editorial verification."
-    },
-    {
-      "code": "EDITORIAL_REVIEW",
-      "path": "twi/explore/pending-colours-beginner",
-      "message": "Entry is explicitly marked for editorial verification."
-    },
-    {
-      "code": "EDITORIAL_REVIEW",
-      "path": "twi/explore/pending-colours-intermediate",
-      "message": "Entry is explicitly marked for editorial verification."
-    },
-    {
-      "code": "EDITORIAL_REVIEW",
-      "path": "twi/explore/pending-colours-advanced",
-      "message": "Entry is explicitly marked for editorial verification."
-    },
-    {
-      "code": "EDITORIAL_REVIEW",
-      "path": "twi/explore/pending-restaurant-beginner",
-      "message": "Entry is explicitly marked for editorial verification."
-    },
-    {
-      "code": "EDITORIAL_REVIEW",
-      "path": "twi/explore/pending-restaurant-intermediate",
-      "message": "Entry is explicitly marked for editorial verification."
-    },
-    {
-      "code": "EDITORIAL_REVIEW",
-      "path": "twi/explore/pending-restaurant-advanced",
-      "message": "Entry is explicitly marked for editorial verification."
-    },
     {
       "code": "DUPLICATE_CULTURE",
       "path": "ga/unit-3/ga-unit-3-lesson-2",
