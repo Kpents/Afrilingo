@@ -58,3 +58,45 @@ export const twiHomeMission = {
   culture: "This practice scene puts the greeting before the purpose of the visit and closes with appreciation for the relationship. Real household etiquette varies.",
   completionTitle: "Visit complete!", completionText: "You introduced yourself and maintained a friendly Twi exchange."
 };
+
+export const twiWorkMission = {
+  id: "twi-workday", title: "A Busy Workday", languageName: "Twi", setting: "workplace", level: "intermediate",
+  image: "images/adventures/workplace.jpg", imageAlt: "Illustrated shared workplace with desks and work materials", hotspotClass: "left-[13%] top-[41%]", inspectAction: "Check the work area", xp: 40,
+  goal: "Tell the crew where you are going, describe your workday, ask for slower speech, and explain that you will return.",
+  item: { label: "Today’s work", emoji: "💼", hint: "Look around the work area before joining the conversation.", vocabulary: [{ native: "Adwuma", english: "work" }] },
+  characters: ["kofi", "gogo-nandi"],
+  routes: [
+    { id: "begin", label: "Start the workday", ending: "You explained your destination, followed the exchange, and closed with a clear plan." },
+    { id: "check", label: "Check with Taffy first", note: "Taffy describes the activity before you join Zuri.", ending: "Taffy’s clue helped you enter the workplace exchange confidently.", detour: step("work-clue", "kofi", "Colleague", "Meyɛ adwuma.", "I work.", "What activity did Taffy describe?", ["Working", "Shopping", "Going home"], "Working", "Adwuma means work in this course expression.") }
+  ],
+  steps: [
+    step("destination", "gogo-nandi", "Colleague", "Worekɔ he?", "Where are you going?", "Tell Zuri you are going to work.", ["Merekɔ adwuma.", "Merekɔ fie.", "Mepɛ aduane."], "Merekɔ adwuma.", "Merekɔ adwuma means ‘I am going to work.’"),
+    step("activity", "gogo-nandi", "Colleague", "Meyɛ adwuma.", "I work.", "Which response matches the activity?", ["I work", "I am hungry", "Turn right"], "I work", "Meyɛ adwuma describes working."),
+    step("tired", "gogo-nandi", "Colleague", "Mabrɛ.", "I am tired.", "What is Zuri telling you?", ["She is tired", "She is thirsty", "She is going home"], "She is tired", "Mabrɛ means ‘I am tired.’"),
+    step("repair", "gogo-nandi", "Colleague", "Meyɛ adwuma.", "I work.", "Ask Zuri to say it slowly.", ["Wobɛtumi aka no brɛoo?", "Ɛyɛ ahe?", "Wo din de sɛn?"], "Wobɛtumi aka no brɛoo?", "This asks whether the speaker can say it slowly."),
+    step("return", "gogo-nandi", "Colleague", "Yɛbɛhyia bio.", "We shall meet again.", "Say that you will return.", ["Mɛsan aba.", "Mennim.", "Fa benkum."], "Mɛsan aba.", "Mɛsan aba means ‘I will return.’")
+  ],
+  culture: "This scene practises clear plans, honest clarification, and leave-taking. Workplaces differ, so observe how colleagues address one another in the setting you enter.",
+  completionTitle: "Workday complete!", completionText: "You navigated a practical Twi workplace exchange."
+};
+
+export const twiPlansMission = {
+  id: "twi-meet-again", title: "Meet Again", languageName: "Twi", setting: "community park", level: "advanced",
+  image: "images/adventures/community-park.jpg", imageAlt: "Illustrated community park where friends are meeting", hotspotClass: "left-[15%] top-[42%]", inspectAction: "Find the meeting place", xp: 45,
+  goal: "Join the crew, make a later plan, repair the conversation when needed, and close at the right moment.",
+  item: { label: "The meeting place", emoji: "📍", hint: "Find the crew’s meeting point before making the plan.", vocabulary: [{ native: "Akyire yi", english: "later" }] },
+  characters: ["kofi", "gogo-nandi"],
+  routes: [
+    { id: "plan", label: "Make the plan together", ending: "You agreed on a later meeting and kept the conversation clear." },
+    { id: "listen", label: "Listen to Taffy first", note: "Taffy models the plan before Zuri asks you to respond.", ending: "You listened to the model, confirmed the plan, and closed the exchange.", detour: step("later-clue", "kofi", "Friend", "Akyire yi yɛbɛhyia.", "We shall meet later.", "When will the friends meet?", ["Later", "This morning", "Never"], "Later", "Akyire yi means later in this course expression.") }
+  ],
+  steps: [
+    step("greet", "gogo-nandi", "Friend", "Maakye.", "Good morning.", "Return Zuri’s greeting.", ["Maakye.", "Da yie.", "Ɛyɛ ahe?"], "Maakye.", "Maakye is the morning greeting practised in the course."),
+    step("invite", "gogo-nandi", "Friend", "Yɛbɛhyia bio?", "Shall we meet again?", "Agree to meet later.", ["Aane, akyire yi yɛbɛhyia.", "Ne boɔ yɛ den.", "Mente aseɛ."], "Aane, akyire yi yɛbɛhyia.", "This agrees and says that you will meet later."),
+    step("repeat", "gogo-nandi", "Friend", "Akyire yi yɛbɛhyia.", "We shall meet later.", "Ask Zuri to repeat the plan.", ["Wobɛtumi aka no bio?", "Wobɛtumi aboa me?", "Mepɛ aduane."], "Wobɛtumi aka no bio?", "This asks whether the speaker can repeat it."),
+    step("confirm", "gogo-nandi", "Friend", "Yɛbɛhyia bio.", "We shall meet again.", "Confirm the plan positively.", ["Aane.", "Mente aseɛ.", "Mabrɛ."], "Aane.", "Aane means ‘Yes.’ It confirms the plan directly."),
+    step("close", "gogo-nandi", "Friend", "Akyire yi yɛbɛhyia.", "We shall meet later.", "Close with thanks.", ["Meda wo ase.", "Fa nifa.", "Ɛkɔm de me."], "Meda wo ase.", "Meda wo ase is the full thank-you expression used in the course.")
+  ],
+  culture: "Making plans includes listening, confirming, and repairing misunderstandings. The exact greeting and leave-taking should fit the time, relationship, and local context.",
+  completionTitle: "Plan made!", completionText: "You arranged another meeting and kept the Twi exchange moving."
+};

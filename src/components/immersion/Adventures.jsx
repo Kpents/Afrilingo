@@ -9,13 +9,13 @@ import { zuluMarketPilot } from "../../data/adventures/zuluMarket";
 import { zuluCafeMission } from "../../data/adventures/zuluCafe";
 import { gaMarketMission } from "../../data/adventures/gaMarket";
 import { twiMarketMission } from "../../data/adventures/twiMarket";
-import { twiCafeMission, twiHomeMission, twiTaxiMission } from "../../data/adventures/twiScenes";
+import { twiCafeMission, twiHomeMission, twiPlansMission, twiTaxiMission, twiWorkMission } from "../../data/adventures/twiScenes";
 import { sidekicks } from "../../data/sidekicks";
 import SidekickPortrait from "../ui/SidekickPortrait";
 import CompanionReaction from "./CompanionReaction";
 import { hapticPress } from "../../utils/hapticFeedback";
 
-const featuredMissions = { zulu: [zuluMarketPilot, zuluCafeMission], ga: [gaMarketMission], twi: [twiMarketMission, twiCafeMission, twiTaxiMission, twiHomeMission] };
+const featuredMissions = { zulu: [zuluMarketPilot, zuluCafeMission], ga: [gaMarketMission], twi: [twiMarketMission, twiCafeMission, twiTaxiMission, twiHomeMission, twiWorkMission, twiPlansMission] };
 
 const sceneLooks = [
   { id: "market", emoji: "🛍️", title: "Neighbourhood Market", accent: "#F28C28", image: "images/adventures/market-square.jpg" },
@@ -63,12 +63,14 @@ export default function Adventures({ dark, data, progress, soundEnabled, onLoseH
   const [active, setActive] = useState(() => (featuredMissions[data.languageId] || []).find(mission => mission.id === initialMissionId) || null);
   const completed = progress.immersion?.completedAdventures || [];
   const featured = featuredMissions[data.languageId] || [];
+  const featuredCompleted = featured.filter(mission => completed.includes(mission.id)).length;
 
   if (active && featured.some(mission => mission.id === active.id)) return <SceneMission mission={active} companion={companion} languageId={data.languageId} dark={dark} hearts={progress.hearts} completed={completed.includes(active.id)} soundEnabled={soundEnabled} onLoseHeart={onLoseHeart} onReward={onReward} onExit={()=>setActive(null)}/>;
   if (active) return <AdventureScene adventure={{...active, companion}} languageId={data.languageId} dark={dark} hearts={progress.hearts} completed={completed.includes(active.id)} soundEnabled={soundEnabled} onLoseHeart={onLoseHeart} onExit={() => setActive(null)} onReward={onReward}/>;
 
   return <div>
     <div className="flex items-end justify-between gap-4"><div><div className="text-xs font-black uppercase tracking-[.22em] text-[#F28C28]">Walk in. Look around. Speak.</div><h1 className="mt-2 text-3xl font-black sm:text-4xl">{data.languageName} Adventures</h1><p className="mt-3 max-w-2xl leading-7 opacity-55">Enter everyday settings and talk with the people you meet. Adventures are optional and do not change your course path.</p><div className="mt-3 inline-flex items-center gap-2 rounded-full bg-[#F28C28]/10 py-1.5 pl-1.5 pr-3 text-sm font-black"><SidekickPortrait character={companion} className="size-8 rounded-full bg-white"/> {companion.name} is with you</div></div><MapPin className="hidden text-[#F28C28] sm:block" size={38}/></div>
+    {featured.length > 0 && <section className={`mt-6 rounded-[1.7rem] border p-5 ${dark ? "border-white/10 bg-[#1A201E]" : "border-black/8 bg-white"}`}><div className="flex items-center justify-between gap-4"><div><div className="text-xs font-black uppercase tracking-[.18em] text-[#24745B]">Twi adventure passport</div><div className="mt-1 text-xl font-black">{featuredCompleted === featured.length ? "Every scene explored" : `${featuredCompleted} of ${featured.length} scene stamps`}</div></div><span className="grid size-14 shrink-0 place-items-center rounded-2xl bg-[#F6C445]/20 text-3xl">{featuredCompleted === featured.length ? "🏆" : "🛂"}</span></div><div className={`mt-4 h-3 overflow-hidden rounded-full ${dark ? "bg-white/10" : "bg-black/8"}`}><motion.div initial={{width:0}} animate={{width:`${featuredCompleted / featured.length * 100}%`}} className="h-full rounded-full bg-gradient-to-r from-[#24745B] via-[#F28C28] to-[#F6C445]"/></div><div className="mt-3 flex flex-wrap gap-2">{featured.map(mission => <span key={mission.id} title={mission.title} className={`grid size-9 place-items-center rounded-xl text-sm font-black ${completed.includes(mission.id) ? "bg-[#24745B] text-white" : dark ? "bg-white/7" : "bg-black/5"}`}>{completed.includes(mission.id) ? "✓" : "○"}</span>)}</div></section>}
     {featured.length > 0 && <div className="mt-6 grid gap-3 sm:grid-cols-2">{featured.map((mission,index)=><button key={mission.id} onClick={()=>setActive(mission)} className={`flex w-full overflow-hidden rounded-[1.7rem] border text-left transition hover:-translate-y-0.5 ${dark ? "border-[#F6C445]/30 bg-[#1A201E]" : "border-[#F28C28]/30 bg-white"}`}><img src={`${import.meta.env.BASE_URL}${mission.image}`} alt="" className="h-40 w-28 shrink-0 object-cover sm:w-32"/><div className="flex min-w-0 flex-1 flex-col justify-center p-4"><div className="text-[10px] font-black uppercase tracking-wider text-[#F28C28]">Featured · {index+1} of {featured.length}</div><div className="mt-2 text-lg font-black">{mission.title}</div><p className={`mt-1 line-clamp-2 text-xs font-semibold ${dark ? "text-white/50" : "text-black/50"}`}>{mission.goal}</p><div className="mt-3 text-xs font-black text-[#24745B]">{completed.includes(mission.id) ? "Play again" : `Start mission · +${mission.xp} XP`} →</div></div></button>)}</div>}
     <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{adventures.map((item, index) => {
       const locked = index > 0 && !completed.includes(adventures[index - 1].id);
