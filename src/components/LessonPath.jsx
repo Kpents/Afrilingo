@@ -1,29 +1,30 @@
 import { motion, useReducedMotion } from "framer-motion";
 import { Check, Lock, Star } from "lucide-react";
 import { isLessonUnlocked } from "../utils/courseProgress";
-import { LeboTip } from "./ui/Lebo";
 import SidekickPortrait from "./ui/SidekickPortrait";
 import { sidekicks } from "../data/sidekicks";
 import { hapticPress } from "../utils/hapticFeedback";
 
-export default function LessonPath({ lessons, progress, dark, onStart, languageId }) {
+const encouragements = [
+  { id: "kobby", message: "Every new word is a win. Keep going—you’re building something brilliant!" },
+  { id: "zuri", message: "Take your time and notice the patterns. You know more than you think." },
+  { id: "nia", message: "Stay curious! Each lesson brings you closer to a real conversation." },
+  { id: "taji", message: "Say it out loud and trust your voice. I’m cheering you on!" }
+].map(item => ({ ...item, character: sidekicks.find(character => character.id === item.id) }));
+
+export default function LessonPath({ lessons, progress, dark, onStart }) {
   const reduceMotion = useReducedMotion();
   const offsets = [0, 70, 20, -55, 10];
   const tilts = [-3, 2.5, -2, 3, -1.5];
-  const journeyCrew = [
-    sidekicks.find(character => character.id === "kobby"),
-    sidekicks.find(character => character.id === "zuri"),
-    sidekicks.find(character => character.id === "nia"),
-    sidekicks.find(character => character.id === "taji")
-  ];
 
   return (
-    <div className="relative flex min-h-[720px] flex-col items-center gap-14 overflow-hidden py-6">
+    <div className="relative flex min-h-[720px] flex-col items-center gap-10 overflow-hidden py-6">
       <div className={`absolute bottom-10 left-1/2 top-10 w-2 -translate-x-1/2 rounded-full ${dark ? "bg-[#232B28]" : "bg-[#E9E0D4]"}`} />
       {lessons.map((lesson, index) => {
         const done = progress.completedLessonIds.includes(lesson.id);
         const unlocked = isLessonUnlocked(lessons, index, progress.completedLessonIds);
         const status = done ? "done" : unlocked ? "current" : "locked";
+        const encouragement = index < lessons.length - 1 ? encouragements[index % encouragements.length] : null;
 
         return (
           <div key={lesson.id} className="contents">
@@ -31,23 +32,6 @@ export default function LessonPath({ lessons, progress, dark, onStart, languageI
             className="relative z-10 flex w-full max-w-sm justify-center"
             style={{ transform: `translateX(${offsets[index] || 0}px)` }}
           >
-            {journeyCrew[index] && (
-              <motion.div
-                aria-hidden="true"
-                initial={reduceMotion ? false : { opacity: 0, y: 12, scale: 0.9 }}
-                whileInView={reduceMotion ? {} : { opacity: 1, y: 0, scale: 1 }}
-                viewport={{ once: true, amount: 0.6 }}
-                className={`absolute top-2 ${index % 2 === 0 ? "right-[calc(50%+64px)]" : "left-[calc(50%+64px)]"} ${status === "locked" ? "opacity-45 grayscale" : ""}`}
-              >
-                <div className={`relative grid h-[76px] w-[76px] place-items-end overflow-hidden rounded-[26px] border-4 shadow-lg ${dark ? "border-[#303A35] bg-[#232B28]" : "border-white bg-[#FFF1D9]"}`}>
-                  <SidekickPortrait character={journeyCrew[index]} className="h-[70px] w-[70px]" />
-                </div>
-                <span className={`absolute -bottom-2 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full px-2 py-0.5 text-[10px] font-black shadow-sm ${dark ? "bg-[#1A201E] text-white" : "bg-white text-[#252525]"}`}>
-                  {journeyCrew[index].name}
-                </span>
-              </motion.div>
-            )}
-
             <motion.button
               disabled={status === "locked"}
               onClick={() => onStart(lesson)}
@@ -86,12 +70,31 @@ export default function LessonPath({ lessons, progress, dark, onStart, languageI
               </div>
             </motion.button>
           </div>
-          {index === 1 && (
-            <LeboTip dark={dark} pose="learn" reaction="learn" languageId={languageId} className="relative z-10 w-full max-w-sm px-3">
-              {progress.completedLessonIds.includes(lesson.id)
-                ? "Great rhythm! Keep climbing—your next lesson is waiting."
-                : "I’m Lebo! Take the path one lesson at a time. I’ll be cheering you on."}
-            </LeboTip>
+          {encouragement?.character && (
+              <motion.aside
+                aria-label={`Encouragement from ${encouragement.character.name}`}
+                initial={reduceMotion ? false : { opacity: 0, y: 14, scale: 0.96 }}
+                whileInView={reduceMotion ? {} : { opacity: 1, y: 0, scale: 1 }}
+                viewport={{ once: true, amount: 0.55 }}
+                className={`relative z-10 flex w-[calc(100%-2rem)] max-w-sm items-center gap-3 rounded-[28px] border p-3 shadow-lg ${index % 2 === 0 ? "flex-row" : "flex-row-reverse text-right"} ${dark ? "border-white/10 bg-[#1A201E]" : "border-black/5 bg-white"}`}
+              >
+                <div className="relative shrink-0">
+                  <div className={`grid h-[74px] w-[74px] place-items-end overflow-hidden rounded-[24px] border-4 ${dark ? "border-[#303A35] bg-[#232B28]" : "border-[#FFF1D9] bg-[#FFF8EE]"}`}>
+                    <SidekickPortrait character={encouragement.character} className="h-[68px] w-[68px]" />
+                  </div>
+                  <span className={`absolute -bottom-1 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full px-2 py-0.5 text-[10px] font-black shadow-sm ${encouragement.character.id === "zuri" ? "text-[#252525]" : "text-white"}`} style={{ backgroundColor: encouragement.character.color }}>
+                    {encouragement.character.name}
+                  </span>
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="mb-1 text-[10px] font-black uppercase tracking-[0.16em]" style={{ color: encouragement.character.color }}>
+                    {encouragement.character.name} says
+                  </div>
+                  <p className={`text-sm font-bold leading-relaxed ${dark ? "text-white/85" : "text-[#252525]"}`}>
+                    {encouragement.message}
+                  </p>
+                </div>
+              </motion.aside>
           )}
           </div>
         );
