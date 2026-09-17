@@ -12,6 +12,8 @@
 - [x] Installable offline application shell
 - [x] Privacy, help, recovery, and reset controls
 - [x] Netlify and Vercel static-host configuration
+- [x] Regression checks for lesson/unit unlocking, language isolation, backup import, and corrupt-data rejection
+- [x] Fresh-account browser QA for onboarding, mistakes, hearts, review, XP, and Twi/Ga switching
 
 ## Required before a public production claim
 
