@@ -7,6 +7,10 @@ export const achievements = [
   { id: "streak-starter", title: "Streak Starter", description: "Reach a 7 day streak", emoji: "🔥", test: ({ streak }) => streak >= 7 },
   { id: "review-hero", title: "Review Hero", description: "Resolve 10 review questions", emoji: "🧠", test: ({ reviews }) => reviews >= 10 },
   { id: "word-collector", title: "Word Collector", description: "Master 25 Explore words", emoji: "📚", test: ({ masteredWords }) => masteredWords >= 25 },
+  { id: "scene-stealer", title: "Scene Stealer", description: "Complete your first Adventure", emoji: "🎭", test: ({ adventures }) => adventures >= 1 },
+  { id: "world-walker", title: "World Walker", description: "Complete 6 Adventures", emoji: "🧭", test: ({ adventures }) => adventures >= 6 },
+  { id: "voice-finder", title: "Voice Finder", description: "Complete 3 pronunciation practices", emoji: "🎙️", test: ({ pronunciation }) => pronunciation >= 3 },
+  { id: "story-seeker", title: "Story Seeker", description: "Complete 3 interactive stories", emoji: "📖", test: ({ stories }) => stories >= 3 },
   { id: "culture-keeper", title: "Culture Keeper", description: "Collect 25 culture cards", emoji: "🪘", test: ({ cards }) => cards >= 25 },
   { id: "century-club", title: "Century Club", description: "Complete 100 lessons", emoji: "💯", test: ({ lessons }) => lessons >= 100 }
 ];
@@ -16,11 +20,14 @@ export function getAchievementStats(progressByLanguage) {
   return {
     xp: courses.reduce((sum, item) => sum + (item.xp || 0), 0),
     lessons: courses.reduce((sum, item) => sum + (item.completedLessonIds?.length || 0), 0),
-    cards: courses.reduce((sum, item) => sum + (item.unlockedCultureCards?.length || 0), 0),
+    cards: courses.reduce((sum, item) => sum + (item.unlockedCultureCards?.length || 0) + (item.immersion?.unlockedWorldCultureCards?.length || 0), 0),
     streak: Math.max(0, ...courses.map(item => item.streak || 0)),
     activeLanguages: courses.filter(item => (item.completedLessonIds?.length || 0) > 0).length,
     reviews: courses.reduce((sum, item) => sum + (item.reviewResolved || 0), 0),
-    masteredWords: courses.reduce((sum, item) => sum + (item.explore?.masteredEntryIds?.length || 0), 0)
+    masteredWords: courses.reduce((sum, item) => sum + (item.explore?.masteredEntryIds?.length || 0), 0),
+    adventures: courses.reduce((sum, item) => sum + (item.immersion?.completedAdventures?.length || 0), 0),
+    pronunciation: courses.reduce((sum, item) => sum + (item.immersion?.completedPronunciation?.length || 0), 0),
+    stories: courses.reduce((sum, item) => sum + (item.immersion?.completedStories?.length || 0) + (item.immersion?.completedWorldStories?.length || 0), 0)
   };
 }
 

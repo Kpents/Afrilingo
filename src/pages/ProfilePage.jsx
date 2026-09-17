@@ -1,4 +1,4 @@
-import { Flame, Heart, Star, Zap } from "lucide-react";
+import { BookOpenText, Compass, Flame, Heart, LibraryBig, Mic, Star, Zap } from "lucide-react";
 import { achievements, getAchievementStats } from "../data/achievements";
 import { availableLanguageList } from "../data/languages";
 
@@ -8,6 +8,13 @@ export default function ProfilePage({ dark, progress, progressByLanguage = {}, l
   const persistedAchievements = new Set(Object.values(progressByLanguage).flatMap(item => item?.unlockedAchievementIds || []));
   const startedIds = new Set(preferences?.startedLanguageIds?.length ? preferences.startedLanguageIds : [language.id]);
   const startedCourses = availableLanguageList.filter(item => startedIds.has(item.id));
+  const immersion = progress.immersion || {};
+  const activeStats = [
+    ["Vocabulary", progress.explore?.masteredEntryIds?.length || 0, "words mastered", LibraryBig, "#24745B"],
+    ["Adventures", immersion.completedAdventures?.length || 0, "scenes completed", Compass, "#F28C28"],
+    ["Stories", (immersion.completedStories?.length || 0) + (immersion.completedWorldStories?.length || 0), "stories completed", BookOpenText, "#C95D3A"],
+    ["Pronunciation", immersion.completedPronunciation?.length || 0, "practices completed", Mic, "#4338CA"]
+  ];
 
   return (
     <div className="mx-auto max-w-3xl">
@@ -25,6 +32,10 @@ export default function ProfilePage({ dark, progress, progressByLanguage = {}, l
           <Metric icon={<Star />} label="Lessons" value={totals.lessons} dark={dark} />
         </div>
       </div>
+
+      <h2 className="mt-8 text-2xl font-black">{language.language} learning footprint</h2>
+      <p className={`mt-2 text-sm font-semibold leading-6 ${dark ? "text-white/45" : "text-black/45"}`}>Your progress beyond the lesson path—words explored, situations handled, stories followed, and speaking practice completed.</p>
+      <div className="mt-4 grid gap-3 sm:grid-cols-2">{activeStats.map(([title,value,label,Icon,color]) => <div key={title} className={`relative overflow-hidden rounded-[1.5rem] border p-5 ${card}`}><div className="absolute -bottom-6 -right-4 size-24 rounded-full opacity-10" style={{backgroundColor:color}}/><div className="relative flex items-center gap-4"><span className="grid size-12 place-items-center rounded-2xl text-white" style={{backgroundColor:color}}><Icon size={22}/></span><div><div className="text-2xl font-black">{value}</div><div className="font-black">{title}</div><div className="text-xs font-semibold opacity-45">{label}</div></div></div></div>)}</div>
 
       {preferences && <><h2 className="mt-8 text-2xl font-black">Learning preferences</h2><div className={`mt-4 rounded-[1.5rem] border p-5 ${card}`}><label className="text-sm font-black">Display name<input value={preferences.name} onChange={event=>onPreferencesChange({...preferences,name:event.target.value})} className={`mt-2 min-h-12 w-full rounded-xl border px-4 font-bold outline-none focus:border-[#F28C28] ${dark?"border-white/10 bg-white/5":"border-black/10 bg-[#FFF8EE]"}`}/></label><div className="mt-5 text-sm font-black">Daily activity goal</div><div className="mt-2 grid grid-cols-3 gap-2">{[1,3,5].map(value=><button key={value} onClick={()=>onPreferencesChange({...preferences,dailyTarget:value})} className={`min-h-12 rounded-xl font-black ${preferences.dailyTarget===value?"bg-[#F28C28] text-white":dark?"bg-white/6":"bg-black/5"}`}>{value} / day</button>)}</div></div></>}
 
@@ -47,8 +58,9 @@ export default function ProfilePage({ dark, progress, progressByLanguage = {}, l
       <div className="mt-4 space-y-3">{startedCourses.map(item => {
         const course = progressByLanguage[item.id];
         const lessonTotal = item.units.reduce((sum, unit) => sum + unit.lessons.length, 0);
-        const percent = Math.round(((course?.completedLessonIds.length || 0) / lessonTotal) * 100);
-        return <div key={item.id} className={`rounded-[1.5rem] border p-4 ${card}`}><div className="flex items-center justify-between"><div className="font-black">{item.flag} {item.language}</div><div className="text-sm font-black text-[#F28C28]">{course?.xp || 0} XP</div></div><div className={`mt-3 h-2 overflow-hidden rounded-full ${dark ? "bg-white/10" : "bg-black/10"}`}><div className="h-full rounded-full bg-[#24745B]" style={{width:`${percent}%`}}/></div><div className={`mt-2 text-xs font-bold ${dark ? "text-white/40" : "text-black/40"}`}>{course?.completedLessonIds.length || 0}/{lessonTotal} lessons · {percent}%</div></div>;
+        const percent = Math.round(((course?.completedLessonIds?.length || 0) / lessonTotal) * 100);
+        const extras = (course?.explore?.masteredEntryIds?.length || 0) + (course?.immersion?.completedAdventures?.length || 0) + (course?.immersion?.completedStories?.length || 0) + (course?.immersion?.completedWorldStories?.length || 0);
+        return <div key={item.id} className={`rounded-[1.5rem] border p-4 ${card}`}><div className="flex items-center justify-between"><div className="font-black">{item.flag} {item.language}</div><div className="text-sm font-black text-[#F28C28]">{course?.xp || 0} XP</div></div><div className={`mt-3 h-2 overflow-hidden rounded-full ${dark ? "bg-white/10" : "bg-black/10"}`}><div className="h-full rounded-full bg-[#24745B]" style={{width:`${percent}%`}}/></div><div className={`mt-2 flex flex-wrap justify-between gap-2 text-xs font-bold ${dark ? "text-white/40" : "text-black/40"}`}><span>{course?.completedLessonIds?.length || 0}/{lessonTotal} lessons · {percent}%</span><span>{extras} Explore & Immersion moments</span></div></div>;
       })}</div>
     </div>
   );
