@@ -120,6 +120,13 @@ button, [role="button"], input, select {
   .afri-press { transition: none; }
 }
 
+@media print {
+  body * { visibility: hidden; }
+  .afri-certificate, .afri-certificate * { visibility: visible; }
+  .afri-certificate { position: fixed; inset: 1cm; margin: 0 !important; }
+  .afri-certificate-print { display: none !important; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     scroll-behavior: auto !important;

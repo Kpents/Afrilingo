@@ -100,6 +100,8 @@ export const twiWorld = {
     }
   },
   cultureCards: [
+    { id:"twi-adventure-path", title:"Language lives in the moment", emoji:"🛤️", category:"Learning through culture", language:"Twi", region:"Ghana", text:"An AfriLingo Adventure places greetings, requests, directions, and thanks inside a social setting. The goal is not only to recall a translation, but to notice who is speaking, what is happening, and which response fits the moment.", provenance:"Original AfriLingo learning reflection", unlockLabel:"Complete your first Twi Adventure to unlock." },
+    { id:"twi-story-keeper", title:"Stories carry language", emoji:"📖", category:"Storytelling", language:"Twi", region:"Ghana", text:"Stories let learners meet familiar expressions in sequence, connect actions with consequences, and remember language through people and events rather than isolated word lists.", provenance:"Original AfriLingo learning reflection", unlockLabel:"Complete your first Twi story to unlock." },
     { id:"twi-ananses-stories", title:"Why stories belong to Ananse", emoji:"🕷️", category:"Storytelling", language:"Twi", region:"Akan storytelling traditions · Ghana and the wider diaspora", text:"Ananse is a many-sided spider trickster in Akan storytelling. Smithsonian Folkways records him as hero, villain, moral inspiration, and comic figure; one Ashanti tale explains how he earns stories from Nyame and how those stories come to be shared. Individual tellers and communities preserve many versions.", sourceTitle:"Smithsonian Folkways — Ashanti: Folk Tales from Ghana", sourceUrl:"https://folkways.si.edu/harold-courlander/ashanti-folk-tales-from-ghana/childrens-prose/album/smithsonian" }
   ],
   games: {

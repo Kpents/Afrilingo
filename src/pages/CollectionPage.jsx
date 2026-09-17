@@ -65,7 +65,7 @@ export default function CollectionPage({ dark, progressByLanguage, activeLanguag
         const worldCards = (languageWorlds[language.id]?.cultureCards || []).map(card => ({
           ...card,
           unlocked: unlockedWorldIds.includes(card.id),
-          unlockLabel: "Complete its interactive story to unlock.",
+          unlockLabel: card.unlockLabel || "Complete its interactive story to unlock.",
         }));
         const cards = [...lessonCards, ...worldCards];
         const filteredCards = cards.filter(card => {

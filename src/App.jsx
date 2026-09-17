@@ -48,6 +48,7 @@ import useUserPreferences from "./hooks/useUserPreferences";
 import useDialogFocus from "./hooks/useDialogFocus";
 import useAppLifecycle from "./hooks/useAppLifecycle";
 import AppStatus from "./components/system/AppStatus";
+import { recordReviewStreak, recordWeeklyActivity } from "./utils/learningGoals";
 
 export default function App() {
   const lifecycle = useAppLifecycle();
@@ -242,6 +243,7 @@ export default function App() {
       streak: nextStreak,
       lastStudyDate: today,
       daily: { date: today, completed: dailyCompleted, claimed: earnsDailyBonus || (p.daily?.date === today && p.daily.claimed) },
+      weekly: recordWeeklyActivity(p, { xp }),
 
       /*
         Lesson completion
@@ -344,6 +346,7 @@ export default function App() {
       return {
         ...p,
         xp: p.xp + xp,
+        weekly: recordWeeklyActivity(p, { xp }),
         explore: {
           masteredEntryIds: nextMastery,
           completedCategoryLevels: completedLevel ? [...new Set([...existing.completedCategoryLevels, categoryKey])] : existing.completedCategoryLevels
@@ -371,7 +374,7 @@ export default function App() {
 
   const completeReview = ({ resolvedKeys, xp }) => {
     showReward({ kind: "xp", label: `+${xp} Review XP` });
-    setProgress((p) => ({ ...p, xp: p.xp + xp, reviewResolved: (p.reviewResolved || 0) + resolvedKeys.length, reviewQueue: (p.reviewQueue || []).filter((item) => !resolvedKeys.includes(item.reviewKey)) }));
+    setProgress((p) => ({ ...p, xp: p.xp + xp, weekly: recordWeeklyActivity(p, { xp, review: true }), reviewStreak: recordReviewStreak(p), reviewResolved: (p.reviewResolved || 0) + resolvedKeys.length, reviewQueue: (p.reviewQueue || []).filter((item) => !resolvedKeys.includes(item.reviewKey)) }));
   };
 
   const completePractice = ({ mode, xp, correct, total }) => {
@@ -386,7 +389,7 @@ export default function App() {
       const bonus = count >= preferences.dailyTarget && !(p.daily?.date === today && p.daily.claimed);
       const nextStreak = p.lastStudyDate === today ? p.streak : p.lastStudyDate === yesterday ? p.streak + 1 : 1;
       const previousPractice = p.practice?.date === today ? p.practice : { date: today, sessions: 0, xp: 0, lastMode: null };
-      return { ...p, xp: p.xp + xp + (bonus ? 30 : 0), streak: nextStreak, lastStudyDate: today, daily: { date: today, completed: count, claimed: bonus || (p.daily?.date === today && p.daily.claimed) }, practice: { date: today, sessions: previousPractice.sessions + 1, xp: previousPractice.xp + xp, lastMode: mode } };
+      return { ...p, xp: p.xp + xp + (bonus ? 30 : 0), weekly: recordWeeklyActivity(p, { xp }), streak: nextStreak, lastStudyDate: today, daily: { date: today, completed: count, claimed: bonus || (p.daily?.date === today && p.daily.claimed) }, practice: { date: today, sessions: previousPractice.sessions + 1, xp: previousPractice.xp + xp, lastMode: mode } };
     });
     showReward(earnsDailyBonus ? { kind: "milestone", eyebrow: "Daily goal complete", title: `+${xp + 30} XP`, message: `${correct}/${total} correct · includes 30 bonus XP` } : { kind: "xp", label: `+${xp} Practice XP` });
   };
@@ -398,10 +401,15 @@ export default function App() {
       const existing = p.immersion || {};
       const values = existing[field] || [];
       const alreadyRecorded = values.includes(id);
+      const rewardCardId = activeLanguage === "twi" && field === "completedAdventures"
+        ? "twi-adventure-path"
+        : activeLanguage === "twi" && field === "completedStories" ? "twi-story-keeper" : null;
+      const worldCards = existing.unlockedWorldCultureCards || [];
       return {
         ...p,
         xp: p.xp + (alreadyRecorded ? 0 : xp),
-        immersion: { ...existing, [field]: alreadyRecorded ? values : [...values, id] }
+        weekly: alreadyRecorded || !(xp > 0) ? p.weekly : recordWeeklyActivity(p, { xp }),
+        immersion: { ...existing, [field]: alreadyRecorded ? values : [...values, id], unlockedWorldCultureCards: rewardCardId && !alreadyRecorded ? [...new Set([...worldCards, rewardCardId])] : worldCards }
       };
     });
   };
@@ -707,6 +715,7 @@ export default function App() {
                 startedLanguageIds={preferences.startedLanguageIds}
                 languageId={activeLanguage}
                 learnerName={preferences.name}
+                dailyTarget={preferences.dailyTarget}
 
                 onUnitChange={
                   setActiveUnit
@@ -748,6 +757,8 @@ export default function App() {
                     currentLanguage.units[activeUnit].lessons.at(-1).id === activeLesson.id &&
                     !progress.completedLessonIds.includes(activeLesson.id)
                   }
+                  unit={currentLanguage.units[activeUnit]}
+                  isCourseFinal={activeUnit === currentLanguage.units.length - 1 && currentLanguage.units[activeUnit].lessons.at(-1).id === activeLesson.id}
 
                   onExit={() => {
 

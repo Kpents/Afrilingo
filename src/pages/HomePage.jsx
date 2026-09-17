@@ -13,6 +13,7 @@ import LeboCoach from "../components/gamification/LeboCoach";
 import { getFurthestUnlockedUnit, isUnitUnlocked as getUnitUnlocked } from "../utils/courseProgress";
 import CourseSwitcher from "../components/navigation/CourseSwitcher";
 import UnitNavigator from "../components/navigation/UnitNavigator";
+import CourseGraduation from "../components/gamification/CourseGraduation";
 
 export default function HomePage({
   dark,
@@ -25,8 +26,9 @@ export default function HomePage({
   onUnitChange,
   progressByLanguage,
   startedLanguageIds,
-  languageId
-  ,learnerName
+  languageId,
+  learnerName,
+  dailyTarget
 }) {
   const units = language.units;
   const unit = units[activeUnit];
@@ -102,6 +104,7 @@ export default function HomePage({
     if (progress.completedLessonIds.includes(lesson.id)) return false;
     return index === 0 || progress.completedLessonIds.includes(recommendedUnit.lessons[index - 1].id);
   }) || recommendedUnit.lessons.at(-1);
+  const courseComplete = units.every(courseUnit => courseUnit.lessons.every(lesson => progress.completedLessonIds.includes(lesson.id)));
 
   return (
     <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
@@ -216,6 +219,8 @@ export default function HomePage({
           languageId={languageId}
         />
 
+        {courseComplete && language.id === "twi" && <CourseGraduation dark={dark} language={language} learnerName={learnerName} units={units} onReview={onStartLesson}/>}
+
       </section>
 
       {/* ================================================= */}
@@ -226,7 +231,7 @@ export default function HomePage({
 
         <LeboCoach dark={dark} progress={progress} completedInUnit={completedLessonsInUnit} totalInUnit={unit.lessons.length} languageId={languageId} />
 
-        <GamificationPanel dark={dark} progress={progress} />
+        <GamificationPanel dark={dark} progress={progress} dailyTarget={dailyTarget} />
 
         {/* STREAK */}
 

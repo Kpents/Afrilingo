@@ -10,7 +10,7 @@ import ConfettiBurst from "../components/ui/ConfettiBurst";
 import { playUiSound } from "../services/uiSound";
 import { hapticPress } from "../utils/hapticFeedback";
 
-export default function LessonPage({ lesson, dark, hearts, languageId, soundEnabled, isFirstLesson, isUnitChallenge, onExit, onLoseHeart, onReviewQuestion, onRefillHearts, onComplete }) {
+export default function LessonPage({ lesson, unit, dark, hearts, languageId, soundEnabled, isFirstLesson, isUnitChallenge, isCourseFinal, onExit, onLoseHeart, onReviewQuestion, onRefillHearts, onComplete }) {
   const [stage, setStage] = useState("conversation");
   const [queue, setQueue] = useState(() => lesson.questions.map((q) => ({ ...q, retry: false })));
   const [index, setIndex] = useState(0);
@@ -66,6 +66,8 @@ export default function LessonPage({ lesson, dark, hearts, languageId, soundEnab
         mistakes={mistakes}
         isFirstLesson={isFirstLesson}
         isUnitChallenge={isUnitChallenge}
+        isCourseFinal={isCourseFinal}
+        unit={unit}
         soundEnabled={soundEnabled}
         onContinue={() => onComplete({
           xp: lesson.xp + (isUnitChallenge ? 50 : 0),
@@ -219,8 +221,9 @@ function OutOfHearts({ dark, onExit, onRefill }) {
   return <div className="mx-auto max-w-xl text-center"><motion.div initial={{scale:.7, opacity:0}} animate={{scale:1, opacity:1}} className="mx-auto grid h-24 w-24 place-items-center rounded-[2rem] bg-[#EF5B5B]/15 text-5xl">💔</motion.div><h1 className="mt-6 text-4xl font-black">Out of hearts</h1><p className={`mx-auto mt-3 max-w-md leading-7 ${dark ? "text-white/55" : "text-black/55"}`}>One heart regenerates every 30 minutes. Recover one now with a quick practice refill and continue from the same question.</p><button onClick={onRefill} onPointerDown={hapticPress} data-tone="green" className="afri-press mt-6 flex min-h-14 w-full items-center justify-center gap-2 rounded-[1.4rem] bg-[#24745B] px-5 text-lg font-black text-white"><Sparkles size={20}/>Practice refill · +1 heart</button><button onClick={onExit} className={`mt-3 min-h-12 w-full rounded-[1.2rem] font-black ${dark ? "bg-white/6" : "bg-black/5"}`}>Return to path</button></div>;
 }
 
-function Completion({ dark, lesson, languageId, earned, mistakes, soundEnabled, isFirstLesson, isUnitChallenge, onContinue }) {
+function Completion({ dark, lesson, unit, languageId, earned, mistakes, soundEnabled, isFirstLesson, isUnitChallenge, isCourseFinal, onContinue }) {
   const reduceMotion = useReducedMotion();
+  const learnedWords = new Set((unit?.lessons || []).flatMap(item => item.vocabulary || []).map(item => item.native)).size;
   useEffect(() => playUiSound(isUnitChallenge ? "unit" : "complete", soundEnabled), [isUnitChallenge, soundEnabled]);
   return (
     <div className="relative mx-auto max-w-2xl overflow-hidden rounded-[2rem] px-1 pb-2 text-center" aria-live="polite">
@@ -232,7 +235,7 @@ function Completion({ dark, lesson, languageId, earned, mistakes, soundEnabled, 
         <motion.span initial={reduceMotion?false:{scale:0,rotate:-20}} animate={{scale:1,rotate:0}} transition={{delay:.35,type:"spring",stiffness:220}} className="absolute bottom-3 right-2 grid h-14 w-14 place-items-center rounded-2xl bg-[#F6C445] text-3xl shadow-xl" aria-hidden>🏆</motion.span>
       </motion.div>
 
-      <h1 className="mt-6 text-4xl font-black">Lesson complete!</h1>
+      <h1 className="mt-6 text-4xl font-black">{isCourseFinal ? "Twi path complete!" : isUnitChallenge ? "Unit complete!" : "Lesson complete!"}</h1>
       <p className={`mt-2 font-semibold ${dark ? "text-white/55" : "text-black/55"}`}>
         {mistakes === 0 ? "Perfect run. Beautiful work." : "You finished strong — and reviewed what you missed."}
       </p>
@@ -242,6 +245,8 @@ function Completion({ dark, lesson, languageId, earned, mistakes, soundEnabled, 
         <Reward dark={dark} label="Practice XP" value={`+${earned} XP`} accent="#F28C28" />
         <Reward dark={dark} label="Accuracy" value={`${Math.round((lesson.questions.length / (lesson.questions.length + mistakes)) * 100)}%`} accent="#53B98A" />
       </div>
+
+      {isUnitChallenge && <div className={`mt-5 rounded-[1.5rem] border p-5 text-left ${dark ? "border-white/10 bg-white/5" : "border-black/8 bg-white"}`}><div className="text-xs font-black uppercase tracking-[.18em] text-[#4338CA]">What you can do now</div><div className="mt-2 text-xl font-black">{unit?.title}</div><p className="mt-2 text-sm font-semibold leading-6 opacity-55">{unit?.subtitle || "Use this unit’s language in context."}</p><div className="mt-3 inline-flex rounded-full bg-[#24745B]/15 px-3 py-1.5 text-xs font-black text-[#24745B]">{learnedWords} key expressions practised</div></div>}
 
       {(isFirstLesson || isUnitChallenge || mistakes === 0) && <motion.div initial={{opacity:0, scale:.96}} animate={{opacity:1, scale:1}} className={`mt-5 rounded-[1.5rem] border p-4 text-left ${dark ? "border-[#F6C445]/25 bg-[#F6C445]/10" : "border-[#F6C445]/35 bg-[#F6C445]/15"}`}><div className="text-xs font-black uppercase tracking-wider text-[#F28C28]">{isFirstLesson ? "New achievement" : isUnitChallenge ? "Unit reward" : "Perfect lesson"}</div><div className="mt-1 text-lg font-black">{isFirstLesson ? "👣 First Steps unlocked" : isUnitChallenge ? "🏆 Challenge cleared · +50 bonus XP" : "✨ Flawless finish"}</div></motion.div>}
 
@@ -254,7 +259,7 @@ function Completion({ dark, lesson, languageId, earned, mistakes, soundEnabled, 
         onPointerDown={hapticPress}
         className="afri-press mt-6 w-full rounded-[1.4rem] bg-[#F28C28] py-4 text-lg font-black uppercase text-white"
       >
-        Collect & continue
+        {isCourseFinal ? "Claim graduation reward" : "Collect & continue"}
       </button>
     </div>
   );
