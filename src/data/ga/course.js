@@ -3,6 +3,16 @@ import { gaUnit2 } from "./unit2";
 import { gaSourceNotes } from "./sourceNotes";
 import { gaExtendedUnits } from "./extendedUnits";
 import { gaAdvancedUnits } from "./advancedUnits";
+import { deepenCourse } from "../twi/courseDepth";
+
+const rawGaUnits = [
+  gaUnit1,
+  gaUnit2,
+  ...gaExtendedUnits,
+  ...gaAdvancedUnits
+];
+
+export const gaUnits = deepenCourse(rawGaUnits, "Ga");
 
 export const gaCourse = {
   id: "ga",
@@ -17,19 +27,7 @@ export const gaCourse = {
       id: "foundations",
       title: "Foundations",
 
-      units: [
-        gaUnit1,
-        gaUnit2,
-        ...gaExtendedUnits,
-        ...gaAdvancedUnits
-      ]
+      units: gaUnits
     }
   ]
 };
-
-export const gaUnits = [
-  gaUnit1,
-  gaUnit2
-  ,...gaExtendedUnits,
-  ...gaAdvancedUnits
-];

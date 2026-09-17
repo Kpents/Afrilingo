@@ -48,6 +48,25 @@ for (const [languageId, course] of Object.entries(languages)) {
   }
 }
 
+for (const languageId of ["twi", "ga"]) {
+  const course = languages[languageId];
+  course.units.forEach((unit, unitIndex) => {
+    unit.lessons.forEach((lesson, lessonIndex) => {
+      const isChallenge = lessonIndex === unit.lessons.length - 1;
+      const checkpoint = isChallenge && (unitIndex + 1) % 4 === 0;
+      const minimum = checkpoint ? 20 : isChallenge ? 15 : 12;
+      check(
+        lesson.questions.length >= minimum,
+        `${languageId}/${unit.id}/${lesson.id}: expected at least ${minimum} questions, found ${lesson.questions.length}.`,
+      );
+      if (checkpoint) {
+        check(lesson.reviewScope === "four-unit-checkpoint", `${languageId}/${unit.id}: checkpoint metadata is missing.`);
+        check(lesson.reviewUnitIds?.length === 4, `${languageId}/${unit.id}: checkpoint must review four units.`);
+      }
+    });
+  });
+}
+
 class MemoryStorage {
   constructor(entries = {}) { this.values = new Map(Object.entries(entries)); }
   get length() { return this.values.size; }

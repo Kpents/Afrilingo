@@ -61,14 +61,14 @@ function numberChoices(items, values) {
   return values.map(value => items.find(item => item.number === value)).filter(Boolean);
 }
 
-function visualMathQuestion(numberItems) {
+function visualMathQuestion(numberItems, languageName) {
   const choices = numberChoices(numberItems, [1, 2, 3, 4]);
   const answer = choices.find(item => item.number === 3);
   if (!answer || choices.length < 4) return null;
   return {
     id: "visual-math-review",
     type: "image-choice",
-    prompt: "Visual maths: 🍌🍌 + 🍌. Choose the Twi total.",
+    prompt: `Visual maths: 🍌🍌 + 🍌. Choose the ${languageName} total.`,
     options: choices.map(item => ({ value: item.native, label: item.native, visualLabel: `${item.number} items`, showLabel: false, number: item.number })),
     answer: answer.native,
     explanation: `Two plus one is three. ${answer.native} means “three.”`
@@ -111,7 +111,7 @@ function lastToken(value) {
   return String(value).trim().split(/\s+/).at(-1);
 }
 
-function generatedQuestion(kind, word, pool, id, checkpoint) {
+function generatedQuestion(kind, word, pool, id, checkpoint, languageName) {
   const prefix = checkpoint ? "Checkpoint review: " : "";
 
   if (kind === 0) return {
@@ -123,7 +123,7 @@ function generatedQuestion(kind, word, pool, id, checkpoint) {
 
   if (kind === 1) return {
     id, type: "english-to-native",
-    prompt: `${prefix}Choose the Twi for “${word.english}”.`,
+    prompt: `${prefix}Choose the ${languageName} for “${word.english}”.`,
     options: optionsFor(pool, word.native, "native"), answer: word.native,
     explanation: `${word.native} expresses “${word.english}.”`
   };
@@ -132,7 +132,7 @@ function generatedQuestion(kind, word, pool, id, checkpoint) {
     const phrase = pool.find(item => item.native.split(/\s+/).length > 1) || word;
     return {
       id, type: "sentence-builder",
-      prompt: `${prefix}Build the Twi expression for “${phrase.english}”.`,
+      prompt: `${prefix}Build the ${languageName} expression for “${phrase.english}”.`,
       tiles: phrase.native.trim().split(/\s+/), answer: phrase.native,
       explanation: `The complete expression is “${phrase.native}”.`
     };
@@ -152,7 +152,7 @@ function generatedQuestion(kind, word, pool, id, checkpoint) {
 
   if (kind === 4) return {
     id, type: "matching",
-    prompt: `${prefix}Match each Twi expression with its English meaning.`,
+    prompt: `${prefix}Match each ${languageName} expression with its English meaning.`,
     pairs: pool.slice(0, Math.min(4, pool.length)),
     explanation: "Connect each expression with its meaning, then read the pairs once more."
   };
@@ -165,7 +165,7 @@ function generatedQuestion(kind, word, pool, id, checkpoint) {
   };
 }
 
-function deepenLesson(lesson, pool, target, checkpoint = false) {
+function deepenLesson(lesson, pool, target, checkpoint = false, languageName = "Twi") {
   const vocabulary = uniqueVocabulary([...vocabularyForLesson(lesson), ...pool]);
   if (!vocabulary.length || lesson.questions.length >= target) return lesson;
 
@@ -182,7 +182,7 @@ function deepenLesson(lesson, pool, target, checkpoint = false) {
 
   while (questions.length < target && attempt < target * 10) {
     const word = vocabulary[attempt % vocabulary.length];
-    const question = generatedQuestion(attempt % 6, word, vocabulary, `depth-${questions.length + 1}`, checkpoint);
+    const question = generatedQuestion(attempt % 6, word, vocabulary, `depth-${questions.length + 1}`, checkpoint, languageName);
     attempt++;
     if (prompts.has(normalized(question.prompt))) continue;
     prompts.add(normalized(question.prompt));
@@ -223,7 +223,7 @@ function withCultureMetadata(lesson, unit, unitIndex) {
   };
 }
 
-export function deepenTwiCourse(units) {
+export function deepenCourse(units, languageName = "Twi") {
   const numberItems = uniqueVocabulary(units.flatMap(unit => unit.lessons.flatMap(vocabularyForLesson))).filter(item => Number.isFinite(item.number));
   return units.map((unit, unitIndex) => {
     const unitPool = uniqueVocabulary(unit.lessons.flatMap(vocabularyForLesson));
@@ -236,9 +236,9 @@ export function deepenTwiCourse(units) {
       lessons: unit.lessons.map((lesson, lessonIndex) => {
         const isChallenge = lessonIndex === unit.lessons.length - 1;
         if (!isChallenge) {
-          const enriched = deepenLesson(lesson, unitPool, 12);
+          const enriched = deepenLesson(lesson, unitPool, 12, false, languageName);
           const specialVisual = unitIndex === 1 && lessonIndex === 3
-            ? visualMathQuestion(numberItems)
+            ? visualMathQuestion(numberItems, languageName)
             : /market|shopping/i.test(unit.title) && lessonIndex === 0
               ? marketPriceQuestion(numberItems)
               : null;
@@ -248,7 +248,7 @@ export function deepenTwiCourse(units) {
 
         const target = checkpoint ? 20 : 16;
         return {
-          ...deepenLesson(lesson, reviewPool, target, checkpoint),
+          ...deepenLesson(lesson, reviewPool, target, checkpoint, languageName),
           reviewScope: checkpoint ? "four-unit-checkpoint" : "unit",
           reviewUnitIds: reviewUnits.map(reviewUnit => reviewUnit.id),
           reviewLabel: checkpoint ? `Checkpoint · Units ${unitIndex - 2}–${unitIndex + 1}` : "Unit review"
@@ -256,4 +256,8 @@ export function deepenTwiCourse(units) {
       }).map(lesson => withCultureMetadata(lesson, unit, unitIndex))
     };
   });
+}
+
+export function deepenTwiCourse(units) {
+  return deepenCourse(units, "Twi");
 }
