@@ -56,11 +56,12 @@ export default function App() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
   const moreDialogRef = useRef(null);
+  const mainRef = useRef(null);
   useDialogFocus(moreDialogRef, moreOpen, () => setMoreOpen(false));
   const [pendingSearchResult, setPendingSearchResult] = useState(null);
   const showReward = (event) => setRewardEvent({ ...event, id: `${Date.now()}-${Math.random()}` });
   const [dark, setDark] =
-    useState(true);
+    useState(() => preferences.darkMode !== false);
 
   const [screen, setScreen] =
     useState("home");
@@ -87,6 +88,23 @@ export default function App() {
     languages[
       activeLanguage
     ];
+
+  const toggleTheme = useCallback(() => {
+    setDark(previous => {
+      const next = !previous;
+      setPreferences(current => ({ ...current, darkMode: next }));
+      return next;
+    });
+  }, [setPreferences]);
+
+  useEffect(() => {
+    const screenName = screen === "home" ? "Learn" : screen.charAt(0).toUpperCase() + screen.slice(1);
+    document.title = `${screenName} ${currentLanguage.language} · AfriLingo`;
+  }, [screen, currentLanguage.language]);
+
+  useEffect(() => {
+    if (screen !== "lesson") mainRef.current?.focus({ preventScroll: true });
+  }, [screen]);
 
   /*
     Language-specific
@@ -436,6 +454,7 @@ export default function App() {
           : "bg-[#FFF8EE] text-[#252525]"
       }`}
     >
+      <a href="#main-content" className="afri-skip-link">Skip to learning content</a>
       <RewardEvent event={rewardEvent} dark={dark} languageId={activeLanguage} soundEnabled={preferences.soundEnabled !== false} onDone={() => setRewardEvent(null)} />
       <AppStatus dark={dark} lifecycle={lifecycle} />
 
@@ -573,12 +592,7 @@ export default function App() {
             {/* Theme toggle */}
 
             <button
-              onClick={() =>
-                setDark(
-                  (v) =>
-                    !v
-                )
-              }
+              onClick={toggleTheme}
               className={`grid h-11 w-11 place-items-center rounded-xl border transition ${
                 dark
                   ? "border-white/10 bg-white/5 hover:bg-white/10"
@@ -613,7 +627,7 @@ export default function App() {
       {/* MAIN CONTENT */}
       {/* ================================================= */}
 
-      <main className="relative mx-auto max-w-5xl px-4 pb-28 pt-6">
+      <main ref={mainRef} id="main-content" tabIndex={-1} className="afri-main relative mx-auto max-w-5xl px-4 pt-6">
 
         <AnimatePresence mode="wait">
 
@@ -869,7 +883,8 @@ export default function App() {
         "lesson" && (
 
         <nav
-          className={`fixed bottom-3 left-1/2 z-50 w-[calc(100%-1.5rem)] max-w-md -translate-x-1/2 rounded-[1.6rem] border p-2 shadow-2xl backdrop-blur-xl ${
+          aria-label="Primary navigation"
+          className={`afri-bottom-nav fixed left-1/2 z-50 w-[calc(100%-1.5rem)] max-w-md -translate-x-1/2 rounded-[1.6rem] border p-2 shadow-2xl backdrop-blur-xl ${
             dark
               ? "border-white/10 bg-[#1A201E]/95"
               : "border-black/10 bg-white/95"

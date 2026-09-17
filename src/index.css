@@ -19,6 +19,34 @@ body {
   margin: 0;
   min-width: 320px;
   background: var(--sand);
+  overflow-x: hidden;
+  overscroll-behavior-x: none;
+}
+
+.afri-main {
+  padding-bottom: calc(7rem + env(safe-area-inset-bottom, 0px));
+}
+
+.afri-bottom-nav {
+  bottom: max(.75rem, env(safe-area-inset-bottom, 0px));
+}
+
+.afri-skip-link {
+  position: fixed;
+  left: 1rem;
+  top: 1rem;
+  z-index: 100;
+  padding: .75rem 1rem;
+  border-radius: .85rem;
+  background: var(--sunrise);
+  color: #101312;
+  font-weight: 900;
+  transform: translateY(-160%);
+  transition: transform .16s ease;
+}
+
+.afri-skip-link:focus {
+  transform: translateY(0);
 }
 
 .afri-shelf {

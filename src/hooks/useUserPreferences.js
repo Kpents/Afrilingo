@@ -11,7 +11,8 @@ export const defaultPreferences = {
   dailyTarget: 3,
   familiarity: "new",
   companionId: "zuri",
-  soundEnabled: true
+  soundEnabled: true,
+  darkMode: true
 };
 
 function readPreferences() {
