@@ -6,7 +6,7 @@ Ga already has a complete 28-unit path. This checklist brings its depth and surr
 2. [ ] **Native-speaker editorial audit** — verify spelling, tone, vowel length, translations, naturalness, and regional/context labels across all course records.
 3. [x] **Explore vocabulary depth** — removed verification placeholders, rebalanced all 28 units by theme, deduplicated entries by level, preserved source-aligned course examples, and added progressive provenance details.
 4. [x] **Immersion conversations** — expanded to 12 source-aligned, multi-turn scenarios across three levels with repair strategies, contextual feedback, progress tracking, and reusable multi-turn UI.
-5. [ ] **Interactive Adventures** — expand from one market scene to home, food, transport, work/school, and social-planning settings with crew characters and branching choices.
+5. [x] **Interactive Adventures** — expanded to a six-scene passport covering the market, home, food, transport, school, and social planning, with crew companions, branching routes, contextual feedback, and persisted stamps.
 6. [ ] **Stories and culture** — add reviewed Ga stories, proverbs, naming traditions, festivals, food, music, and Accra context with clear provenance.
 7. [ ] **Practice variety** — verify weak-word review, matching, sentence building, visual choice, timed practice, and category-specific drills use strong Ga content.
 8. [ ] **Culture Card collection** — ensure every lesson reward is distinct, useful, correctly categorized, and grouped under Ga.
