@@ -4,6 +4,7 @@ import { gaSourceNotes } from "./sourceNotes";
 import { gaExtendedUnits } from "./extendedUnits";
 import { gaAdvancedUnits } from "./advancedUnits";
 import { deepenCourse } from "../twi/courseDepth";
+import { polishGaCultureCards } from "./cultureCards";
 
 const rawGaUnits = [
   gaUnit1,
@@ -12,7 +13,7 @@ const rawGaUnits = [
   ...gaAdvancedUnits
 ];
 
-export const gaUnits = deepenCourse(rawGaUnits, "Ga");
+export const gaUnits = polishGaCultureCards(deepenCourse(rawGaUnits, "Ga"));
 
 export const gaCourse = {
   id: "ga",
