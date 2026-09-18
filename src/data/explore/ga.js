@@ -14,7 +14,12 @@ const themes = [
   ["sports", "Sports", "⚽"], ["relationships", "Relationships", "❤️"], ["places-directions", "Places & Directions", "🗺️"],
   ["body", "Body", "🧍"], ["colours", "Colours", "🎨"]
 ].map(([id, label, emoji]) => ({ id, label, emoji }));
-const unitThemes = ["relationships","market-shopping","relationships","home","family","food-drinks","home","colours","relationships","places-directions","work","market-shopping","relationships","school","transport","relationships","health","weather","work","relationships"];
+const unitThemes = [
+  "relationships", "market-shopping", "relationships", "home", "family", "food-drinks", "home",
+  "colours", "relationships", "places-directions", "work", "market-shopping", "relationships", "school",
+  "transport", "relationships", "health", "weather", "work", "relationships", "relationships", "school",
+  "home", "transport", "health", "relationships", "relationships", "relationships"
+];
 const number = /one|two|three|four|five|six|seven|eight|nine|ten|number|hundred/i;
 const question = /^(what|who|where|how|which|whom)|\?$/i;
 const adverb = /today|tomorrow|slowly|again|near|far|here|there|ahead|left|right/i;
@@ -28,35 +33,43 @@ function typeOf(native, english) {
   if (!/[.!?]/.test(native) && native.split(/\s+/).length <= 2) return "nouns";
   return "common-expressions";
 }
+const normalize = value => String(value || "").toLocaleLowerCase().replace(/[.!?]/g, "").trim();
+const levelFor = unitIndex => unitIndex < 9 ? "beginner" : unitIndex < 20 ? "intermediate" : "advanced";
+function courseExample(lesson, word) {
+  const native = normalize(word.native);
+  const line = lesson.conversation?.find(item => normalize(item.native).includes(native) || native.includes(normalize(item.native)));
+  return line || { native: word.native, english: word.english };
+}
 const entries = gaUnits.flatMap((unit, unitIndex) => unit.lessons.flatMap((lesson, lessonIndex) =>
-  (lesson.vocabulary || []).map((word, wordIndex) => ({
-    id: `ga-${unit.id}-${lesson.id}-${wordIndex}`, native: word.native, english: word.english,
-    audio: word.audio || "", exampleNative: lesson.conversation?.[0]?.native || word.native,
-    exampleEnglish: lesson.conversation?.[0]?.english || word.english,
-    level: levels[(lessonIndex + wordIndex) % 3], wordType: typeOf(word.native, word.english),
-    theme: unitThemes[unitIndex] || "relationships", contextNote: lesson.cultureCard?.text,
-    source: "Ga course", verificationStatus: "source-aligned", linguistic: word.linguistic || {}
-  }))
+  (lesson.vocabulary || []).map((word, wordIndex) => {
+    const example = courseExample(lesson, word);
+    return {
+      id: `ga-${unit.id}-${lesson.id}-${wordIndex}`, native: word.native, english: word.english,
+      audio: word.audio || "", exampleNative: example.native, exampleEnglish: example.english,
+      level: levelFor(unitIndex), wordType: typeOf(word.native, word.english),
+      theme: unitThemes[unitIndex], contextNote: lesson.cultureCard?.text,
+      source: `Ga course · Unit ${unitIndex + 1}: ${unit.title}`,
+      verificationStatus: "source-aligned",
+      linguistic: { ...(word.linguistic || {}), courseUnit: unitIndex + 1, lesson: lesson.title }
+    };
+  })
 ));
 const supplements = [
-  ["pronoun-mi", "mi", "I / me", "pronouns", "relationships"],
-  ["pronoun-bo", "bo", "you", "pronouns", "relationships"],
-  ["verb-yaa", "yaa", "go", "verbs", "transport"],
-  ["verb-kasɛ", "kasɛ", "learn", "verbs", "school"],
-  ["animal-gbee", "gbee", "dog", "nouns", "animals"],
-  ["animal-alonte", "alɔnte", "cat", "nouns", "animals"],
-  ["body-yitso", "yitso", "head", "nouns", "body"],
-  ["body-nine", "nine", "hand / arm", "nouns", "body"],
-  ["clothes-mama", "mama", "cloth", "nouns", "clothing"],
-  ["sport-review", "AfriLingo editorial review pending", "Sports vocabulary pending source verification", "nouns", "sports"],
-  ["weather-review", "AfriLingo editorial review pending", "Weather vocabulary pending source verification", "nouns", "weather"],
-  ["restaurant-review", "AfriLingo editorial review pending", "Restaurant vocabulary pending source verification", "nouns", "restaurant"]
-].flatMap(([id, native, english, wordType, theme]) => levels.map((level, index) => ({
-  id: `${id}-${level}`, native, english, wordType, theme, level, audio: "",
-  exampleNative: native, exampleEnglish: english, source: index ? "editorial placeholder" : "BGL Ga guide",
-  verificationStatus: native.startsWith("AfriLingo") ? "verification-pending" : "source-aligned",
-  contextNote: native.startsWith("AfriLingo") ? "This category remains visible but will not teach an uncertain translation." : "Open optional details as Ga linguistic annotations are reviewed.",
-  linguistic: {}
-})));
+  ["pronoun-mi", "mi", "I / me", "pronouns", "relationships", "beginner"],
+  ["pronoun-bo", "bo", "you", "pronouns", "relationships", "beginner"],
+  ["verb-yaa", "yaa", "go", "verbs", "transport", "beginner"],
+  ["verb-kasɛ", "kasɛ", "learn", "verbs", "school", "beginner"],
+  ["animal-gbee", "gbee", "dog", "nouns", "animals", "beginner"],
+  ["animal-alonte", "alɔnte", "cat", "nouns", "animals", "beginner"],
+  ["body-yitso", "yitso", "head", "nouns", "body", "beginner"],
+  ["body-nine", "nine", "hand / arm", "nouns", "body", "beginner"],
+  ["clothes-mama", "mama", "cloth", "nouns", "clothing", "beginner"]
+].map(([id, native, english, wordType, theme, level]) => ({
+  id, native, english, wordType, theme, level, audio: "",
+  exampleNative: native, exampleEnglish: english, source: "Bureau of Ghana Languages — Ga guide",
+  verificationStatus: "source-aligned",
+  contextNote: "A source-aligned reference item. A native-speaker review will add a longer natural example.",
+  linguistic: { sourceType: "reference vocabulary" }
+}));
 const seen = new Set();
-export const gaExploreLibrary = { languageId: "ga", languageName: "Ga", nativeName: "Ga", wordTypes, themes, levels, entries: [...supplements, ...entries].filter(item => { const key=`${item.native}|${item.english}|${item.theme}|${item.level}`; if(seen.has(key)) return false; seen.add(key); return true; }) };
+export const gaExploreLibrary = { languageId: "ga", languageName: "Ga", nativeName: "Ga", wordTypes, themes, levels, entries: [...supplements, ...entries].filter(item => { const key=`${normalize(item.native)}|${normalize(item.english)}|${item.level}`; if(seen.has(key)) return false; seen.add(key); return true; }) };

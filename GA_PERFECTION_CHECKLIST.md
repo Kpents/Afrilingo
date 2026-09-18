@@ -4,7 +4,7 @@ Ga already has a complete 28-unit path. This checklist brings its depth and surr
 
 1. [x] **Course depth and checkpoints** — 12-question lessons, 15–16 unique-question unit challenges, 20-question four-unit checkpoints, mixed exercise types, visual questions, and dynamic progression.
 2. [ ] **Native-speaker editorial audit** — verify spelling, tone, vowel length, translations, naturalness, and regional/context labels across all course records.
-3. [ ] **Explore vocabulary depth** — remove verification placeholders, improve category balance, add natural examples and progressive linguistic details.
+3. [x] **Explore vocabulary depth** — removed verification placeholders, rebalanced all 28 units by theme, deduplicated entries by level, preserved source-aligned course examples, and added progressive provenance details.
 4. [ ] **Immersion conversations** — broaden real-life dialogues, repair strategies, variation notes, and contextual feedback.
 5. [ ] **Interactive Adventures** — expand from one market scene to home, food, transport, work/school, and social-planning settings with crew characters and branching choices.
 6. [ ] **Stories and culture** — add reviewed Ga stories, proverbs, naming traditions, festivals, food, music, and Accra context with clear provenance.
