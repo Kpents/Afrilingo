@@ -28,7 +28,8 @@ export default function HomePage({
   startedLanguageIds,
   languageId,
   learnerName,
-  dailyTarget
+  dailyTarget,
+  courseProfile
 }) {
   const units = language.units;
   const unit = units[activeUnit];
@@ -105,6 +106,18 @@ export default function HomePage({
     return index === 0 || progress.completedLessonIds.includes(recommendedUnit.lessons[index - 1].id);
   }) || recommendedUnit.lessons.at(-1);
   const courseComplete = units.every(courseUnit => courseUnit.lessons.every(lesson => progress.completedLessonIds.includes(lesson.id)));
+  const motivationLabels = { travel:"Travel", family:"Family", culture:"Culture", relationships:"Relationships", general:"Balanced growth" };
+  const focusPatterns = {
+    travel:/travel|transport|direction|place|market|food|restaurant/i,
+    family:/family|people|home|relationship|introduction/i,
+    culture:/culture|story|food|music|name|greeting|festival|proverb/i,
+    relationships:/relationship|social|conversation|family|greeting|people/i,
+    general:/.*/i
+  };
+  const motivations = courseProfile?.motivations || [];
+  const focusUnitIndex = motivations.map(id => units.findIndex(item => focusPatterns[id]?.test(`${item.title} ${item.subtitle}`))).find(index => index >= 0) ?? -1;
+  const focusUnit = focusUnitIndex >= 0 ? units[focusUnitIndex] : recommendedUnit;
+  const focusUnlocked = isUnitUnlocked(focusUnitIndex >= 0 ? focusUnitIndex : recommendedUnitIndex);
 
   return (
     <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
@@ -228,6 +241,8 @@ export default function HomePage({
       {/* ================================================= */}
 
       <aside className="min-w-0 space-y-4">
+
+        {motivations.length > 0 && <div className={`rounded-[1.75rem] border p-5 ${card}`}><div className="text-xs font-black uppercase tracking-[.18em] text-[#F28C28]">Your {language.language} learning plan</div><div className="mt-3 flex flex-wrap gap-2">{motivations.map(id => <span key={id} className="rounded-full bg-[#24745B]/12 px-3 py-1.5 text-xs font-black text-[#24745B]">{motivationLabels[id] || id}</span>)}</div><h3 className="mt-4 text-xl font-black">{focusUnit.title}</h3><p className={`mt-2 text-sm font-semibold leading-6 ${dark ? "text-white/50" : "text-black/50"}`}>{focusUnlocked ? "This unlocked unit connects with why you chose this course." : "This unit connects with your goals and will open as you progress."}</p>{focusUnlocked && <button onClick={() => onUnitChange(focusUnitIndex >= 0 ? focusUnitIndex : recommendedUnitIndex)} className="afri-press mt-4 min-h-11 w-full rounded-xl bg-[#24745B] px-4 font-black text-white">Open recommended unit</button>}</div>}
 
         <LeboCoach dark={dark} progress={progress} completedInUnit={completedLessonsInUnit} totalInUnit={unit.lessons.length} languageId={languageId} />
 

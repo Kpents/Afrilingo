@@ -31,6 +31,7 @@ const LeboRigPreview = lazy(() => import("./pages/LeboRigPreview"));
 const ReviewPage = lazy(() => import("./pages/ReviewPage"));
 const PracticePage = lazy(() => import("./pages/PracticePage"));
 const OnboardingPage = lazy(() => import("./pages/OnboardingPage"));
+const CourseOnboardingPage = lazy(() => import("./pages/CourseOnboardingPage"));
 const SettingsPage = lazy(() => import("./pages/SettingsPage"));
 const GlobalSearch = lazy(() => import("./components/navigation/GlobalSearch"));
 import RewardEvent from "./components/gamification/RewardEvent";
@@ -60,6 +61,7 @@ export default function App() {
   const mainRef = useRef(null);
   useDialogFocus(moreDialogRef, moreOpen, () => setMoreOpen(false));
   const [pendingSearchResult, setPendingSearchResult] = useState(null);
+  const [pendingCourseId, setPendingCourseId] = useState(null);
   const showReward = (event) => setRewardEvent({ ...event, id: `${Date.now()}-${Math.random()}` });
   const [dark, setDark] =
     useState(() => preferences.darkMode !== false);
@@ -121,13 +123,16 @@ export default function App() {
 
   const selectLanguage = useCallback((languageId) => {
     if (!languages[languageId]) return;
+    if (!(preferences.startedLanguageIds || []).includes(languageId)) {
+      setPendingCourseId(languageId);
+      return;
+    }
     setPreferences(previous => ({
       ...previous,
-      languageId,
-      startedLanguageIds: [...new Set([...(previous.startedLanguageIds || []), languageId])]
+      languageId
     }));
     setActiveLanguage(languageId);
-  }, [setPreferences]);
+  }, [preferences.startedLanguageIds, setPreferences]);
 
   useEffect(() => {
     const earnedIds = getUnlockedAchievementIds(progressByLanguage);
@@ -454,15 +459,22 @@ export default function App() {
     return <Suspense fallback={<PageLoader dark={dark} languageId={activeLanguage} />}><OnboardingPage dark={dark} initial={preferences} onComplete={next => {
       const completed = { ...next, startedLanguageIds: [next.languageId] };
       const course = languages[next.languageId];
-      if (next.placement?.unitIndex > 0 && course) {
-        setLanguageProgress(next.languageId, previous => ({
-          ...previous,
-          placement: next.placement
-        }));
-        setActiveUnit(next.placement.unitIndex);
-      }
+      if (course) setLanguageProgress(next.languageId, previous => ({ ...previous, placement:next.placement || null, onboarding:{ motivations:next.motivations || [], familiarity:next.familiarity || "new", completedAt:new Date().toISOString() } }));
+      if (next.placement?.unitIndex > 0) setActiveUnit(next.placement.unitIndex);
       setPreferences(completed);
       setActiveLanguage(next.languageId);
+      setScreen("home");
+    }} /></Suspense>;
+  }
+
+  if (pendingCourseId && languages[pendingCourseId]) {
+    return <Suspense fallback={<PageLoader dark={dark} languageId={pendingCourseId} />}><CourseOnboardingPage dark={dark} course={languages[pendingCourseId]} onCancel={() => { setPendingCourseId(null); setPendingSearchResult(null); }} onComplete={profile => {
+      const languageId = pendingCourseId;
+      setLanguageProgress(languageId, previous => ({ ...previous, placement:profile.placement, onboarding:{ motivations:profile.motivations, familiarity:profile.familiarity, completedAt:profile.completedAt } }));
+      setPreferences(previous => ({ ...previous, languageId, startedLanguageIds:[...new Set([...(previous.startedLanguageIds || []), languageId])] }));
+      setPendingCourseId(null);
+      setActiveLanguage(languageId);
+      setActiveUnit(profile.placement?.unitIndex || 0);
       setScreen("home");
     }} /></Suspense>;
   }
@@ -729,6 +741,7 @@ export default function App() {
                 languageId={activeLanguage}
                 learnerName={preferences.name}
                 dailyTarget={preferences.dailyTarget}
+                courseProfile={progress.onboarding}
 
                 onUnitChange={
                   setActiveUnit

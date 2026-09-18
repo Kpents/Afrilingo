@@ -16,6 +16,7 @@ export const initialProgress = {
   reviewResolved: 0,
   reviewQueue: [],
   placement: null,
+  onboarding: null,
   practice: { date: null, sessions: 0, xp: 0, lastMode: null },
   explore: { masteredEntryIds: [], completedCategoryLevels: [] },
   immersion: { savedPhrases: [], savedWords: [], completedConversations: [], completedMissions: [], completedGrammar: [], completedPronunciation: [], completedStories: [], completedAdventures: [], claimedDailyPhrases: [] }
