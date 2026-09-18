@@ -3,6 +3,7 @@ import { ArrowLeft, BookOpenText, CheckCircle2, ChevronRight, Globe2, Graduation
 import AudioButton from "../components/ui/AudioButton";
 import { conversationVoice } from "../services/conversationVoice";
 import Adventures from "../components/immersion/Adventures";
+import StoriesExperience from "../components/immersion/Stories";
 import MeetTheCast from "../components/immersion/MeetTheCast";
 import SidekickPortrait from "../components/ui/SidekickPortrait";
 import { sidekicks } from "../data/sidekicks";
@@ -71,7 +72,7 @@ function Feature({ feature, ...props }) {
   if (feature === "grammar") return <Grammar {...props}/>;
   if (feature === "pronunciation") return <Pronunciation {...props}/>;
   if (feature === "missions") return <Missions {...props}/>;
-  if (feature === "stories") return <Stories {...props}/>;
+  if (feature === "stories") return <StoriesExperience {...props}/>;
   return <DailyPhrase {...props}/>;
 }
 
