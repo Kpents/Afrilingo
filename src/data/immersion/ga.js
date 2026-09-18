@@ -1,15 +1,63 @@
 const pendingAudio = { slow: "", normal: "", natural: "", status: "pending" };
+const gaTurn = (speaker, native, english, answer, choices, feedback) => ({ speaker, native, english, answer, choices, feedback });
+const gaConversation = (id, title, emoji, level, context, turns, xp = 15) => ({ id, title, emoji, level, context, turns, xp });
 export const gaImmersion = {
   languageId: "ga", languageName: "Ga",
   capabilities: { voiceRecognition: "adapter-required", generatedFeedback: "adapter-required", nativeAudio: "pending", textFallback: "ready" },
   conversations: [
-    ["meet", "Meet Someone", "👋", "beginner", "You meet someone in Accra.", "Te atsɛɔ bo tɛŋŋ?", "What is your name?", "Atsɛɔ mi Tete.", ["Atsɛɔ mi Tete.","Midu gbɛ.","Miiwɔlɔ."]],
-    ["directions", "Ask for Directions", "🗺️", "beginner", "You have lost your way.", "Mɛni otao?", "What do you want?", "Midu gbɛ.", ["Midu gbɛ.","Miyɛ jogbaŋŋ.","Miiya shia."]],
-    ["market", "At the Market", "🛒", "intermediate", "You want to know a price.", "Mɛni otao ohɛ?", "What would you like to buy?", "Enyie ahɔɔ enɛ?", ["Enyie ahɔɔ enɛ?","Wiemɔ ekɔŋŋ.","Wɔ jogbaŋŋ."]],
-    ["school", "At School", "🏫", "intermediate", "A teacher asks what you are learning.", "Mɛni okasɛɔ?", "What are you learning?", "Miikasɛ Ga.", ["Miikasɛ Ga.","Miiye oyai.","Mimli efu."]],
-    ["travel", "At the Station", "🚕", "advanced", "You need the lorry station.", "Nɛgbɛ oyaa?", "Where are you going?", "Nɛgbɛ tsɔnemaamɔhe lɛ yɛɔ?", ["Nɛgbɛ tsɔnemaamɔhe lɛ yɛɔ?","Mijɛ Odɔkɔɔ.","Miyitso miigba mi."]],
-    ["repair", "Keep the Conversation Going", "💬", "advanced", "A speaker talks too quickly.", "Ole Ga lo?", "Do you know Ga?", "Wiemɔ bɛlɛoo.", ["Wiemɔ bɛlɛoo.","Yaa ohie tɛɛ.","Ŋa shinaa lɛ."]]
-  ].map(([id,title,emoji,level,context,native,english,answer,choices])=>({id,title,emoji,level,context,turns:[{speaker:"Ga speaker",native,english,answer,choices,feedback:"Choose the response that directly fits this Ga conversation."}]})),
+    gaConversation("meet", "Meet Someone", "👋", "beginner", "You meet someone and exchange names before continuing.", [
+      gaTurn("New acquaintance", "Te atsɛɔ bo tɛŋŋ?", "What is your name?", "Atsɛɔ mi Tete.", ["Atsɛɔ mi Tete.", "Midu gbɛ.", "Miiwɔlɔ."], "Atsɛɔ mi… gives your name directly."),
+      gaTurn("New acquaintance", "Te oyɔɔ tɛŋŋ?", "How are you?", "Miyɛ jogbaŋŋ.", ["Miyɛ jogbaŋŋ.", "Miiya shia.", "Minuuu shishi."], "Miyɛ jogbaŋŋ says that you are fine.")
+    ], 15),
+    gaConversation("home", "Going Home", "🏠", "beginner", "A friend asks where you are going, then welcomes you back.", [
+      gaTurn("Friend", "Nɛgbɛ oyaa?", "Where are you going?", "Miiya shia.", ["Miiya shia.", "Mijɛ Odɔkɔɔ.", "Mimli efu."], "Miiya shia says that you are going home."),
+      gaTurn("Friend", "Miiherɛ bo.", "Welcome.", "Oyiwaladɔŋŋ.", ["Oyiwaladɔŋŋ.", "Yaa ohie tɛɛ.", "Miiwɔlɔ."], "Oyiwaladɔŋŋ closes the welcome with thanks.")
+    ], 15),
+    gaConversation("learner", "Learning Ga", "📚", "beginner", "You explain that you are learning and ask for helpful pacing.", [
+      gaTurn("Ga speaker", "Ole Ga lo?", "Do you know Ga?", "Miikasɛ Ga.", ["Miikasɛ Ga.", "Midu gbɛ.", "Etɔ mi."], "Miikasɛ Ga explains that you are learning Ga."),
+      gaTurn("Ga speaker", "Miikasɛ Ga.", "I am learning Ga.", "Wiemɔ bɛlɛoo.", ["Wiemɔ bɛlɛoo.", "Sha ohe.", "Nɛgbɛ ojɛ?"], "Wiemɔ bɛlɛoo asks the person to speak slowly.")
+    ], 15),
+    gaConversation("school", "At School", "🏫", "beginner", "A teacher checks what you are learning and whether you followed.", [
+      gaTurn("Teacher", "Mɛni okasɛɔ?", "What are you learning?", "Miikasɛ Ga.", ["Miikasɛ Ga.", "Miiya shia.", "Mihao."], "Miikasɛ Ga answers with the subject you are learning."),
+      gaTurn("Teacher", "Miikasɛ Ga.", "I am learning Ga.", "Wiemɔ ekɔŋŋ.", ["Wiemɔ ekɔŋŋ.", "Wɔ jogbaŋŋ.", "Maya Kumase wɔ."], "Wiemɔ ekɔŋŋ asks for the expression again.")
+    ], 15),
+    gaConversation("directions", "Find the Way", "🗺️", "intermediate", "You are lost and need a clear route.", [
+      gaTurn("Local guide", "Mɛni otao?", "What do you want?", "Midu gbɛ.", ["Midu gbɛ.", "Miyɛ jogbaŋŋ.", "Miiya shia."], "Midu gbɛ clearly says that you have lost the way."),
+      gaTurn("Local guide", "Yaa ohie tɛɛ.", "Go straight ahead.", "Wiemɔ ekɔŋŋ.", ["Wiemɔ ekɔŋŋ.", "Atsɛɔ mi Tete.", "Hɔmɔ miiye mi."], "Asking for repetition is safer than pretending to understand."),
+      gaTurn("Local guide", "Yaa ohie tɛɛ.", "Go straight ahead.", "Oyiwaladɔŋŋ.", ["Oyiwaladɔŋŋ.", "Nɛgbɛ ojɛ?", "Miiwɔlɔ."], "Thank the person after confirming the direction.")
+    ], 20),
+    gaConversation("market", "At the Market", "🛒", "intermediate", "You greet a seller, ask about bread, and check the price.", [
+      gaTurn("Seller", "Mɛni otao ohɛ?", "What would you like to buy?", "Ohaa bodobodo lo?", ["Ohaa bodobodo lo?", "Nɛgbɛ oyaa?", "Miyitso miigba mi."], "Ohaa bodobodo lo? asks whether bread is sold."),
+      gaTurn("Seller", "Ohaa bodobodo lo?", "Do you sell bread?", "Enyie ahɔɔ enɛ?", ["Enyie ahɔɔ enɛ?", "Wiemɔ bɛlɛoo.", "Wɔ jogbaŋŋ."], "Enyie ahɔɔ enɛ? moves the exchange to the price."),
+      gaTurn("Seller", "Enyie ahɔɔ enɛ?", "How much is this?", "Oyiwaladɔŋŋ.", ["Oyiwaladɔŋŋ.", "Midu gbɛ.", "Mimli efu."], "Oyiwaladɔŋŋ is the sourced thank-you expression.")
+    ], 20),
+    gaConversation("station", "At the Station", "🚕", "intermediate", "You locate the station and ask about the fare.", [
+      gaTurn("Passenger", "Nɛgbɛ oyaa?", "Where are you going?", "Nɛgbɛ tsɔnemaamɔhe lɛ yɛɔ?", ["Nɛgbɛ tsɔnemaamɔhe lɛ yɛɔ?", "Mijɛ Odɔkɔɔ.", "Miiwɔlɔ."], "This asks where the lorry station is."),
+      gaTurn("Passenger", "Nɛgbɛ tsɔnemaamɔhe lɛ yɛɔ?", "Where is the lorry station?", "Enyie ji bɔ ni ahɛɔ?", ["Enyie ji bɔ ni ahɛɔ?", "Te atsɛɔ bo tɛŋŋ?", "Ŋa shinaa lɛ."], "Enyie ji bɔ ni ahɛɔ? asks about the fare.")
+    ], 20),
+    gaConversation("health", "Ask for Care", "🏥", "intermediate", "You explain that you are ill and identify a symptom.", [
+      gaTurn("Health worker", "Te oyɔɔ tɛŋŋ?", "How are you?", "Mihe miiye.", ["Mihe miiye.", "Miyɛ jogbaŋŋ.", "Miiya shia."], "Mihe miiye says that you are ill."),
+      gaTurn("Health worker", "Mihe miiye.", "I am ill.", "Miyitso miigba mi.", ["Miyitso miigba mi.", "Miiya Wiejaŋ.", "Miiherɛ bo."], "Miyitso miigba mi identifies a headache.")
+    ], 20),
+    gaConversation("repair", "Keep the Conversation Going", "💬", "advanced", "You miss part of a fast exchange and repair it honestly.", [
+      gaTurn("Ga speaker", "Ole Ga lo?", "Do you know Ga?", "Miikasɛ Ga.", ["Miikasɛ Ga.", "Yaa ohie tɛɛ.", "Ŋa shinaa lɛ."], "Explain that you are learning Ga."),
+      gaTurn("Ga speaker", "Miikasɛ Ga.", "I am learning Ga.", "Minuuu shishi.", ["Minuuu shishi.", "Maya Kumase wɔ.", "Etɔ mi."], "Minuuu shishi honestly says that you do not understand."),
+      gaTurn("Ga speaker", "Minuuu shishi.", "I do not understand.", "Wiemɔ bɛlɛoo.", ["Wiemɔ bɛlɛoo.", "Sha ohe.", "Miiya shia."], "Ask for slower speech to stay in the conversation.")
+    ], 25),
+    gaConversation("plans", "Make a Future Plan", "📅", "advanced", "You explain tomorrow's journey and when you will return.", [
+      gaTurn("Friend", "Nɛgbɛ oyaa?", "Where are you going?", "Maya Kumase wɔ.", ["Maya Kumase wɔ.", "Midu gbɛ.", "Miiwɔlɔ."], "Maya Kumase wɔ states tomorrow's journey to Kumasi."),
+      gaTurn("Friend", "Maya Kumase wɔ.", "I shall go to Kumasi tomorrow.", "Maku misɛɛ Shɔ.", ["Maku misɛɛ Shɔ.", "Mimli efu.", "Nɛgbɛ ojɛ?"], "Maku misɛɛ Shɔ states the sourced Wednesday return plan.")
+    ], 25),
+    gaConversation("accra-day", "An Accra Day", "🏙️", "advanced", "You move between home, school, and the market using connected course language.", [
+      gaTurn("Teacher", "Mɛni okasɛɔ?", "What are you learning?", "Miikasɛ Ga.", ["Miikasɛ Ga.", "Miiwɔlɔ.", "Mimli efu."], "Miikasɛ Ga gives Ga as the subject you are learning."),
+      gaTurn("Classmate", "Mɛni ekasɛɔ?", "What is he or she studying?", "Wɔkasɛɔ nibii pii.", ["Wɔkasɛɔ nibii pii.", "Midu gbɛ.", "Etɔ mi."], "This says that many subjects are being learned."),
+      gaTurn("Seller", "Mɛni otao ohɛ?", "What would you like to buy?", "Enyie ahɔɔ enɛ?", ["Enyie ahɔɔ enɛ?", "Wɔ jogbaŋŋ.", "Nɛgbɛ ojɛ?"], "The price question fits the market part of the day.")
+    ], 25),
+    gaConversation("social", "Respond With Context", "🤝", "advanced", "A friend checks in; you state how you feel and close politely.", [
+      gaTurn("Friend", "Te oyɔɔ tɛŋŋ?", "How are you?", "Etɔ mi.", ["Etɔ mi.", "Yaa ohie tɛɛ.", "Ohaa bodobodo lo?"], "Etɔ mi says that you are tired."),
+      gaTurn("Friend", "Etɔ mi.", "I am tired.", "Yaaba jogbaŋŋ.", ["Yaaba jogbaŋŋ.", "Enyie ahɔɔ enɛ?", "Nɛgbɛ bo yɛɔ?"], "Yaaba jogbaŋŋ closes the exchange with goodbye.")
+    ], 25)
+  ],
   variations: [
     { id:"welcome", common:"Miiherɛ bo.", alternative:"Miifala.", meaning:"Welcome.", region:"Ga usage; regional labeling pending", formality:"neutral", context:"Receiving someone", explanation:"Both forms appear in the Bureau of Ghana Languages guide. A native-speaker review will document finer contextual preference." },
     { id:"good-night", common:"Wɔ jogbaŋŋ.", alternative:"Oke wɔ jurɔ.", meaning:"Good night.", region:"Ga usage; regional labeling pending", formality:"neutral", context:"Night-time leave-taking", explanation:"The source records both forms; AfriLingo does not assign a dialect label without stronger evidence." },

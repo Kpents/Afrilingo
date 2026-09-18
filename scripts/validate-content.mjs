@@ -90,6 +90,14 @@ for (const [languageId, course] of Object.entries(languages)) {
       if (!items.length) add(warnings, "IMMERSION_SECTION", `${languageId}/immersion/${collection}`, "Section is empty.");
       if (!unique(items.map(item => item.id))) add(errors, "DUPLICATE_IMMERSION_ID", `${languageId}/immersion/${collection}`, "Ids are duplicated.");
     }
+    for (const conversation of immersion.conversations || []) {
+      const path = `${languageId}/immersion/conversations/${conversation.id}`;
+      if (!conversation.turns?.length) add(errors, "IMMERSION_CONVERSATION", path, "Conversation needs at least one turn.");
+      conversation.turns?.forEach((turn, index) => {
+        if (!present(turn.speaker) || !present(turn.native) || !present(turn.english) || !present(turn.answer) || !turn.choices?.length) add(errors, "IMMERSION_TURN", `${path}/turn-${index + 1}`, "Turn needs a speaker, native and English text, an answer, and choices.");
+        if (!turn.choices?.includes(turn.answer)) add(errors, "IMMERSION_ANSWER", `${path}/turn-${index + 1}`, "The answer is not present in the turn choices.");
+      });
+    }
   }
 }
 

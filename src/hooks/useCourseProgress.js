@@ -18,7 +18,7 @@ export const initialProgress = {
   placement: null,
   practice: { date: null, sessions: 0, xp: 0, lastMode: null },
   explore: { masteredEntryIds: [], completedCategoryLevels: [] },
-  immersion: { savedPhrases: [], savedWords: [], completedMissions: [], completedGrammar: [], completedPronunciation: [], completedStories: [], completedAdventures: [], claimedDailyPhrases: [] }
+  immersion: { savedPhrases: [], savedWords: [], completedConversations: [], completedMissions: [], completedGrammar: [], completedPronunciation: [], completedStories: [], completedAdventures: [], claimedDailyPhrases: [] }
 };
 
 export const HEART_REGEN_MS = 30 * 60 * 1000;
