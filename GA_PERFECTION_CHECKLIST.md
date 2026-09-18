@@ -10,7 +10,7 @@ Ga already has a complete 28-unit path. This checklist brings its depth and surr
 6. [x] **Stories and culture** — expanded to six source-aligned original learning stories with comprehension feedback, saved vocabulary, cultural context, visible provenance, and a six-topic Ga culture shelf; traditional proverbs and festival claims remain excluded until speaker/editorial review.
 7. [x] **Practice variety** — verified adaptive review and added reusable five-pair matching, sentence-building, visual-recall, vocabulary, and timed fluency sessions driven by completed Ga lessons and the source-aligned Ga Explore library.
 8. [x] **Culture Card collection** — every Ga lesson now unlocks a distinct unit-and-lesson-specific card with contextual vocabulary, normalized categories, Ga/Greater Accra grouping, cautious variation language, and visible source provenance.
-9. [ ] **Gamification parity** — verify Ga-specific completion rewards, achievements, weekly goals, Adventure stamps, graduation, and maintenance mode.
+9. [x] **Gamification parity** — added four Ga milestones, verified persisted Adventure passport stamps and shared rewards, made weekly goals course-aware, and opened graduation certificates plus maintenance review for Ga (and every completed course).
 10. [ ] **Audio integration** — add licensed native-speaker slow/normal/natural recordings and verify graceful fallback. Deferred until recordings exist.
 11. [ ] **Accessibility and responsive QA** — test 375 px mobile, tablet, desktop, keyboard, reduced motion, dark/light mode, and screen readers.
 12. [ ] **Final Ga QA and pilot** — fresh-account completion, error/review/reward persistence, corrupt-storage recovery, native-speaker sign-off, and representative beginner testing.

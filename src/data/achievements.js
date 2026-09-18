@@ -1,6 +1,8 @@
 import { twiUnits } from "./twi/course";
+import { gaUnits } from "./ga/course";
 
 const twiLessonTotal = twiUnits.reduce((sum, unit) => sum + unit.lessons.length, 0);
+const gaLessonTotal = gaUnits.reduce((sum, unit) => sum + unit.lessons.length, 0);
 
 export const achievements = [
   { id: "first-steps", title: "First Steps", description: "Complete your first lesson", emoji: "👣", test: ({ lessons }) => lessons >= 1 },
@@ -21,12 +23,17 @@ export const achievements = [
   ,{ id: "twi-story-fire", title: "Story Fire", description: "Complete 3 Twi stories", emoji: "🔥", test: ({ twiStories }) => twiStories >= 3 }
   ,{ id: "twi-world-guide", title: "Twi World Guide", description: "Complete 6 Twi Adventures", emoji: "🧭", test: ({ twiAdventures }) => twiAdventures >= 6 }
   ,{ id: "twi-graduate", title: "Twi Path Graduate", description: "Complete the full Twi learning path", emoji: "🎓", test: ({ twiLessons, twiLessonTotal }) => twiLessonTotal > 0 && twiLessons >= twiLessonTotal }
+  ,{ id: "ga-ojekoo", title: "Ga Ojekoo", description: "Complete your first Ga lesson", emoji: "🇬🇭", test: ({ gaLessons }) => gaLessons >= 1 }
+  ,{ id: "ga-story-keeper", title: "Ga Story Keeper", description: "Complete 3 Ga stories", emoji: "📖", test: ({ gaStories }) => gaStories >= 3 }
+  ,{ id: "ga-accra-guide", title: "Accra Guide", description: "Complete 6 Ga Adventures", emoji: "🧭", test: ({ gaAdventures }) => gaAdventures >= 6 }
+  ,{ id: "ga-graduate", title: "Ga Path Graduate", description: "Complete the full Ga learning path", emoji: "🎓", test: ({ gaLessons, gaLessonTotal }) => gaLessonTotal > 0 && gaLessons >= gaLessonTotal }
   ,{ id: "review-rhythm", title: "Review Rhythm", description: "Build a 3-day review streak", emoji: "🔁", test: ({ reviewStreak }) => reviewStreak >= 3 }
 ];
 
 export function getAchievementStats(progressByLanguage) {
   const courses = Object.values(progressByLanguage);
   const twi = progressByLanguage.twi || {};
+  const ga = progressByLanguage.ga || {};
   return {
     xp: courses.reduce((sum, item) => sum + (item.xp || 0), 0),
     lessons: courses.reduce((sum, item) => sum + (item.completedLessonIds?.length || 0), 0),
@@ -42,7 +49,11 @@ export function getAchievementStats(progressByLanguage) {
     twiLessons: twi.completedLessonIds?.length || 0,
     twiLessonTotal,
     twiStories: (twi.immersion?.completedStories?.length || 0) + (twi.immersion?.completedWorldStories?.length || 0),
-    twiAdventures: twi.immersion?.completedAdventures?.length || 0
+    twiAdventures: twi.immersion?.completedAdventures?.length || 0,
+    gaLessons: ga.completedLessonIds?.length || 0,
+    gaLessonTotal,
+    gaStories: (ga.immersion?.completedStories?.length || 0) + (ga.immersion?.completedWorldStories?.length || 0),
+    gaAdventures: ga.immersion?.completedAdventures?.length || 0
   };
 }
 

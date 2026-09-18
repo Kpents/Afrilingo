@@ -232,7 +232,7 @@ export default function HomePage({
           languageId={languageId}
         />
 
-        {courseComplete && language.id === "twi" && <CourseGraduation dark={dark} language={language} learnerName={learnerName} units={units} onReview={onStartLesson}/>}
+        {courseComplete && <CourseGraduation dark={dark} language={language} learnerName={learnerName} units={units} onReview={onStartLesson}/>}
 
       </section>
 
@@ -246,7 +246,7 @@ export default function HomePage({
 
         <LeboCoach dark={dark} progress={progress} completedInUnit={completedLessonsInUnit} totalInUnit={unit.lessons.length} languageId={languageId} />
 
-        <GamificationPanel dark={dark} progress={progress} dailyTarget={dailyTarget} />
+        <GamificationPanel dark={dark} progress={progress} dailyTarget={dailyTarget} languageName={language.language} />
 
         {/* STREAK */}
 
