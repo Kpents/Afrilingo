@@ -38,6 +38,20 @@ function addLearningVisuals(lesson) {
     return { ...word, ...(Number.isFinite(number) ? { number } : {}), iconId };
   });
   const questions = lesson.questions.map(question => {
+    if (["match", "matching"].includes(question.type)) {
+      const candidates = [...(question.pairs || []), ...vocabulary];
+      const nativeSeen = new Set();
+      const englishSeen = new Set();
+      const pairs = candidates.filter(pair => {
+        const native = normalized(pair.native);
+        const english = normalized(pair.english);
+        if (!native || !english || nativeSeen.has(native) || englishSeen.has(english)) return false;
+        nativeSeen.add(native);
+        englishSeen.add(english);
+        return true;
+      }).slice(0, 5).map(({ native, english }) => ({ native, english }));
+      return { ...question, pairs };
+    }
     if (!question.options?.length || ["listening", "listen-and-select"].includes(question.type)) return question;
     const options = question.options.map(raw => {
       const value = typeof raw === "object" ? raw.value ?? raw.label : raw;

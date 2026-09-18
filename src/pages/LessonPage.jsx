@@ -3,7 +3,7 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { CheckCircle2, Heart, RotateCcw, Sparkles, X, XCircle } from "lucide-react";
 import MiniConversation from "../components/MiniConversation";
 import CultureCard from "../components/CultureCard";
-import QuestionRenderer, { expectedAnswer, normalizeAnswer } from "../components/lessons/QuestionRenderer";
+import QuestionRenderer, { expectedAnswer, isAnswerComplete, normalizeAnswer } from "../components/lessons/QuestionRenderer";
 import Lebo from "../components/ui/Lebo";
 import LearningVisual from "../components/ui/LearningVisual";
 import ConfettiBurst from "../components/ui/ConfettiBurst";
@@ -79,6 +79,7 @@ export default function LessonPage({ lesson, unit, dark, hearts, languageId, sou
 
   const submittedAnswer = normalizeAnswer(current, selected);
   const correct = submittedAnswer === expectedAnswer(current);
+  const answerComplete = isAnswerComplete(current, selected);
   const progress = Math.min(100, ((index + (checked ? 1 : 0)) / queue.length) * 100);
 
   const continueFlow = () => {
@@ -96,7 +97,7 @@ export default function LessonPage({ lesson, unit, dark, hearts, languageId, sou
   };
 
   const checkAnswer = () => {
-    if (selected == null || (Array.isArray(selected) && selected.length === 0)) return;
+    if (!answerComplete) return;
     setChecked(true);
     playUiSound(correct ? "correct" : "incorrect", soundEnabled);
 
@@ -180,12 +181,12 @@ export default function LessonPage({ lesson, unit, dark, hearts, languageId, sou
       <div className="mt-8">
         {!checked ? (
           <button
-            disabled={selected == null || (Array.isArray(selected) && selected.length === 0)}
+            disabled={!answerComplete}
             onClick={checkAnswer}
             onPointerDown={hapticPress}
-            data-tone={selected == null || (Array.isArray(selected) && selected.length === 0) ? dark ? "locked-night" : "locked" : "orange"}
+            data-tone={!answerComplete ? dark ? "locked-night" : "locked" : "orange"}
             className={`afri-press w-full rounded-[1.4rem] py-4 text-lg font-black uppercase tracking-wide ${
-              selected != null && (!Array.isArray(selected) || selected.length > 0)
+              answerComplete
                 ? "bg-[#F28C28] text-white shadow-lg shadow-orange-500/20"
                 : dark
                 ? "bg-white/8 text-white/25"

@@ -117,7 +117,7 @@ export default function App() {
     Ga:
     afrilingo:ga
   */
-  const { progress, setProgress, progressByLanguage } = useCourseProgress(activeLanguage);
+  const { progress, setProgress, setLanguageProgress, progressByLanguage } = useCourseProgress(activeLanguage);
 
   const selectLanguage = useCallback((languageId) => {
     if (!languages[languageId]) return;
@@ -150,7 +150,7 @@ export default function App() {
     try {
       const saved = progressByLanguage[activeLanguage];
       const units = languages[activeLanguage].units;
-      setActiveUnit(getFurthestUnlockedUnit(units, saved.completedLessonIds));
+      setActiveUnit(getFurthestUnlockedUnit(units, saved.completedLessonIds, saved.placement?.unitIndex || 0));
 
       setActiveLesson(
         null
@@ -451,7 +451,20 @@ export default function App() {
   }
 
   if (!preferences.onboarded) {
-    return <Suspense fallback={<PageLoader dark={dark} languageId={activeLanguage} />}><OnboardingPage dark={dark} initial={preferences} onComplete={next => { const completed = { ...next, startedLanguageIds: [next.languageId] }; setPreferences(completed); setActiveLanguage(next.languageId); setScreen("home"); }} /></Suspense>;
+    return <Suspense fallback={<PageLoader dark={dark} languageId={activeLanguage} />}><OnboardingPage dark={dark} initial={preferences} onComplete={next => {
+      const completed = { ...next, startedLanguageIds: [next.languageId] };
+      const course = languages[next.languageId];
+      if (next.placement?.unitIndex > 0 && course) {
+        setLanguageProgress(next.languageId, previous => ({
+          ...previous,
+          placement: next.placement
+        }));
+        setActiveUnit(next.placement.unitIndex);
+      }
+      setPreferences(completed);
+      setActiveLanguage(next.languageId);
+      setScreen("home");
+    }} /></Suspense>;
   }
 
   return (

@@ -7,10 +7,12 @@ const server = await createServer({ root, appType: "custom", logLevel: "silent",
 let languages;
 let progression;
 let backup;
+let placement;
 try {
   ({ languages } = await server.ssrLoadModule("/src/data/languages.js"));
   progression = await server.ssrLoadModule("/src/utils/courseProgress.js");
   backup = await server.ssrLoadModule("/src/services/progressBackup.js");
+  placement = await server.ssrLoadModule("/src/utils/placementTest.js");
 } finally {
   await server.close();
 }
@@ -46,6 +48,13 @@ for (const [languageId, course] of Object.entries(languages)) {
       );
     }
   }
+
+  const placementQuestions = placement.buildPlacementQuestions(course);
+  check(placementQuestions.length === 5, `${languageId}: placement check must contain five questions.`);
+  check(placementQuestions.every(question => question.options.includes(question.answer)), `${languageId}: placement answers must appear in their options.`);
+  const placementIndex = placement.placementUnitIndex(5, 5, course.units.length);
+  check(placementIndex > 0, `${languageId}: a perfect placement result must recommend a later starting unit.`);
+  check(progression.getFurthestUnlockedUnit(course.units, [], placementIndex) === placementIndex, `${languageId}: placement must unlock its suggested unit without fake completions.`);
 }
 
 for (const languageId of ["twi", "ga"]) {

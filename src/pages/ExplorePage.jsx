@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowLeft, CheckCircle2, ChevronRight, Dices, Heart, Info, Search, SlidersHorizontal, Sparkles, XCircle } from "lucide-react";
 import AudioButton from "../components/ui/AudioButton";
-import QuestionRenderer, { expectedAnswer, normalizeAnswer } from "../components/lessons/QuestionRenderer";
+import QuestionRenderer, { expectedAnswer, isAnswerComplete, normalizeAnswer } from "../components/lessons/QuestionRenderer";
 import ConceptIcon from "../components/ui/ConceptIcon";
 import ConfettiBurst from "../components/ui/ConfettiBurst";
 import { playUiSound } from "../services/uiSound";
@@ -167,7 +167,8 @@ function ExploreSession({ dark, entries, categoryKey, categoryEntryIds, title, h
 
   const current = queue[quizIndex];
   const correct = normalizeAnswer(current, selected) === expectedAnswer(current);
-  const submit = () => { if (selected == null) return; setChecked(true); playUiSound(correct ? "correct" : "incorrect", soundEnabled); if (!correct) { setMistakes((value) => value + 1); onLoseHeart(); onReviewQuestion?.(current, { id: categoryKey, title }); if (!queue.some((item, index) => index > quizIndex && item.id === current.id)) setQueue((items) => [...items, { ...current, retry: true }]); } };
+  const answerComplete = isAnswerComplete(current, selected);
+  const submit = () => { if (!answerComplete) return; setChecked(true); playUiSound(correct ? "correct" : "incorrect", soundEnabled); if (!correct) { setMistakes((value) => value + 1); onLoseHeart(); onReviewQuestion?.(current, { id: categoryKey, title }); if (!queue.some((item, index) => index > quizIndex && item.id === current.id)) setQueue((items) => [...items, { ...current, retry: true }]); } };
   const next = () => { if (quizIndex + 1 >= queue.length) { playUiSound("complete", soundEnabled); return setStage("complete"); } setQuizIndex((value) => value + 1); setSelected(null); setChecked(false); };
   return <div className="mx-auto max-w-2xl">
     <SessionHeader title={`${title} · Mini quiz`} onExit={onExit} progress={55 + ((quizIndex + (checked ? 1 : 0)) / queue.length) * 45} hearts={hearts}/>
@@ -175,7 +176,7 @@ function ExploreSession({ dark, entries, categoryKey, categoryEntryIds, title, h
     <h1 className="mt-2 text-3xl font-black">{current.prompt}</h1>
     <div className="mt-6"><QuestionRenderer question={current} dark={dark} checked={checked} value={selected} onChange={setSelected}/></div>
     {checked && <div className={`mt-5 flex gap-3 rounded-2xl border p-4 ${correct ? "border-[#24745B]/30 bg-[#24745B]/10" : "border-[#C95D3A]/30 bg-[#C95D3A]/10"}`}>{correct ? <CheckCircle2 className="text-[#53B98A]"/> : <XCircle className="text-[#C95D3A]"/>}<div><div className="font-black">{correct ? "Excellent!" : "Not quite."}</div><div className="mt-1 text-sm font-semibold opacity-60">{current.explanation}</div></div></div>}
-    <button disabled={!checked && selected == null} onPointerDown={hapticPress} onClick={checked ? next : submit} data-tone={checked ? correct ? "green" : "clay" : "orange"} className={`afri-press mt-7 min-h-14 w-full rounded-2xl font-black text-white disabled:opacity-30 ${checked && correct ? "bg-[#24745B]" : checked ? "bg-[#C95D3A]" : "bg-[#F28C28]"}`}>{checked ? "Continue" : "Check"}</button>
+    <button disabled={!checked && !answerComplete} onPointerDown={hapticPress} onClick={checked ? next : submit} data-tone={checked ? correct ? "green" : "clay" : "orange"} className={`afri-press mt-7 min-h-14 w-full rounded-2xl font-black text-white disabled:opacity-30 ${checked && correct ? "bg-[#24745B]" : checked ? "bg-[#C95D3A]" : "bg-[#F28C28]"}`}>{checked ? "Continue" : "Check"}</button>
   </div>;
 }
 

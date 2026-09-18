@@ -83,7 +83,7 @@ export default function HomePage({
   // -------------------------------------------------------
 
   const isUnitUnlocked = (index) => {
-    return getUnitUnlocked(units, index, progress.completedLessonIds);
+    return getUnitUnlocked(units, index, progress.completedLessonIds, progress.placement?.unitIndex || 0);
   };
 
   // Is the NEXT unit unlocked?
@@ -98,7 +98,7 @@ export default function HomePage({
     completedLessonsInUnit ===
     unit.lessons.length;
 
-  const recommendedUnitIndex = getFurthestUnlockedUnit(units, progress.completedLessonIds);
+  const recommendedUnitIndex = getFurthestUnlockedUnit(units, progress.completedLessonIds, progress.placement?.unitIndex || 0);
   const recommendedUnit = units[recommendedUnitIndex];
   const nextLesson = recommendedUnit.lessons.find((lesson, index) => {
     if (progress.completedLessonIds.includes(lesson.id)) return false;

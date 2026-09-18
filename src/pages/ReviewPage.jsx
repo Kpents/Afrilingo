@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { CheckCircle2, Heart, RotateCcw, Sparkles, XCircle } from "lucide-react";
-import QuestionRenderer, { expectedAnswer, normalizeAnswer } from "../components/lessons/QuestionRenderer";
+import QuestionRenderer, { expectedAnswer, isAnswerComplete, normalizeAnswer } from "../components/lessons/QuestionRenderer";
 import Lebo from "../components/ui/Lebo";
 import { playUiSound } from "../services/uiSound";
 import { hapticPress } from "../utils/hapticFeedback";
@@ -19,8 +19,8 @@ export default function ReviewPage({ dark, progress, language, soundEnabled, onL
 
 function ReviewSession({ dark, items, hearts, languageId, soundEnabled, onLoseHeart, onExit, onComplete }) {
   const [index, setIndex] = useState(0); const [selected, setSelected] = useState(null); const [checked, setChecked] = useState(false); const [resolved, setResolved] = useState([]); const [mistakes, setMistakes] = useState(0);
-  const currentItem = items[index]; const current = currentItem.question; const correct = normalizeAnswer(current, selected) === expectedAnswer(current); const progress = ((index + (checked ? 1 : 0)) / items.length) * 100;
-  const submit = () => { if (selected == null || (Array.isArray(selected) && !selected.length)) return; setChecked(true); playUiSound(correct ? "correct" : "incorrect", soundEnabled); if (correct) setResolved(keys => [...new Set([...keys, currentItem.reviewKey])]); else { setMistakes(value => value + 1); onLoseHeart(); } };
+  const currentItem = items[index]; const current = currentItem.question; const correct = normalizeAnswer(current, selected) === expectedAnswer(current); const answerComplete = isAnswerComplete(current, selected); const progress = ((index + (checked ? 1 : 0)) / items.length) * 100;
+  const submit = () => { if (!answerComplete) return; setChecked(true); playUiSound(correct ? "correct" : "incorrect", soundEnabled); if (correct) setResolved(keys => [...new Set([...keys, currentItem.reviewKey])]); else { setMistakes(value => value + 1); onLoseHeart(); } };
   const next = () => { if (index + 1 >= items.length) return onComplete({ resolvedKeys: resolved, xp: resolved.length * 5 }); setIndex(value => value + 1); setSelected(null); setChecked(false); };
   return <div className="mx-auto max-w-2xl">
     <div className="mb-7 flex items-center gap-3"><button onClick={onExit} className={`grid size-11 place-items-center rounded-xl ${dark ? "bg-white/6" : "bg-black/5"}`} aria-label="Exit review"><RotateCcw size={19}/></button><div className={`h-3 flex-1 overflow-hidden rounded-full ${dark ? "bg-white/10" : "bg-black/10"}`}><motion.div className="h-full rounded-full bg-[#F28C28]" animate={{width:`${progress}%`}}/></div><div className="flex items-center gap-1 font-black text-[#EF5B5B]"><Heart size={20} fill="currentColor"/>{hearts}</div></div>
@@ -28,7 +28,7 @@ function ReviewSession({ dark, items, hearts, languageId, soundEnabled, onLoseHe
     <h1 className="mt-2 text-3xl font-black">{current.prompt}</h1>
     <div className="mt-6"><QuestionRenderer question={current} dark={dark} checked={checked} value={selected} onChange={setSelected}/></div>
     {checked && <div className={`mt-5 flex items-start gap-3 rounded-2xl border p-4 ${correct ? "border-[#24745B]/30 bg-[#24745B]/10" : "border-[#C95D3A]/30 bg-[#C95D3A]/10"}`}><Lebo pose={correct ? "encourage" : "learn"} reaction={correct ? "correct" : "encourage"} languageId={languageId} className="size-16 shrink-0" decorative/>{correct ? <CheckCircle2 className="text-[#53B98A]"/> : <XCircle className="text-[#C95D3A]"/>}<div><div className="font-black">{correct ? "Memory strengthened!" : "Keep this one in review."}</div><div className="mt-1 text-sm font-semibold opacity-55">{current.explanation}</div></div></div>}
-    <button disabled={!checked && (selected == null || (Array.isArray(selected) && !selected.length))} onPointerDown={hapticPress} onClick={checked ? next : submit} data-tone={checked ? correct ? "green" : "clay" : "orange"} className={`afri-press mt-7 min-h-14 w-full rounded-2xl font-black text-white disabled:opacity-30 ${checked ? correct ? "bg-[#24745B]" : "bg-[#C95D3A]" : "bg-[#F28C28]"}`}>{checked ? index + 1 >= items.length ? `Finish · ${resolved.length * 5} XP` : "Continue" : "Check"}</button>
+    <button disabled={!checked && !answerComplete} onPointerDown={hapticPress} onClick={checked ? next : submit} data-tone={checked ? correct ? "green" : "clay" : "orange"} className={`afri-press mt-7 min-h-14 w-full rounded-2xl font-black text-white disabled:opacity-30 ${checked ? correct ? "bg-[#24745B]" : "bg-[#C95D3A]" : "bg-[#F28C28]"}`}>{checked ? index + 1 >= items.length ? `Finish · ${resolved.length * 5} XP` : "Continue" : "Check"}</button>
     {mistakes > 0 && <div className="mt-3 text-center text-xs font-bold opacity-40">{mistakes} still strengthening</div>}
   </div>;
 }

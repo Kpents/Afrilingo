@@ -20,7 +20,7 @@ function buildIndex(progressByLanguage) {
   Object.values(languages).forEach(language => {
     const saved = progressByLanguage[language.id] || { completedLessonIds: [], reviewQueue: [] };
     language.units.forEach((unit, unitIndex) => unit.lessons.forEach((lesson, lessonIndex) => {
-      const unlocked = isUnitUnlocked(language.units, unitIndex, saved.completedLessonIds) && isLessonUnlocked(unit.lessons, lessonIndex, saved.completedLessonIds);
+      const unlocked = isUnitUnlocked(language.units, unitIndex, saved.completedLessonIds, saved.placement?.unitIndex || 0) && isLessonUnlocked(unit.lessons, lessonIndex, saved.completedLessonIds);
       const conversation = Array.isArray(lesson.conversation) ? lesson.conversation : [];
       results.push({ id: `${language.id}:lesson:${lesson.id}`, type: "lesson", languageId: language.id, language, unitIndex, lesson, unlocked, title: lesson.title, subtitle: `Unit ${unitIndex + 1} · ${unit.title}`, search: haystack(language.language, language.nativeName, unit.title, unit.subtitle, lesson.title, conversation.map(line => [line.native, line.english]), lesson.questions?.map(q => [q.prompt, q.answer, q.options])) });
       if (lesson.cultureCard) results.push({ id: `${language.id}:culture:${lesson.cultureCard.id}`, type: "culture", languageId: language.id, language, title: lesson.cultureCard.title, subtitle: lesson.cultureCard.category || "Culture card", search: haystack(language.language, lesson.cultureCard.title, lesson.cultureCard.category, lesson.cultureCard.description, lesson.cultureCard.explanation) });

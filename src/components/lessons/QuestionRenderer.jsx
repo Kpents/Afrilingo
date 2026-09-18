@@ -47,14 +47,35 @@ function SentenceBuilder({ question, value, onChange, dark, checked }) {
 
 function Matching({ question, value, onChange, dark, checked }) {
   const pairs = question.pairs || [];
-  const [native, setNative] = useState(null);
-  useEffect(() => setNative(null), [question.id]);
-  const add = (english) => { if (!native) return; onChange([...value, `${native}::${english}`]); setNative(null); };
+  const nativePairs = useMemo(() => shuffled(pairs), [question.id, question.retry]);
+  const englishPairs = useMemo(() => {
+    if (nativePairs.length < 2) return nativePairs;
+    const offset = 1 + Math.floor(Math.random() * (nativePairs.length - 1));
+    return nativePairs.map((_, index) => nativePairs[(index + offset) % nativePairs.length]);
+  }, [nativePairs]);
+  const [pending, setPending] = useState(null);
+  useEffect(() => setPending(null), [question.id, question.retry]);
   const usedNative = new Set(value.map(v => v.split("::")[0]));
   const usedEnglish = new Set(value.map(v => v.split("::")[1]));
+  const choose = (side, selectedValue) => {
+    const usedIndex = value.findIndex(match => side === "native" ? match.startsWith(`${selectedValue}::`) : match.endsWith(`::${selectedValue}`));
+    if (usedIndex >= 0) {
+      onChange(value.filter((_, index) => index !== usedIndex));
+      setPending(null);
+      return;
+    }
+    if (!pending || pending.side === side) {
+      setPending({ side, value: selectedValue });
+      return;
+    }
+    const native = side === "native" ? selectedValue : pending.value;
+    const english = side === "english" ? selectedValue : pending.value;
+    onChange([...value, `${native}::${english}`]);
+    setPending(null);
+  };
   return <div className="grid grid-cols-2 gap-3">
-    <div className="space-y-3">{pairs.map(p => <button key={p.native} disabled={checked || usedNative.has(p.native)} onPointerDown={hapticPress} onClick={() => setNative(p.native)} data-tone={native === p.native ? "orange" : dark ? "night" : "surface"} className={`afri-press min-h-14 w-full rounded-xl p-3 font-black ${native === p.native ? "bg-[#F28C28] text-white" : dark ? "bg-white/8" : "bg-black/5"} disabled:opacity-30`}>{p.native}</button>)}</div>
-    <div className="space-y-3">{pairs.map(p => <button key={p.english} disabled={checked || usedEnglish.has(p.english)} onPointerDown={hapticPress} onClick={() => add(p.english)} data-tone={dark ? "night" : "surface"} className={`afri-press min-h-14 w-full rounded-xl p-3 font-black ${dark ? "bg-white/8" : "bg-black/5"} disabled:opacity-30`}>{p.english}</button>)}</div>
+    <div className="space-y-3" aria-label="Native-language words">{nativePairs.map(p => { const selected = pending?.side === "native" && pending.value === p.native; const paired = usedNative.has(p.native); return <button key={p.native} aria-pressed={selected || paired} disabled={checked} onPointerDown={hapticPress} onClick={() => choose("native", p.native)} data-tone={selected ? "orange" : paired ? "green" : dark ? "night" : "surface"} className={`afri-press min-h-14 w-full rounded-xl p-3 font-black ${selected ? "bg-[#F28C28] text-white" : paired ? "bg-[#24745B]/20 text-[#53B98A]" : dark ? "bg-white/8" : "bg-black/5"} disabled:opacity-55`}>{p.native}</button>})}</div>
+    <div className="space-y-3" aria-label="English meanings">{englishPairs.map(p => { const selected = pending?.side === "english" && pending.value === p.english; const paired = usedEnglish.has(p.english); return <button key={p.english} aria-pressed={selected || paired} disabled={checked} onPointerDown={hapticPress} onClick={() => choose("english", p.english)} data-tone={selected ? "orange" : paired ? "green" : dark ? "night" : "surface"} className={`afri-press min-h-14 w-full rounded-xl p-3 font-black ${selected ? "bg-[#F28C28] text-white" : paired ? "bg-[#24745B]/20 text-[#53B98A]" : dark ? "bg-white/8" : "bg-black/5"} disabled:opacity-55`}>{p.english}</button>})}</div>
   </div>;
 }
 
@@ -67,4 +88,11 @@ export function normalizeAnswer(question, value) {
 export function expectedAnswer(question) {
   if (["match", "matching"].includes(question.type)) return (question.pairs || []).map(p => `${p.native}::${p.english}`).sort().join("|");
   return question.answer;
+}
+
+export function isAnswerComplete(question, value) {
+  if (value == null) return false;
+  if (["match", "matching"].includes(question.type)) return Array.isArray(value) && value.length === (question.pairs || []).length;
+  if (Array.isArray(value)) return value.length > 0;
+  return true;
 }

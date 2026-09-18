@@ -15,6 +15,7 @@ export const initialProgress = {
   unlockedAchievementIds: [],
   reviewResolved: 0,
   reviewQueue: [],
+  placement: null,
   practice: { date: null, sessions: 0, xp: 0, lastMode: null },
   explore: { masteredEntryIds: [], completedCategoryLevels: [] },
   immersion: { savedPhrases: [], savedWords: [], completedMissions: [], completedGrammar: [], completedPronunciation: [], completedStories: [], completedAdventures: [], claimedDailyPhrases: [] }
@@ -59,6 +60,15 @@ export default function useCourseProgress(activeLanguage) {
       return { ...all, [activeLanguage]: next };
     });
   }, [activeLanguage]);
+  const setLanguageProgress = useCallback((languageId, update) => {
+    if (!languages[languageId]) return;
+    setProgressByLanguage(all => {
+      const previous = all[languageId] || initialProgress;
+      const next = typeof update === "function" ? update(previous) : update;
+      try { localStorage.setItem(`afrilingo:${languageId}`, JSON.stringify(next)); } catch {}
+      return { ...all, [languageId]: next };
+    });
+  }, []);
   useEffect(() => {
     const timer = window.setInterval(() => {
       setProgressByLanguage(all => Object.fromEntries(Object.entries(all).map(([id, value]) => {
@@ -69,5 +79,5 @@ export default function useCourseProgress(activeLanguage) {
     }, 30000);
     return () => window.clearInterval(timer);
   }, []);
-  return useMemo(() => ({ progress, setProgress, progressByLanguage }), [progress, setProgress, progressByLanguage]);
+  return useMemo(() => ({ progress, setProgress, setLanguageProgress, progressByLanguage }), [progress, setProgress, setLanguageProgress, progressByLanguage]);
 }
