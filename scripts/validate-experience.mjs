@@ -8,11 +8,13 @@ let languages;
 let progression;
 let backup;
 let placement;
+let reviewScheduler;
 try {
   ({ languages } = await server.ssrLoadModule("/src/data/languages.js"));
   progression = await server.ssrLoadModule("/src/utils/courseProgress.js");
   backup = await server.ssrLoadModule("/src/services/progressBackup.js");
   placement = await server.ssrLoadModule("/src/utils/placementTest.js");
+  reviewScheduler = await server.ssrLoadModule("/src/utils/reviewScheduler.js");
 } finally {
   await server.close();
 }
@@ -115,10 +117,27 @@ backup.resetCourseData("ga");
 check(localStorage.getItem("afrilingo:ga") === null, "Course reset must remove only the selected course.");
 check(localStorage.getItem("afrilingo:twi") !== null, "Course reset must preserve other languages.");
 
+const reviewNow = Date.UTC(2026, 9, 4, 12);
+const reviewQuestion = { id: "review-1", type: "multiple-choice", prompt: "Choose the greeting.", answer: "Maakye", options: ["Maakye", "Daabi"] };
+let reviewQueue = reviewScheduler.recordReviewMiss([], reviewQuestion, { id: "twi-u1-l1", title: "Morning greetings" }, reviewNow);
+check(reviewQueue.length === 1 && reviewScheduler.isReviewDue(reviewQueue[0], reviewNow), "A missed question must enter review immediately.");
+reviewQueue = reviewScheduler.recordReviewMiss(reviewQueue, reviewQuestion, { id: "twi-u1-l1", title: "Morning greetings" }, reviewNow + 1000);
+check(reviewQueue[0].misses === 2, "Repeated misses must increase review priority without duplicating the item.");
+reviewQueue = reviewScheduler.applyReviewOutcomes(reviewQueue, [{ reviewKey: reviewQueue[0].reviewKey, correct: true }], reviewNow + 2000);
+check(reviewQueue[0].stage === 1 && !reviewScheduler.isReviewDue(reviewQueue[0], reviewNow + 2000), "A correct review must schedule the concept for a later interval.");
+reviewQueue = reviewScheduler.applyReviewOutcomes(reviewQueue, [{ reviewKey: reviewQueue[0].reviewKey, correct: false }], reviewNow + 3000);
+check(reviewQueue[0].misses === 3 && reviewScheduler.isReviewDue(reviewQueue[0], reviewNow + 3000), "A failed review must return the concept to the due queue.");
+
+let masteredQueue = reviewScheduler.recordReviewMiss([], { ...reviewQuestion, id: "review-2" }, { id: "twi-u1-l1", title: "Morning greetings" }, reviewNow);
+for (let stage = 0; stage < 5; stage += 1) {
+  masteredQueue = reviewScheduler.applyReviewOutcomes(masteredQueue, [{ reviewKey: masteredQueue[0]?.reviewKey, correct: true }], reviewNow + stage * 31 * 24 * 60 * 60 * 1000);
+}
+check(masteredQueue.length === 0, "A concept must leave review only after repeated successful recall.");
+
 if (failures.length) {
   console.error(`Experience validation failed with ${failures.length} issue${failures.length === 1 ? "" : "s"}:`);
   failures.forEach(failure => console.error(`- ${failure}`));
   process.exitCode = 1;
 } else {
-  console.log(`AfriLingo experience validation: ${Object.keys(languages).length} languages · progression, isolation, backup and recovery passed`);
+  console.log(`AfriLingo experience validation: ${Object.keys(languages).length} languages · progression, adaptive review, isolation, backup and recovery passed`);
 }

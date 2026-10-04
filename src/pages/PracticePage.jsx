@@ -8,6 +8,7 @@ import { playUiSound } from "../services/uiSound";
 import { hapticPress } from "../utils/hapticFeedback";
 import SidekickPortrait from "../components/ui/SidekickPortrait";
 import { sidekicks } from "../data/sidekicks";
+import { isReviewDue, prioritizeReviewQueue } from "../utils/reviewScheduler";
 
 const modes = [
   { id: "smart", title: "Smart practice", text: "Mistakes first, then concepts you have already met.", icon: Sparkles, color: "#F28C28" },
@@ -84,7 +85,7 @@ function buildPools(language, progress, library) {
   const course = language.units.flatMap(unit => unit.lessons)
     .filter(lesson => completed.has(lesson.id))
     .flatMap(lesson => (lesson.questions || []).map(question => ({ key: `course:${lesson.id}:${question.id}`, question, source: { id: lesson.id, title: lesson.title } })));
-  const review = [...(progress.reviewQueue || [])].sort((a, b) => b.misses - a.misses).map(item => ({ key: item.reviewKey, question: item.question, source: { id: item.sourceId, title: item.sourceTitle }, reviewKey: item.reviewKey }));
+  const review = prioritizeReviewQueue(progress.reviewQueue || []).filter(item => isReviewDue(item)).map(item => ({ key: item.reviewKey, question: item.question, source: { id: item.sourceId, title: item.sourceTitle }, reviewKey: item.reviewKey }));
   const vocabulary = vocabularyQuestions(library, progress.explore?.masteredEntryIds || []);
   const listening = course.filter(item => item.question.type === "listening" && item.question.audio);
   const matching = [...course.filter(item => ["match", "matching"].includes(item.question.type)), ...matchingQuestions(library)];

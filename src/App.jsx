@@ -50,6 +50,7 @@ import useDialogFocus from "./hooks/useDialogFocus";
 import useAppLifecycle from "./hooks/useAppLifecycle";
 import AppStatus from "./components/system/AppStatus";
 import { recordReviewStreak, recordWeeklyActivity } from "./utils/learningGoals";
+import { applyReviewOutcomes, recordReviewMiss } from "./utils/reviewScheduler";
 
 export default function App() {
   const lifecycle = useAppLifecycle();
@@ -361,25 +362,13 @@ export default function App() {
   };
 
   const addToReview = (question, source = {}) => {
-    const reviewKey = `${source.id || "practice"}:${question.id}`;
-    setProgress((p) => {
-      const queue = p.reviewQueue || [];
-      const existing = queue.find((item) => item.reviewKey === reviewKey);
-      const nextItem = {
-        reviewKey,
-        question: { ...question, retry: false },
-        sourceId: source.id || "practice",
-        sourceTitle: source.title || "Practice",
-        misses: (existing?.misses || 0) + 1,
-        lastMissedAt: Date.now()
-      };
-      return { ...p, reviewQueue: existing ? queue.map((item) => item.reviewKey === reviewKey ? nextItem : item) : [...queue, nextItem] };
-    });
+    setProgress((p) => ({ ...p, reviewQueue: recordReviewMiss(p.reviewQueue, question, source) }));
   };
 
-  const completeReview = ({ resolvedKeys, xp }) => {
+  const completeReview = ({ outcomes, xp }) => {
+    const strengthened = outcomes.filter((outcome) => outcome.correct).length;
     showReward({ kind: "xp", label: `+${xp} Review XP` });
-    setProgress((p) => ({ ...p, xp: p.xp + xp, weekly: recordWeeklyActivity(p, { xp, review: true }), reviewStreak: recordReviewStreak(p), reviewResolved: (p.reviewResolved || 0) + resolvedKeys.length, reviewQueue: (p.reviewQueue || []).filter((item) => !resolvedKeys.includes(item.reviewKey)) }));
+    setProgress((p) => ({ ...p, xp: p.xp + xp, weekly: recordWeeklyActivity(p, { xp, review: true }), reviewStreak: recordReviewStreak(p), reviewResolved: (p.reviewResolved || 0) + strengthened, reviewQueue: applyReviewOutcomes(p.reviewQueue, outcomes) }));
   };
 
   const completePractice = ({ mode, xp, correct, total }) => {
