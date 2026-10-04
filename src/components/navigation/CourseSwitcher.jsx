@@ -14,7 +14,7 @@ function courseStats(course, progressByLanguage) {
   return { completed, total: lessons.length, percent: lessons.length ? Math.round((completed / lessons.length) * 100) : 0 };
 }
 
-export default function CourseSwitcher({ dark, activeLanguage, startedLanguageIds = [], progressByLanguage, onLanguageChange, onContinue, learnerName }) {
+export default function CourseSwitcher({ dark, activeLanguage, startedLanguageIds = [], progressByLanguage, onLanguageChange, onContinue, learnerName, nextLessonTitle, nextUnitTitle }) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [previewCourse, setPreviewCourse] = useState(null);
@@ -53,21 +53,23 @@ export default function CourseSwitcher({ dark, activeLanguage, startedLanguageId
 
       <div className="afri-pattern relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-[#4338CA] via-[#5548D8] to-[#24745B] p-6 text-white shadow-xl shadow-indigo-950/15 sm:p-7">
         <div className="relative z-10 max-w-[72%] sm:max-w-[64%]">
-          <div className="text-xs font-black uppercase tracking-[0.2em] text-white/65">Pick up where you left off</div>
+          <div className="text-xs font-black uppercase tracking-[0.2em] text-[#F6C445]">Your next step</div>
           <div className="mt-3 flex items-center gap-3">
             <span className="text-3xl">{active.flag}</span>
             <div>
               <h2 className="text-2xl font-black">{active.language}</h2>
-              <p className="text-sm font-bold text-white/65">{active.nativeName}</p>
+              {active.nativeName && active.nativeName !== active.language && <p className="text-sm font-bold text-white/65">{active.nativeName}</p>}
             </div>
           </div>
-          <div className="mt-5 flex items-center gap-3">
+          <div className="mt-4 text-lg font-black leading-tight">{nextLessonTitle || "Continue your learning path"}</div>
+          {nextUnitTitle && <div className="mt-1 text-xs font-bold text-white/60">{nextUnitTitle}</div>}
+          <div className="mt-4 flex items-center gap-3">
             <div className="h-2.5 flex-1 overflow-hidden rounded-full bg-white/20">
               <div className="h-full rounded-full bg-[#F6C445] transition-all" style={{ width: `${activeStats.percent}%` }} />
             </div>
             <span className="text-xs font-black">{activeStats.percent}%</span>
           </div>
-          <button onClick={onContinue} className="mt-5 inline-flex min-h-12 items-center gap-2 rounded-2xl bg-white px-5 py-3 text-sm font-black text-[#4338CA] shadow-lg transition hover:-translate-y-0.5">
+          <button onClick={onContinue} data-tone="gold" className="afri-press mt-5 inline-flex min-h-14 items-center gap-2 rounded-2xl bg-[#F6C445] px-5 py-3 text-sm font-black text-[#1A201E]">
             Continue learning <ArrowRight size={17} strokeWidth={3} />
           </button>
         </div>
@@ -86,7 +88,7 @@ export default function CourseSwitcher({ dark, activeLanguage, startedLanguageId
         <button onClick={openCatalog} className="min-h-11 rounded-xl px-3 text-sm font-black text-[#F28C28] transition hover:bg-[#F28C28]/10">{myCourses.length === 1 ? "Add a course" : "View all"}</button>
       </div>
 
-      <div className="mt-3 grid gap-3">
+      {preview.length > 1 && <div className="mt-3 grid gap-3">
         {preview.map(course => {
           const stats = courseStats(course, progressByLanguage);
           const selected = course.id === activeLanguage;
@@ -100,7 +102,7 @@ export default function CourseSwitcher({ dark, activeLanguage, startedLanguageId
             <ChevronRight size={20} className={dark ? "text-white/25" : "text-black/25"} />
           </button>;
         })}
-      </div>
+      </div>}
     </section>
 
     <AnimatePresence>

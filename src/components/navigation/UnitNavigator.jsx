@@ -5,6 +5,8 @@ import { CheckCircle2, ChevronDown, Layers3, Lock } from "lucide-react";
 export default function UnitNavigator({ dark, language, units, activeUnit, completedLessonIds, isUnitUnlocked, onUnitChange }) {
   const [open, setOpen] = useState(false);
   const active = units[activeUnit];
+  const completedInUnit = active.lessons.filter(lesson => completedLessonIds.includes(lesson.id)).length;
+  const percent = active.lessons.length ? Math.round(completedInUnit / active.lessons.length * 100) : 0;
   const phaseGroups = language.phases?.length
     ? language.phases.map((phase, phaseIndex) => ({
         id: phase.id || `phase-${phaseIndex}`,
@@ -25,11 +27,13 @@ export default function UnitNavigator({ dark, language, units, activeUnit, compl
   return (
     <div className="mb-5">
       <button type="button" onClick={() => setOpen((value) => !value)} aria-expanded={open} aria-controls="course-unit-map"
-        className={`flex min-h-20 w-full items-center gap-4 rounded-[1.6rem] border p-4 text-left transition focus:outline-none focus-visible:ring-4 focus-visible:ring-[#F28C28]/25 ${dark ? "border-white/10 bg-[#1A201E] hover:bg-[#232B28]" : "border-black/8 bg-white hover:bg-[#FFF4E5]"}`}>
-        <span className="grid size-12 shrink-0 place-items-center rounded-2xl bg-[#F28C28] text-white shadow-lg shadow-orange-500/20"><Layers3 size={23} /></span>
+        className={`afri-pattern flex min-h-32 w-full items-center gap-4 rounded-[1.8rem] border p-5 text-left transition focus:outline-none focus-visible:ring-4 focus-visible:ring-[#F28C28]/25 ${dark ? "border-white/10 bg-[#1A201E] hover:bg-[#232B28]" : "border-black/8 bg-white hover:bg-[#FFF4E5]"}`}>
+        <span className="grid size-14 shrink-0 place-items-center rounded-2xl bg-[#F28C28] text-white shadow-lg shadow-orange-500/20"><Layers3 size={25} /></span>
         <span className="min-w-0 flex-1">
-          <span className="block text-[11px] font-black uppercase tracking-[0.2em] text-[#F28C28]">Current unit · {activeUnit + 1} of {units.length}</span>
-          <span className="mt-1 block truncate text-base font-black sm:text-lg">{active.title}</span>
+          <span className="block text-[11px] font-black uppercase tracking-[0.2em] text-[#F28C28]">{language.flag} {language.language} · Unit {activeUnit + 1} of {units.length}</span>
+          <span className="mt-1 block text-xl font-black sm:text-2xl">{active.title}</span>
+          <span className={`mt-1 line-clamp-2 text-sm font-semibold ${dark ? "text-white/48" : "text-black/48"}`}>{active.subtitle}</span>
+          <span className="mt-3 flex items-center gap-3"><span className={`h-2 flex-1 overflow-hidden rounded-full ${dark ? "bg-white/10" : "bg-black/8"}`}><span className="block h-full rounded-full bg-[#24745B]" style={{width:`${percent}%`}}/></span><span className="text-xs font-black text-[#24745B]">{completedInUnit}/{active.lessons.length}</span></span>
         </span>
         <span className={`hidden text-xs font-black sm:block ${dark ? "text-white/45" : "text-black/45"}`}>{open ? "Hide units" : "View all units"}</span>
         <ChevronDown size={20} className={`shrink-0 text-[#F28C28] transition-transform ${open ? "rotate-180" : ""}`} />
