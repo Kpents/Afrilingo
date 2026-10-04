@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Image } from "lucide-react";
+import { Check, Image, X } from "lucide-react";
 import { motion } from "framer-motion";
 import AudioButton from "../ui/AudioButton";
 import ConceptIcon from "../ui/ConceptIcon";
@@ -22,15 +22,15 @@ export default function QuestionRenderer({ question, dark, checked, value, onCha
 }
 
 function ChoiceGrid({ question, options, value, onChange, dark, checked, header, images = false }) {
-  return <>{header}<div className="grid gap-3 sm:grid-cols-2">{options.map((raw) => {
+  return <>{header}<div className="grid gap-3 sm:grid-cols-2">{options.map((raw, index) => {
     const option = typeof raw === "object" ? raw.value ?? raw.label : raw;
     const label = typeof raw === "object" ? raw.label ?? raw.value : raw;
     const visualLabel = typeof raw === "object" ? raw.visualLabel ?? label : label;
     const showLabel = typeof raw !== "object" || raw.showLabel !== false;
     const correct = checked && option === question.answer;
     const wrong = checked && value === option && option !== question.answer;
-    return <motion.button key={option} disabled={checked} onPointerDown={hapticPress} onClick={() => onChange(option)} data-tone={correct ? "green" : wrong ? "clay" : dark ? "night" : "surface"} className={`afri-press min-h-16 rounded-[1.4rem] border-2 p-5 text-left text-lg font-black ${correct ? "border-[#24745B] bg-[#24745B]/15" : wrong ? "border-[#C95D3A] bg-[#C95D3A]/12" : value === option ? "border-[#F28C28] bg-[#F28C28]/12" : dark ? "border-white/10 bg-[#1A201E]" : "border-black/8 bg-white"}`}>
-      {images && <div className="mb-3 grid aspect-[4/3] place-items-center overflow-hidden rounded-xl bg-black/5">{raw.iconId || Number.isFinite(raw.number) ? <LearningVisual iconId={raw.iconId} number={raw.number} label={visualLabel} className="h-full w-full" /> : raw.image ? <img src={raw.image} alt={visualLabel} className="h-full w-full object-cover" /> : raw.emoji ? <span role="img" aria-label={visualLabel} className="text-5xl">{raw.emoji}</span> : <Image aria-label={visualLabel} className="opacity-30" />}</div>}<span className={showLabel ? "" : "sr-only"}>{label}</span>
+    return <motion.button key={option} aria-pressed={value === option} disabled={checked} whileTap={checked ? undefined : { scale: .985 }} onPointerDown={hapticPress} onClick={() => onChange(option)} data-tone={correct ? "green" : wrong ? "clay" : dark ? "night" : "surface"} className={`afri-press group relative min-h-16 rounded-[1.4rem] border-2 p-4 text-left text-base font-black transition sm:p-5 sm:text-lg ${correct ? "border-[#24745B] bg-[#24745B]/15" : wrong ? "border-[#C95D3A] bg-[#C95D3A]/12" : value === option ? "border-[#F28C28] bg-[#F28C28]/12" : dark ? "border-white/10 bg-[#1A201E] hover:border-white/20" : "border-black/8 bg-white hover:border-[#F28C28]/35"}`}>
+      {images && <div className="mb-3 grid aspect-[4/3] place-items-center overflow-hidden rounded-xl bg-black/5">{raw.iconId || Number.isFinite(raw.number) ? <LearningVisual iconId={raw.iconId} number={raw.number} label={visualLabel} className="h-full w-full" /> : raw.image ? <img src={raw.image} alt={visualLabel} className="h-full w-full object-cover" /> : raw.emoji ? <span role="img" aria-label={visualLabel} className="text-5xl">{raw.emoji}</span> : <Image aria-label={visualLabel} className="opacity-30" />}</div>}<span className="flex items-center gap-3"><span aria-hidden className={`grid size-8 shrink-0 place-items-center rounded-lg text-xs font-black ${correct ? "bg-[#24745B] text-white" : wrong ? "bg-[#C95D3A] text-white" : value === option ? "bg-[#F28C28] text-white" : dark ? "bg-white/8 text-white/45" : "bg-black/5 text-black/40"}`}>{correct ? <Check size={17} strokeWidth={3}/> : wrong ? <X size={17} strokeWidth={3}/> : String.fromCharCode(65 + index)}</span><span className={showLabel ? "" : "sr-only"}>{label}</span></span>
     </motion.button>;
   })}</div></>;
 }
@@ -38,7 +38,8 @@ function ChoiceGrid({ question, options, value, onChange, dark, checked, header,
 function SentenceBuilder({ question, value, onChange, dark, checked }) {
   const tiles = useMemo(() => shuffled(question.tiles || question.answer.split(" ")), [question.id, question.retry]);
   return <div>
-    <div className={`min-h-20 rounded-2xl border-2 border-dashed p-3 ${dark ? "border-white/15" : "border-black/15"}`}>
+    <div className={`min-h-24 rounded-2xl border-2 border-dashed p-3 ${dark ? "border-white/15 bg-white/[.025]" : "border-black/15 bg-black/[.02]"}`}>
+      {!value.length && <div className={`grid min-h-16 place-items-center text-sm font-bold ${dark ? "text-white/30" : "text-black/30"}`}>Tap words below to build your answer</div>}
       {value.map((word, i) => <button disabled={checked} key={`${word}-${i}`} onPointerDown={hapticPress} onClick={() => onChange(value.filter((_, n) => n !== i))} className="afri-press m-1 rounded-xl bg-[#F28C28] px-4 py-3 font-black text-white">{word}</button>)}
     </div>
     <div className="mt-4 flex flex-wrap gap-3">{tiles.map((word, i) => <button disabled={checked || value.filter(v => v === word).length >= tiles.filter((v, n) => v === word && n <= i).length} key={`${word}-${i}`} onPointerDown={hapticPress} onClick={() => onChange([...value, word])} data-tone={dark ? "night" : "surface"} className={`afri-press rounded-xl px-4 py-3 font-black disabled:opacity-25 ${dark ? "bg-white/10" : "bg-black/8"}`}>{word}</button>)}</div>

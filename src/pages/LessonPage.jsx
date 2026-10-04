@@ -81,6 +81,7 @@ export default function LessonPage({ lesson, unit, dark, hearts, languageId, sou
   const correct = submittedAnswer === expectedAnswer(current);
   const answerComplete = isAnswerComplete(current, selected);
   const progress = Math.min(100, ((index + (checked ? 1 : 0)) / queue.length) * 100);
+  const instruction = exerciseInstruction(current.type);
 
   const continueFlow = () => {
     if (hearts <= 0 && !correct) {
@@ -116,15 +117,21 @@ export default function LessonPage({ lesson, unit, dark, hearts, languageId, sou
   };
 
   return (
-    <div className="mx-auto max-w-3xl">
-      <div className="mb-8 flex items-center gap-4">
-        <button aria-label="Exit lesson" onClick={onExit} className={`grid h-11 w-11 place-items-center rounded-xl ${dark ? "bg-white/6" : "bg-black/5"}`}>
+    <div className="mx-auto max-w-3xl pb-28 sm:pb-8">
+      <div className={`sticky top-0 z-20 -mx-4 mb-6 flex items-center gap-3 border-b px-4 py-3 backdrop-blur-xl sm:static sm:mx-0 sm:mb-8 sm:border-0 sm:bg-transparent sm:px-0 sm:py-0 ${dark ? "border-white/8 bg-[#101312]/90" : "border-black/8 bg-[#FFF8EE]/90"}`}>
+        <button aria-label="Exit lesson" onClick={onExit} className={`grid h-11 w-11 shrink-0 place-items-center rounded-xl transition hover:scale-105 ${dark ? "bg-white/6" : "bg-black/5"}`}>
           <X size={22} />
         </button>
-        <div role="progressbar" aria-label="Lesson progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow={Math.round(progress)} className={`h-4 flex-1 overflow-hidden rounded-full ${dark ? "bg-white/10" : "bg-black/10"}`}>
-          <motion.div className="h-full rounded-full bg-[#F28C28]" animate={{ width: `${progress}%` }} />
+        <div className="min-w-0 flex-1">
+          <div className="mb-1.5 flex items-center justify-between text-[10px] font-black uppercase tracking-[0.14em]">
+            <span className={dark ? "text-white/45" : "text-black/45"}>{current.retry ? "Review round" : lesson.title}</span>
+            <span className="text-[#F28C28]">{index + 1} / {queue.length}</span>
+          </div>
+          <div role="progressbar" aria-label="Lesson progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow={Math.round(progress)} className={`h-3 flex-1 overflow-hidden rounded-full ${dark ? "bg-white/10" : "bg-black/10"}`}>
+            <motion.div className="h-full rounded-full bg-gradient-to-r from-[#F28C28] to-[#F6C445]" animate={{ width: `${progress}%` }} />
+          </div>
         </div>
-        <div className="flex items-center gap-1.5 font-black text-[#EF5B5B]">
+        <div aria-label={`${hearts} hearts remaining`} className="flex min-w-12 items-center justify-end gap-1.5 font-black text-[#EF5B5B]">
           <Heart size={22} fill="currentColor" /> {hearts}
         </div>
       </div>
@@ -135,33 +142,36 @@ export default function LessonPage({ lesson, unit, dark, hearts, languageId, sou
         </div>
       )}
 
-      <div className="mb-7">
-        <div className="text-xs font-black uppercase tracking-[0.25em] text-[#4338CA]">
-          {current.type.replaceAll("-", " ")}
+      <div className={`mb-5 rounded-[1.75rem] border p-5 sm:p-7 ${dark ? "border-white/10 bg-[#1A201E]" : "border-black/8 bg-white shadow-sm"}`}>
+        <div className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.2em] text-[#4338CA]">
+          <span className="grid size-7 place-items-center rounded-lg bg-[#4338CA]/10">{current.retry ? <RotateCcw size={14} /> : "✦"}</span>
+          {instruction}
         </div>
-        <h1 className="mt-2 text-3xl font-black sm:text-4xl">{current.prompt}</h1>
+        <h1 className="mt-4 text-2xl font-black leading-tight sm:text-4xl">{current.prompt}</h1>
       </div>
 
       <QuestionRenderer question={current} dark={dark} checked={checked} value={selected} onChange={setSelected} />
 
-      <AnimatePresence>
+      <AnimatePresence mode="wait">
         {checked && (
           <motion.div
             role="status"
             aria-live="polite"
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            className={`mt-6 rounded-[1.5rem] border p-4 ${
+            className={`mt-6 rounded-[1.5rem] border p-4 sm:p-5 ${
               correct
                 ? "border-[#24745B]/30 bg-[#24745B]/12"
                 : "border-[#C95D3A]/30 bg-[#C95D3A]/12"
             }`}
           >
             <div className="flex items-start gap-3">
-              <Lebo key={`${current.id}-${correct}`} pose={correct ? "encourage" : "learn"} reaction={correct ? "correct" : "encourage"} languageId={languageId} className="h-16 w-16 shrink-0 sm:h-20 sm:w-20" decorative />
-              {correct ? <CheckCircle2 className="text-[#53B98A]" /> : <XCircle className="text-[#E47A5D]" />}
-              <div>
-                <div className={`font-black ${correct ? "text-[#53B98A]" : "text-[#E47A5D]"}`}>
+              <Lebo key={`${current.id}-${correct}`} pose={correct ? "encourage" : "learn"} reaction={correct ? "correct" : "encourage"} languageId={languageId} className="hidden h-20 w-20 shrink-0 sm:block" decorative />
+              <div className={`grid size-10 shrink-0 place-items-center rounded-xl ${correct ? "bg-[#24745B] text-white" : "bg-[#C95D3A] text-white"}`}>
+                {correct ? <CheckCircle2 size={24} /> : <XCircle size={24} />}
+              </div>
+              <div className="min-w-0">
+                <div className={`text-lg font-black ${correct ? "text-[#53B98A]" : "text-[#E47A5D]"}`}>
                   {correct ? "Excellent!" : "Not quite."}
                 </div>
                 <div className={`mt-1 text-sm font-semibold ${dark ? "text-white/60" : "text-black/60"}`}>
@@ -178,14 +188,15 @@ export default function LessonPage({ lesson, unit, dark, hearts, languageId, sou
         )}
       </AnimatePresence>
 
-      <div className="mt-8">
+      <div className={`fixed inset-x-0 bottom-0 z-30 border-t p-3 pb-[max(.75rem,env(safe-area-inset-bottom))] backdrop-blur-xl sm:static sm:mt-8 sm:border-0 sm:bg-transparent sm:p-0 ${dark ? "border-white/10 bg-[#101312]/95" : "border-black/8 bg-[#FFF8EE]/95"}`}>
+        <div className="mx-auto max-w-3xl">
         {!checked ? (
           <button
             disabled={!answerComplete}
             onClick={checkAnswer}
             onPointerDown={hapticPress}
             data-tone={!answerComplete ? dark ? "locked-night" : "locked" : "orange"}
-            className={`afri-press w-full rounded-[1.4rem] py-4 text-lg font-black uppercase tracking-wide ${
+            className={`afri-press min-h-14 w-full rounded-[1.4rem] px-5 py-3 text-base font-black uppercase tracking-wide ${
               answerComplete
                 ? "bg-[#F28C28] text-white shadow-lg shadow-orange-500/20"
                 : dark
@@ -200,16 +211,38 @@ export default function LessonPage({ lesson, unit, dark, hearts, languageId, sou
             onClick={continueFlow}
             onPointerDown={hapticPress}
             data-tone={correct ? "green" : "clay"}
-            className={`afri-press w-full rounded-[1.4rem] py-4 text-lg font-black uppercase tracking-wide text-white ${
+            className={`afri-press min-h-14 w-full rounded-[1.4rem] px-5 py-3 text-base font-black uppercase tracking-wide text-white ${
               correct ? "bg-[#24745B]" : "bg-[#C95D3A]"
             }`}
           >
-            Continue
+            {index + 1 >= queue.length ? "Finish lesson" : "Continue"}
           </button>
         )}
+        </div>
       </div>
     </div>
   );
+}
+
+function exerciseInstruction(type) {
+  const labels = {
+    "multiple-choice": "Choose the best answer",
+    translate: "Choose the translation",
+    "native-to-english": "Translate into English",
+    "english-to-native": "Translate into the language",
+    "fill-in-the-blank": "Complete the sentence",
+    conversation: "Choose the natural response",
+    "mini-conversation": "Continue the conversation",
+    challenge: "Challenge question",
+    "sentence-builder": "Build the sentence",
+    match: "Match the pairs",
+    matching: "Match the pairs",
+    listening: "Listen and choose",
+    "listen-and-select": "Listen and choose",
+    "image-to-word": "Name what you see",
+    "image-choice": "Choose the matching picture"
+  };
+  return labels[type] || type.replaceAll("-", " ");
 }
 
 function VisualWarmup({ vocabulary = [], dark }) {
