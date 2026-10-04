@@ -1,5 +1,7 @@
 # AfriLingo launch checklist
 
+The Twi/Ga competitive rollout gates and staged plan live in `TWIGA_ROLLOUT_BENCHMARK.md`.
+
 ## Ready
 
 - [x] Production build and 250 KB chunk budget
