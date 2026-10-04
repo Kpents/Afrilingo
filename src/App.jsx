@@ -898,6 +898,7 @@ export default function App() {
                 }
                 preferences={preferences}
                 onPreferencesChange={setPreferences}
+                onContinue={() => setScreen("home")}
               />
 
             )}
