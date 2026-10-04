@@ -10,6 +10,7 @@ let backup;
 let placement;
 let reviewScheduler;
 let personalization;
+let adaptiveLesson;
 try {
   ({ languages } = await server.ssrLoadModule("/src/data/languages.js"));
   progression = await server.ssrLoadModule("/src/utils/courseProgress.js");
@@ -17,6 +18,7 @@ try {
   placement = await server.ssrLoadModule("/src/utils/placementTest.js");
   reviewScheduler = await server.ssrLoadModule("/src/utils/reviewScheduler.js");
   personalization = await server.ssrLoadModule("/src/utils/learningPersonalization.js");
+  adaptiveLesson = await server.ssrLoadModule("/src/utils/adaptiveLesson.js");
 } finally {
   await server.close();
 }
@@ -141,10 +143,20 @@ check(personalization.recommendedImmersionFeature(["culture"]) === "stories", "C
 const personalizedItems = personalization.rankByMotivations([{ title: "Family visit" }, { title: "Taxi directions" }], ["travel"], item => item.title);
 check(personalizedItems[0].title === "Taxi directions", "Goal-aware ranking must bring relevant scenarios forward.");
 
+const authoredQuestions = [{ id: "a" }, { id: "b" }, { id: "c" }, { id: "d" }];
+let adaptiveQueue = adaptiveLesson.createLessonQueue(authoredQuestions);
+adaptiveQueue = adaptiveLesson.scheduleAdaptiveRetry(adaptiveQueue, 0, adaptiveQueue[0]);
+check(adaptiveQueue.map(item => item.id).join("") === "abcad", "A missed concept must return after an intervening recall gap.");
+const repeatedIndex = adaptiveQueue.findIndex((item, index) => index > 0 && item.id === "a");
+adaptiveQueue = adaptiveLesson.scheduleAdaptiveRetry(adaptiveQueue, repeatedIndex, adaptiveQueue[repeatedIndex]);
+check(adaptiveQueue.at(-1).retryAttempt === 2, "Repeated misses must remain in the lesson with an incremented attempt.");
+const mastery = adaptiveLesson.lessonMasterySummary([{ questionId:"a", correct:false, retryAttempt:0 }, { questionId:"a", correct:true, retryAttempt:1 }, { questionId:"b", correct:true, retryAttempt:0 }]);
+check(mastery.secure === 2 && mastery.recovered === 1, "Lesson mastery must distinguish recovered concepts from first-pass recall.");
+
 if (failures.length) {
   console.error(`Experience validation failed with ${failures.length} issue${failures.length === 1 ? "" : "s"}:`);
   failures.forEach(failure => console.error(`- ${failure}`));
   process.exitCode = 1;
 } else {
-  console.log(`AfriLingo experience validation: ${Object.keys(languages).length} languages · progression, personalization, adaptive review, isolation, backup and recovery passed`);
+  console.log(`AfriLingo experience validation: ${Object.keys(languages).length} languages · progression, personalization, adaptive lessons and review, isolation, backup and recovery passed`);
 }

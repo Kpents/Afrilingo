@@ -10,7 +10,7 @@ const choiceTypes = new Set(["multiple-choice", "translate", "native-to-english"
 const shuffled = (values = []) => [...values].sort(() => Math.random() - 0.5);
 
 export default function QuestionRenderer({ question, dark, checked, value, onChange }) {
-  const options = useMemo(() => shuffled(question.options), [question.id, question.retry]);
+  const options = useMemo(() => shuffled(question.options), [question.id, question.retry, question.retryAttempt]);
   if (question.type === "sentence-builder") return <SentenceBuilder question={question} value={value || []} onChange={onChange} dark={dark} checked={checked} />;
   if (["match", "matching"].includes(question.type)) return <Matching question={question} value={value || []} onChange={onChange} dark={dark} checked={checked} />;
   if (question.type === "listening") return <ChoiceGrid question={question} options={options} value={value} onChange={onChange} dark={dark} checked={checked} header={<AudioButton src={question.audio} label={question.prompt} className="mb-5 bg-[#4338CA] font-black text-white" />} />;
@@ -36,7 +36,7 @@ function ChoiceGrid({ question, options, value, onChange, dark, checked, header,
 }
 
 function SentenceBuilder({ question, value, onChange, dark, checked }) {
-  const tiles = useMemo(() => shuffled(question.tiles || question.answer.split(" ")), [question.id, question.retry]);
+  const tiles = useMemo(() => shuffled(question.tiles || question.answer.split(" ")), [question.id, question.retry, question.retryAttempt]);
   return <div>
     <div className={`min-h-24 rounded-2xl border-2 border-dashed p-3 ${dark ? "border-white/15 bg-white/[.025]" : "border-black/15 bg-black/[.02]"}`}>
       {!value.length && <div className={`grid min-h-16 place-items-center text-sm font-bold ${dark ? "text-white/30" : "text-black/30"}`}>Tap words below to build your answer</div>}
@@ -49,14 +49,14 @@ function SentenceBuilder({ question, value, onChange, dark, checked }) {
 function Matching({ question, value, onChange, dark, checked }) {
   const pairs = question.pairs || [];
   const indexedPairs = useMemo(() => pairs.map((pair, index) => ({ ...pair, pairId: `${question.id || "match"}-${index}` })), [pairs, question.id]);
-  const nativePairs = useMemo(() => shuffled(indexedPairs), [indexedPairs, question.retry]);
+  const nativePairs = useMemo(() => shuffled(indexedPairs), [indexedPairs, question.retry, question.retryAttempt]);
   const englishPairs = useMemo(() => {
     if (nativePairs.length < 2) return nativePairs;
     const offset = 1 + Math.floor(Math.random() * (nativePairs.length - 1));
     return nativePairs.map((_, index) => nativePairs[(index + offset) % nativePairs.length]);
   }, [nativePairs]);
   const [pending, setPending] = useState(null);
-  useEffect(() => setPending(null), [question.id, question.retry]);
+  useEffect(() => setPending(null), [question.id, question.retry, question.retryAttempt]);
   const usedNative = new Set(value.map(match => typeof match === "object" ? match.nativeId : match.split("::")[0]));
   const usedEnglish = new Set(value.map(match => typeof match === "object" ? match.englishId : match.split("::")[1]));
   const choose = (side, item) => {

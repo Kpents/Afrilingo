@@ -9,15 +9,17 @@ import LearningVisual from "../components/ui/LearningVisual";
 import ConfettiBurst from "../components/ui/ConfettiBurst";
 import { playUiSound } from "../services/uiSound";
 import { hapticPress } from "../utils/hapticFeedback";
+import { createLessonQueue, lessonMasterySummary, scheduleAdaptiveRetry } from "../utils/adaptiveLesson";
 
-export default function LessonPage({ lesson, unit, dark, hearts, languageId, soundEnabled, isFirstLesson, isUnitChallenge, isCourseFinal, onExit, onLoseHeart, onReviewQuestion, onRefillHearts, onComplete }) {
+export default function LessonPage({ lesson, unit, dark, hearts, languageId, soundEnabled, isFirstLesson, isUnitChallenge, isCourseFinal, onExit, onLoseHeart, onReviewQuestion, onStrengthenQuestion, onRefillHearts, onComplete }) {
   const [stage, setStage] = useState("conversation");
-  const [queue, setQueue] = useState(() => lesson.questions.map((q) => ({ ...q, retry: false })));
+  const [queue, setQueue] = useState(() => createLessonQueue(lesson.questions));
   const [index, setIndex] = useState(0);
   const [selected, setSelected] = useState(null);
   const [checked, setChecked] = useState(false);
   const [earned, setEarned] = useState(0);
   const [mistakes, setMistakes] = useState(0);
+  const [results, setResults] = useState([]);
 
   const current = queue[index];
 
@@ -64,6 +66,7 @@ export default function LessonPage({ lesson, unit, dark, hearts, languageId, sou
         languageId={languageId}
         earned={earned}
         mistakes={mistakes}
+        mastery={lessonMasterySummary(results)}
         isFirstLesson={isFirstLesson}
         isUnitChallenge={isUnitChallenge}
         isCourseFinal={isCourseFinal}
@@ -104,15 +107,14 @@ export default function LessonPage({ lesson, unit, dark, hearts, languageId, sou
 
     if (submittedAnswer === expectedAnswer(current)) {
       setEarned(x => x + (current.retry ? 5 : 10));
+      setResults(items => [...items, { questionId: current.id, correct: true, retryAttempt: current.retryAttempt || 0 }]);
+      if (current.retry) onStrengthenQuestion?.(current);
     } else {
       setMistakes(m => m + 1);
+      setResults(items => [...items, { questionId: current.id, correct: false, retryAttempt: current.retryAttempt || 0 }]);
       onLoseHeart();
       onReviewQuestion?.(current);
-
-      const alreadyQueued = queue.some((q, i) => i > index && q.id === current.id);
-      if (!alreadyQueued) {
-        setQueue(q => [...q, { ...current, retry: true }]);
-      }
+      setQueue(items => scheduleAdaptiveRetry(items, index, current));
     }
   };
 
@@ -124,7 +126,7 @@ export default function LessonPage({ lesson, unit, dark, hearts, languageId, sou
         </button>
         <div className="min-w-0 flex-1">
           <div className="mb-1.5 flex items-center justify-between text-[10px] font-black uppercase tracking-[0.14em]">
-            <span className={dark ? "text-white/45" : "text-black/45"}>{current.retry ? "Review round" : lesson.title}</span>
+            <span className={dark ? "text-white/45" : "text-black/45"}>{current.retry ? `Adaptive review · attempt ${current.retryAttempt}` : lesson.title}</span>
             <span className="text-[#F28C28]">{index + 1} / {queue.length}</span>
           </div>
           <div role="progressbar" aria-label="Lesson progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow={Math.round(progress)} className={`h-3 flex-1 overflow-hidden rounded-full ${dark ? "bg-white/10" : "bg-black/10"}`}>
@@ -255,7 +257,7 @@ function OutOfHearts({ dark, onExit, onRefill }) {
   return <div className="mx-auto max-w-xl text-center"><motion.div initial={{scale:.7, opacity:0}} animate={{scale:1, opacity:1}} className="mx-auto grid h-24 w-24 place-items-center rounded-[2rem] bg-[#EF5B5B]/15 text-5xl">💔</motion.div><h1 className="mt-6 text-4xl font-black">Out of hearts</h1><p className={`mx-auto mt-3 max-w-md leading-7 ${dark ? "text-white/55" : "text-black/55"}`}>One heart regenerates every 30 minutes. Recover one now with a quick practice refill and continue from the same question.</p><button onClick={onRefill} onPointerDown={hapticPress} data-tone="green" className="afri-press mt-6 flex min-h-14 w-full items-center justify-center gap-2 rounded-[1.4rem] bg-[#24745B] px-5 text-lg font-black text-white"><Sparkles size={20}/>Practice refill · +1 heart</button><button onClick={onExit} className={`mt-3 min-h-12 w-full rounded-[1.2rem] font-black ${dark ? "bg-white/6" : "bg-black/5"}`}>Return to path</button></div>;
 }
 
-function Completion({ dark, lesson, unit, languageId, earned, mistakes, soundEnabled, isFirstLesson, isUnitChallenge, isCourseFinal, onContinue }) {
+function Completion({ dark, lesson, unit, languageId, earned, mistakes, mastery, soundEnabled, isFirstLesson, isUnitChallenge, isCourseFinal, onContinue }) {
   const reduceMotion = useReducedMotion();
   const learnedWords = new Set((unit?.lessons || []).flatMap(item => item.vocabulary || []).map(item => item.native)).size;
   useEffect(() => playUiSound(isUnitChallenge ? "unit" : "complete", soundEnabled), [isUnitChallenge, soundEnabled]);
@@ -279,6 +281,8 @@ function Completion({ dark, lesson, unit, languageId, earned, mistakes, soundEna
         <Reward dark={dark} label="Practice XP" value={`+${earned} XP`} accent="#F28C28" />
         <Reward dark={dark} label="Accuracy" value={`${Math.round((lesson.questions.length / (lesson.questions.length + mistakes)) * 100)}%`} accent="#53B98A" />
       </div>
+
+      {mastery.recovered > 0 && <div className={`mt-5 rounded-[1.5rem] border p-4 text-left ${dark ? "border-[#4338CA]/30 bg-[#4338CA]/12" : "border-[#4338CA]/20 bg-[#4338CA]/10"}`}><div className="text-xs font-black uppercase tracking-wider text-[#7067FF]">Adaptive practice complete</div><div className="mt-1 text-lg font-black">{mastery.recovered} {mastery.recovered === 1 ? "concept" : "concepts"} recovered before finishing</div><p className="mt-1 text-sm font-semibold opacity-55">Missed ideas returned after a short gap, so you had to recall them—not simply copy the correction.</p></div>}
 
       {isUnitChallenge && <div className={`mt-5 rounded-[1.5rem] border p-5 text-left ${dark ? "border-white/10 bg-white/5" : "border-black/8 bg-white"}`}><div className="text-xs font-black uppercase tracking-[.18em] text-[#4338CA]">What you can do now</div><div className="mt-2 text-xl font-black">{unit?.title}</div><p className="mt-2 text-sm font-semibold leading-6 opacity-55">{unit?.subtitle || "Use this unit’s language in context."}</p><div className="mt-3 inline-flex rounded-full bg-[#24745B]/15 px-3 py-1.5 text-xs font-black text-[#24745B]">{learnedWords} key expressions practised</div></div>}
 

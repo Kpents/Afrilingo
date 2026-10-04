@@ -50,7 +50,7 @@ import useDialogFocus from "./hooks/useDialogFocus";
 import useAppLifecycle from "./hooks/useAppLifecycle";
 import AppStatus from "./components/system/AppStatus";
 import { recordReviewStreak, recordWeeklyActivity } from "./utils/learningGoals";
-import { applyReviewOutcomes, recordReviewMiss } from "./utils/reviewScheduler";
+import { applyReviewOutcomes, recordReviewMiss, reviewKeyFor } from "./utils/reviewScheduler";
 
 export default function App() {
   const lifecycle = useAppLifecycle();
@@ -363,6 +363,11 @@ export default function App() {
 
   const addToReview = (question, source = {}) => {
     setProgress((p) => ({ ...p, reviewQueue: recordReviewMiss(p.reviewQueue, question, source) }));
+  };
+
+  const strengthenReviewQuestion = (question, source = {}) => {
+    const reviewKey = reviewKeyFor(question, source);
+    setProgress((p) => ({ ...p, reviewQueue: applyReviewOutcomes(p.reviewQueue, [{ reviewKey, correct: true }]) }));
   };
 
   const completeReview = ({ outcomes, xp }) => {
@@ -789,6 +794,7 @@ export default function App() {
 
                   onLoseHeart={loseHeart}
                   onReviewQuestion={(question) => addToReview(question, { id: activeLesson.id, title: activeLesson.title })}
+                  onStrengthenQuestion={(question) => strengthenReviewQuestion(question, { id: activeLesson.id, title: activeLesson.title })}
 
                   onRefillHearts={() => { showReward({ kind: "heart-gain", label: "+1 heart recovered" }); setProgress(p => ({ ...p, hearts: Math.min(5, p.hearts + 1), heartUpdatedAt: Date.now() })); }}
 
