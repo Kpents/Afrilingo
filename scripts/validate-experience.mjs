@@ -9,12 +9,14 @@ let progression;
 let backup;
 let placement;
 let reviewScheduler;
+let personalization;
 try {
   ({ languages } = await server.ssrLoadModule("/src/data/languages.js"));
   progression = await server.ssrLoadModule("/src/utils/courseProgress.js");
   backup = await server.ssrLoadModule("/src/services/progressBackup.js");
   placement = await server.ssrLoadModule("/src/utils/placementTest.js");
   reviewScheduler = await server.ssrLoadModule("/src/utils/reviewScheduler.js");
+  personalization = await server.ssrLoadModule("/src/utils/learningPersonalization.js");
 } finally {
   await server.close();
 }
@@ -134,10 +136,15 @@ for (let stage = 0; stage < 5; stage += 1) {
 }
 check(masteredQueue.length === 0, "A concept must leave review only after repeated successful recall.");
 
+check(personalization.preferredThemeIds(["travel"])[0] === "transport", "Travel goals must prioritize practical transport vocabulary.");
+check(personalization.recommendedImmersionFeature(["culture"]) === "stories", "Culture goals must prioritize contextual stories.");
+const personalizedItems = personalization.rankByMotivations([{ title: "Family visit" }, { title: "Taxi directions" }], ["travel"], item => item.title);
+check(personalizedItems[0].title === "Taxi directions", "Goal-aware ranking must bring relevant scenarios forward.");
+
 if (failures.length) {
   console.error(`Experience validation failed with ${failures.length} issue${failures.length === 1 ? "" : "s"}:`);
   failures.forEach(failure => console.error(`- ${failure}`));
   process.exitCode = 1;
 } else {
-  console.log(`AfriLingo experience validation: ${Object.keys(languages).length} languages · progression, adaptive review, isolation, backup and recovery passed`);
+  console.log(`AfriLingo experience validation: ${Object.keys(languages).length} languages · progression, personalization, adaptive review, isolation, backup and recovery passed`);
 }

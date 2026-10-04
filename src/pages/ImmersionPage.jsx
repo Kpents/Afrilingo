@@ -11,6 +11,7 @@ import { hapticPress } from "../utils/hapticFeedback";
 import LanguageWorld from "../components/immersion/LanguageWorld";
 import { languageWorlds } from "../data/worlds";
 import PronunciationRecorder from "../components/ui/PronunciationRecorder";
+import { motivationSummary, recommendedImmersionFeature } from "../utils/learningPersonalization";
 
 const baseFeatures = [
   ["cast", "Meet the Cast", "Get to know your learning companions", HeartHandshake, "#F28C28"],
@@ -24,7 +25,7 @@ const baseFeatures = [
   ["daily", "Daily Phrase", "Useful language every day", Sparkles, "#F28C28"]
 ];
 
-export default function ImmersionPage({ dark, data, progress, soundEnabled, onLoseHeart, onReward, companionId, onCompanionChange }) {
+export default function ImmersionPage({ dark, data, progress, motivations = [], soundEnabled, onLoseHeart, onReward, companionId, onCompanionChange }) {
   const [feature, setFeature] = useState(null);
   const features = data.pronunciation ? [...baseFeatures, ["pronunciation", "Tone & Pronunciation", "Notice sound patterns safely", Volume2, "#4338CA"]] : baseFeatures;
   const card = dark ? "border-white/10 bg-[#1A201E]" : "border-black/8 bg-white";
@@ -40,13 +41,15 @@ export default function ImmersionPage({ dark, data, progress, soundEnabled, onLo
   const secondary = features.filter(([id]) => !["adventures", "coach", "stories", "missions", "daily"].includes(id));
   const journeyDone = journey.reduce((total, item) => total + (item.progress || 0), 0);
   const featureId = typeof feature === "string" ? feature : feature?.id;
+  const recommendedFeature = recommendedImmersionFeature(motivations);
+  const recommendedJourney = journey.find(item => item.id === recommendedFeature) || journey[0];
   if (feature) return <div><button onClick={() => setFeature(null)} className={`mb-5 flex min-h-11 items-center gap-2 rounded-xl px-3 font-black ${dark ? "bg-white/6" : "bg-black/5"}`}><ArrowLeft size={18}/> Immersion home</button><Feature feature={featureId} initialMissionId={feature?.missionId} initialStoryId={feature?.storyId} world={world} onOpenActivity={activity=>setFeature(activity.missionId?{id:"adventures",missionId:activity.missionId}:activity.storyId?{id:"stories",storyId:activity.storyId}:activity.feature)} dark={dark} data={data} progress={progress} soundEnabled={soundEnabled} onLoseHeart={onLoseHeart} onReward={onReward} companionId={companionId} onCompanionChange={onCompanionChange}/></div>;
   return <div className="mx-auto max-w-5xl">
     <section className="afri-pattern relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-[#C95D3A] via-[#F28C28] to-[#F6C445] p-7 text-white sm:p-9"><div className="relative z-10 max-w-2xl"><div className="text-xs font-black uppercase tracking-[.25em] text-white/70">{data.languageName} Immersion</div><h1 className="mt-2 text-4xl font-black sm:text-5xl">Step into the language.</h1><p className="mt-4 font-semibold leading-7 text-white/80">Meet characters, enter everyday settings, and learn through moments that feel alive.</p></div><div className="absolute -bottom-14 -right-10 size-56 rounded-full bg-white/10"/></section>
 
     <section className="relative mt-5 overflow-hidden rounded-[2rem] bg-gradient-to-br from-[#173d33] via-[#24745B] to-[#4338CA] p-5 text-white sm:p-8">
       <div className="absolute inset-0 opacity-20" style={{backgroundImage:"radial-gradient(circle at 75% 25%, #F6C445 0, transparent 30%), linear-gradient(135deg, transparent 55%, #101312 100%)"}}/>
-      <div className="relative grid items-center gap-4 sm:grid-cols-[minmax(0,1fr)_12rem]"><div><div className="text-xs font-black uppercase tracking-[.22em] text-[#F6C445]">Today’s recommendation</div><h2 className="mt-2 text-3xl font-black sm:text-4xl">{companion.name} is ready to explore.</h2><p className="mt-3 max-w-xl font-semibold leading-7 text-white/70">Start with an Adventure, meet someone in context, and use what you know to move the story forward.</p><button onClick={() => setFeature("adventures")} onPointerDown={hapticPress} className="afri-press mt-6 flex min-h-14 items-center gap-2 rounded-2xl bg-[#F28C28] px-6 font-black text-white">Enter today’s scene <ChevronRight size={19}/></button></div><SidekickPortrait character={companion} className="mx-auto size-40 rounded-[2rem] bg-white/10 sm:size-48" eager/></div>
+      <div className="relative grid items-center gap-4 sm:grid-cols-[minmax(0,1fr)_12rem]"><div><div className="text-xs font-black uppercase tracking-[.22em] text-[#F6C445]">For your {motivationSummary(motivations)} goals</div><h2 className="mt-2 text-3xl font-black sm:text-4xl">{companion.name} recommends {recommendedJourney.title.toLowerCase()} practice.</h2><p className="mt-3 max-w-xl font-semibold leading-7 text-white/70">{recommendedJourney.text}</p><button onClick={() => setFeature(recommendedFeature)} onPointerDown={hapticPress} className="afri-press mt-6 flex min-h-14 items-center gap-2 rounded-2xl bg-[#F28C28] px-6 font-black text-white">Start personalized activity <ChevronRight size={19}/></button></div><SidekickPortrait character={companion} className="mx-auto size-40 rounded-[2rem] bg-white/10 sm:size-48" eager/></div>
     </section>
 
     {world && <button onClick={()=>setFeature("world")} onPointerDown={hapticPress} className="afri-press relative mt-5 flex min-h-28 w-full items-center gap-4 overflow-hidden rounded-[1.7rem] bg-gradient-to-r from-[#F6C445] to-[#F28C28] p-5 text-left text-[#1A201E] sm:p-6"><span className="grid size-16 shrink-0 place-items-center rounded-2xl bg-white/45 text-4xl">🌍</span><span className="min-w-0 flex-1"><span className="block text-xs font-black uppercase tracking-[.2em] opacity-55">New · AfriLingo World</span><span className="mt-1 block text-2xl font-black">Enter the {data.languageName} living world</span><span className="mt-1 block text-sm font-semibold opacity-65">Adventures, stories, culture, and games—one connected journey.</span></span><ChevronRight className="shrink-0"/></button>}

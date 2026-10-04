@@ -836,6 +836,7 @@ export default function App() {
                 dark={dark}
                 library={exploreLibraries[activeLanguage]}
                 progress={progress}
+                motivations={progress.onboarding?.motivations || preferences.motivations}
                 soundEnabled={preferences.soundEnabled !== false}
                 onLoseHeart={loseHeart}
                 onReviewQuestion={(question, source) => addToReview(question, source)}
@@ -848,7 +849,7 @@ export default function App() {
             )}
 
             {screen === "practice" && (
-              <PracticePage dark={dark} language={currentLanguage} progress={progress} library={exploreLibraries[activeLanguage]} dailyTarget={preferences.dailyTarget} soundEnabled={preferences.soundEnabled !== false} onLoseHeart={loseHeart} onReviewQuestion={addToReview} onComplete={completePractice} />
+              <PracticePage dark={dark} language={currentLanguage} progress={progress} library={exploreLibraries[activeLanguage]} motivations={progress.onboarding?.motivations || preferences.motivations} dailyTarget={preferences.dailyTarget} soundEnabled={preferences.soundEnabled !== false} onLoseHeart={loseHeart} onReviewQuestion={addToReview} onComplete={completePractice} />
             )}
 
             {screen === "immersion" && immersionLibraries[activeLanguage] && (
@@ -856,6 +857,7 @@ export default function App() {
                 dark={dark}
                 data={immersionLibraries[activeLanguage]}
                 progress={progress}
+                motivations={progress.onboarding?.motivations || preferences.motivations}
                 soundEnabled={preferences.soundEnabled !== false}
                 onLoseHeart={loseHeart}
                 onReward={updateImmersion}

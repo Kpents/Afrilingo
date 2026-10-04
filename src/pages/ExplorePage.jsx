@@ -7,10 +7,11 @@ import ConceptIcon from "../components/ui/ConceptIcon";
 import ConfettiBurst from "../components/ui/ConfettiBurst";
 import { playUiSound } from "../services/uiSound";
 import { hapticPress } from "../utils/hapticFeedback";
+import { motivationSummary, preferredThemeIds } from "../utils/learningPersonalization";
 
 const levelLabels = { beginner: "Beginner", intermediate: "Intermediate", advanced: "Advanced" };
 
-export default function ExplorePage({ dark, library, progress, soundEnabled, onLoseHeart, onReviewQuestion, onComplete }) {
+export default function ExplorePage({ dark, library, progress, motivations = [], soundEnabled, onLoseHeart, onReviewQuestion, onComplete }) {
   const [browseMode, setBrowseMode] = useState("themes");
   const [category, setCategory] = useState(null);
   const [level, setLevel] = useState("beginner");
@@ -46,7 +47,8 @@ export default function ExplorePage({ dark, library, progress, soundEnabled, onL
     const mastered = entries.filter(entry => mastery.includes(entry.id)).length;
     return { entries, mastered, percent: entries.length ? Math.round(mastered / entries.length * 100) : 0 };
   };
-  const recommended = library.themes.find(item => {
+  const personalizedThemes = preferredThemeIds(motivations).map(id => library.themes.find(item => item.id === id)).filter(Boolean);
+  const recommended = [...personalizedThemes, ...library.themes.filter(item => !personalizedThemes.includes(item))].find(item => {
     const stats = themeStats(item);
     return stats.entries.length && stats.mastered < stats.entries.length;
   }) || library.themes[0];
@@ -100,7 +102,7 @@ export default function ExplorePage({ dark, library, progress, soundEnabled, onL
         <div className="mt-5 space-y-8">
           {recommended && <section className="relative overflow-hidden rounded-[1.8rem] bg-gradient-to-r from-[#24745B] to-[#1f5f4c] p-5 text-white sm:p-7">
             <div className="absolute -right-5 -top-8 text-[9rem] opacity-15">{recommended.emoji}</div>
-            <div className="relative max-w-xl"><div className="text-xs font-black uppercase tracking-[.22em] text-white/65">Continue exploring</div><h2 className="mt-2 text-2xl font-black sm:text-3xl">Keep building your {recommended.label.toLowerCase()} vocabulary</h2><p className="mt-2 text-sm font-semibold text-white/70">{themeStats(recommended).mastered} of {themeStats(recommended).entries.length} words mastered</p><div className="mt-4 h-2 overflow-hidden rounded-full bg-black/20"><div className="h-full rounded-full bg-[#F6C445]" style={{width:`${themeStats(recommended).percent}%`}}/></div><button onClick={() => { setBrowseMode("themes"); setCategory(recommended); }} onPointerDown={hapticPress} className="afri-press mt-5 min-h-12 rounded-xl bg-white px-5 font-black text-[#24745B]">Continue collection</button></div>
+            <div className="relative max-w-xl"><div className="text-xs font-black uppercase tracking-[.22em] text-white/65">Recommended for {motivationSummary(motivations)}</div><h2 className="mt-2 text-2xl font-black sm:text-3xl">Keep building your {recommended.label.toLowerCase()} vocabulary</h2><p className="mt-2 text-sm font-semibold text-white/70">{themeStats(recommended).mastered} of {themeStats(recommended).entries.length} words mastered</p><div className="mt-4 h-2 overflow-hidden rounded-full bg-black/20"><div className="h-full rounded-full bg-[#F6C445]" style={{width:`${themeStats(recommended).percent}%`}}/></div><button onClick={() => { setBrowseMode("themes"); setCategory(recommended); }} onPointerDown={hapticPress} className="afri-press mt-5 min-h-12 rounded-xl bg-white px-5 font-black text-[#24745B]">Continue collection</button></div>
           </section>}
 
           <div className="flex flex-col gap-3 sm:flex-row">
