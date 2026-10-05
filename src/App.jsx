@@ -51,6 +51,7 @@ import useAppLifecycle from "./hooks/useAppLifecycle";
 import AppStatus from "./components/system/AppStatus";
 import { recordReviewStreak, recordWeeklyActivity } from "./utils/learningGoals";
 import { applyReviewOutcomes, recordReviewMiss, reviewKeyFor } from "./utils/reviewScheduler";
+import { skillForQuestion, updateLearnerMastery } from "./utils/learnerMastery";
 
 export default function App() {
   const lifecycle = useAppLifecycle();
@@ -221,7 +222,9 @@ export default function App() {
 
   const completeLesson = ({
     xp,
-    cultureCardId
+    cultureCardId,
+    skillEvidence = [],
+    checkpoint = false
   }) => {
     const completedLessonId =
       activeLesson.id;
@@ -237,6 +240,8 @@ export default function App() {
       const dailyCompleted = p.daily?.date === today ? p.daily.completed + 1 : 1;
       const earnsDailyBonus = dailyCompleted >= preferences.dailyTarget && !(p.daily?.date === today && p.daily.claimed);
       const nextStreak = p.lastStudyDate === today ? p.streak : p.lastStudyDate === yesterday ? p.streak + 1 : 1;
+      const updatedMastery = updateLearnerMastery(p.mastery, skillEvidence);
+      const mastery = checkpoint ? { ...updatedMastery, checkpoints: [...(updatedMastery.checkpoints || []).filter(item => item.unitId !== currentLanguage.units[activeUnit].id), { unitId: currentLanguage.units[activeUnit].id, completedAt: new Date().toISOString(), skills: updatedMastery.skills }] } : updatedMastery;
       return {
       ...p,
 
@@ -250,6 +255,7 @@ export default function App() {
       lastStudyDate: today,
       daily: { date: today, completed: dailyCompleted, claimed: earnsDailyBonus || (p.daily?.date === today && p.daily.claimed) },
       weekly: recordWeeklyActivity(p, { xp }),
+      mastery,
 
       /*
         Lesson completion
@@ -373,7 +379,10 @@ export default function App() {
   const completeReview = ({ outcomes, xp }) => {
     const strengthened = outcomes.filter((outcome) => outcome.correct).length;
     showReward({ kind: "xp", label: `+${xp} Review XP` });
-    setProgress((p) => ({ ...p, xp: p.xp + xp, weekly: recordWeeklyActivity(p, { xp, review: true }), reviewStreak: recordReviewStreak(p), reviewResolved: (p.reviewResolved || 0) + strengthened, reviewQueue: applyReviewOutcomes(p.reviewQueue, outcomes) }));
+    setProgress((p) => {
+      const evidence = outcomes.map(outcome => ({ skill: skillForQuestion((p.reviewQueue || []).find(item => item.reviewKey === outcome.reviewKey)?.question), correct: outcome.correct ? 1 : 0, attempts: 1 }));
+      return { ...p, xp: p.xp + xp, weekly: recordWeeklyActivity(p, { xp, review: true }), reviewStreak: recordReviewStreak(p), reviewResolved: (p.reviewResolved || 0) + strengthened, reviewQueue: applyReviewOutcomes(p.reviewQueue, outcomes), mastery: updateLearnerMastery(p.mastery, evidence) };
+    });
   };
 
   const completePractice = ({ mode, xp, correct, total }) => {
@@ -388,7 +397,8 @@ export default function App() {
       const bonus = count >= preferences.dailyTarget && !(p.daily?.date === today && p.daily.claimed);
       const nextStreak = p.lastStudyDate === today ? p.streak : p.lastStudyDate === yesterday ? p.streak + 1 : 1;
       const previousPractice = p.practice?.date === today ? p.practice : { date: today, sessions: 0, xp: 0, lastMode: null };
-      return { ...p, xp: p.xp + xp + (bonus ? 30 : 0), weekly: recordWeeklyActivity(p, { xp }), streak: nextStreak, lastStudyDate: today, daily: { date: today, completed: count, claimed: bonus || (p.daily?.date === today && p.daily.claimed) }, practice: { date: today, sessions: previousPractice.sessions + 1, xp: previousPractice.xp + xp, lastMode: mode } };
+      const practiceSkill = mode.startsWith("topic:") || mode === "vocabulary" ? "vocabulary" : mode === "listening" ? "listening" : mode === "sentences" ? "sentences" : mode === "matching" ? "matching" : mode === "visual" ? "visual" : "vocabulary";
+      return { ...p, xp: p.xp + xp + (bonus ? 30 : 0), weekly: recordWeeklyActivity(p, { xp }), streak: nextStreak, lastStudyDate: today, daily: { date: today, completed: count, claimed: bonus || (p.daily?.date === today && p.daily.claimed) }, practice: { date: today, sessions: previousPractice.sessions + 1, xp: previousPractice.xp + xp, lastMode: mode }, mastery: updateLearnerMastery(p.mastery, [{ skill: practiceSkill, correct, attempts: total }]) };
     });
     showReward(earnsDailyBonus ? { kind: "milestone", eyebrow: "Daily goal complete", title: `+${xp + 30} XP`, message: `${correct}/${total} correct · includes 30 bonus XP` } : { kind: "xp", label: `+${xp} Practice XP` });
   };

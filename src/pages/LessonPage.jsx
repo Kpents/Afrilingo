@@ -10,6 +10,7 @@ import ConfettiBurst from "../components/ui/ConfettiBurst";
 import { playUiSound } from "../services/uiSound";
 import { hapticPress } from "../utils/hapticFeedback";
 import { createLessonQueue, lessonMasterySummary, scheduleAdaptiveRetry } from "../utils/adaptiveLesson";
+import { skillForQuestion, summarizeSkillEvidence } from "../utils/learnerMastery";
 
 export default function LessonPage({ lesson, unit, dark, hearts, languageId, soundEnabled, isFirstLesson, isUnitChallenge, isCourseFinal, onExit, onLoseHeart, onReviewQuestion, onStrengthenQuestion, onRefillHearts, onComplete }) {
   const [stage, setStage] = useState("conversation");
@@ -74,7 +75,10 @@ export default function LessonPage({ lesson, unit, dark, hearts, languageId, sou
         soundEnabled={soundEnabled}
         onContinue={() => onComplete({
           xp: lesson.xp + (isUnitChallenge ? 50 : 0),
-          cultureCardId: lesson.cultureCard.id
+          cultureCardId: lesson.cultureCard.id,
+          mastery: lessonMasterySummary(results),
+          skillEvidence: summarizeSkillEvidence(results),
+          checkpoint: isUnitChallenge
         })}
       />
     );
@@ -107,11 +111,11 @@ export default function LessonPage({ lesson, unit, dark, hearts, languageId, sou
 
     if (submittedAnswer === expectedAnswer(current)) {
       setEarned(x => x + (current.retry ? 5 : 10));
-      setResults(items => [...items, { questionId: current.id, correct: true, retryAttempt: current.retryAttempt || 0 }]);
+      setResults(items => [...items, { questionId: current.id, skill: skillForQuestion(current), correct: true, retryAttempt: current.retryAttempt || 0 }]);
       if (current.retry) onStrengthenQuestion?.(current);
     } else {
       setMistakes(m => m + 1);
-      setResults(items => [...items, { questionId: current.id, correct: false, retryAttempt: current.retryAttempt || 0 }]);
+      setResults(items => [...items, { questionId: current.id, skill: skillForQuestion(current), correct: false, retryAttempt: current.retryAttempt || 0 }]);
       onLoseHeart();
       onReviewQuestion?.(current);
       setQueue(items => scheduleAdaptiveRetry(items, index, current));

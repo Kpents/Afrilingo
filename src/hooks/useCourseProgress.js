@@ -17,6 +17,7 @@ export const initialProgress = {
   reviewQueue: [],
   placement: null,
   onboarding: null,
+  mastery: { skills: {}, checkpoints: [] },
   practice: { date: null, sessions: 0, xp: 0, lastMode: null },
   explore: { masteredEntryIds: [], completedCategoryLevels: [] },
   immersion: { savedPhrases: [], savedWords: [], completedConversations: [], completedMissions: [], completedGrammar: [], completedPronunciation: [], completedStories: [], completedAdventures: [], claimedDailyPhrases: [] }
@@ -37,7 +38,7 @@ function readProgress(languageId) {
     const saved = localStorage.getItem(`afrilingo:${languageId}`);
     if (!saved) return { ...initialProgress };
     const parsed = JSON.parse(saved);
-    return regenerateHearts({ ...initialProgress, ...parsed, unlockedAchievementIds: Array.isArray(parsed.unlockedAchievementIds) ? parsed.unlockedAchievementIds : [], reviewQueue: Array.isArray(parsed.reviewQueue) ? parsed.reviewQueue : [], daily: { ...initialProgress.daily, ...parsed.daily }, weekly: { ...initialProgress.weekly, ...parsed.weekly }, reviewStreak: { ...initialProgress.reviewStreak, ...parsed.reviewStreak }, practice: { ...initialProgress.practice, ...parsed.practice }, explore: { ...initialProgress.explore, ...parsed.explore }, immersion: { ...initialProgress.immersion, ...parsed.immersion } });
+    return regenerateHearts({ ...initialProgress, ...parsed, unlockedAchievementIds: Array.isArray(parsed.unlockedAchievementIds) ? parsed.unlockedAchievementIds : [], reviewQueue: Array.isArray(parsed.reviewQueue) ? parsed.reviewQueue : [], daily: { ...initialProgress.daily, ...parsed.daily }, weekly: { ...initialProgress.weekly, ...parsed.weekly }, reviewStreak: { ...initialProgress.reviewStreak, ...parsed.reviewStreak }, practice: { ...initialProgress.practice, ...parsed.practice }, explore: { ...initialProgress.explore, ...parsed.explore }, immersion: { ...initialProgress.immersion, ...parsed.immersion }, mastery: { ...initialProgress.mastery, ...parsed.mastery, skills: { ...initialProgress.mastery.skills, ...parsed.mastery?.skills }, checkpoints: Array.isArray(parsed.mastery?.checkpoints) ? parsed.mastery.checkpoints : [] } });
   } catch {
     try {
       const damaged = localStorage.getItem(`afrilingo:${languageId}`);

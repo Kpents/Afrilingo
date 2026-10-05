@@ -3,6 +3,7 @@ import { achievements, getAchievementStats } from "../data/achievements";
 import { availableLanguageList } from "../data/languages";
 import Lebo from "../components/ui/Lebo";
 import { hapticPress } from "../utils/hapticFeedback";
+import { masteryInsights, skillDefinitions } from "../utils/learnerMastery";
 
 export default function ProfilePage({ dark, progress, progressByLanguage = {}, language, preferences, onPreferencesChange, onContinue }) {
   const card = dark ? "border-white/10 bg-[#1A201E]" : "border-black/8 bg-white";
@@ -20,6 +21,8 @@ export default function ProfilePage({ dark, progress, progressByLanguage = {}, l
     ["Stories", (immersion.completedStories?.length || 0) + (immersion.completedWorldStories?.length || 0), "stories completed", BookOpenText, "#C95D3A"],
     ["Pronunciation", immersion.completedPronunciation?.length || 0, "practices completed", Mic, "#4338CA"]
   ];
+  const skills = Object.entries(progress.mastery?.skills || {}).filter(([, value]) => value.attempts > 0);
+  const insights = masteryInsights(progress.mastery);
 
   return (
     <div className="mx-auto max-w-3xl">
@@ -42,6 +45,10 @@ export default function ProfilePage({ dark, progress, progressByLanguage = {}, l
       <h2 className="mt-8 text-2xl font-black">{language.language} learning footprint</h2>
       <p className={`mt-2 text-sm font-semibold leading-6 ${dark ? "text-white/45" : "text-black/45"}`}>Your progress beyond the lesson path—words explored, situations handled, stories followed, and speaking practice completed.</p>
       <div className="mt-4 grid gap-3 sm:grid-cols-2">{activeStats.map(([title,value,label,Icon,color]) => <div key={title} className={`relative overflow-hidden rounded-[1.5rem] border p-5 ${card}`}><div className="absolute -bottom-6 -right-4 size-24 rounded-full opacity-10" style={{backgroundColor:color}}/><div className="relative flex items-center gap-4"><span className="grid size-12 place-items-center rounded-2xl text-white" style={{backgroundColor:color}}><Icon size={22}/></span><div><div className="text-2xl font-black">{value}</div><div className="font-black">{title}</div><div className="text-xs font-semibold opacity-45">{label}</div></div></div></div>)}</div>
+
+      <h2 className="mt-8 text-2xl font-black">Skill mastery</h2>
+      <p className={`mt-2 text-sm font-semibold leading-6 ${dark ? "text-white/45" : "text-black/45"}`}>Built from your answers across lessons, checkpoints, review, and focused practice.</p>
+      {skills.length ? <><div className="mt-4 grid gap-3 sm:grid-cols-2">{skills.map(([id,value]) => { const definition=skillDefinitions[id]; return <div key={id} className={`rounded-[1.5rem] border p-4 ${card}`}><div className="flex items-center justify-between gap-3"><div className="flex items-center gap-3"><span className="text-2xl">{definition.emoji}</span><div><div className="font-black">{definition.label}</div><div className="text-xs font-black uppercase tracking-wider text-[#4338CA]">{value.level}</div></div></div><div className="text-xl font-black">{value.accuracy}%</div></div><div className={`mt-3 h-2 overflow-hidden rounded-full ${dark?"bg-white/10":"bg-black/8"}`}><div className="h-full rounded-full bg-gradient-to-r from-[#F28C28] to-[#24745B]" style={{width:`${value.accuracy}%`}}/></div><div className="mt-2 text-xs font-semibold opacity-40">{value.correct} correct across {value.attempts} attempts</div></div>; })}</div>{(insights.strongest || insights.weakest) && <div className={`mt-4 rounded-[1.5rem] border p-5 ${card}`}><div className="text-xs font-black uppercase tracking-wider text-[#F28C28]">Your next best move</div>{insights.strongest && <p className="mt-2 font-semibold"><strong>Strength:</strong> {skillDefinitions[insights.strongest[0]].label} at {insights.strongest[1].accuracy}%.</p>}{insights.weakest && <p className="mt-1 font-semibold"><strong>Focus next:</strong> {skillDefinitions[insights.weakest[0]].label} at {insights.weakest[1].accuracy}%.</p>}</div>}</> : <div className={`mt-4 rounded-[1.5rem] border p-5 text-sm font-semibold opacity-60 ${card}`}>Complete a lesson to begin building your skill profile.</div>}
 
       {preferences && <><h2 className="mt-8 text-2xl font-black">Learning preferences</h2><div className={`mt-4 rounded-[1.5rem] border p-5 ${card}`}><label className="text-sm font-black">Display name<input value={preferences.name} onChange={event=>onPreferencesChange({...preferences,name:event.target.value})} className={`mt-2 min-h-12 w-full rounded-xl border px-4 font-bold outline-none focus:border-[#F28C28] ${dark?"border-white/10 bg-white/5":"border-black/10 bg-[#FFF8EE]"}`}/></label><div className="mt-5 text-sm font-black">Daily activity goal</div><div className="mt-2 grid grid-cols-3 gap-2">{[1,3,5].map(value=><button key={value} onClick={()=>onPreferencesChange({...preferences,dailyTarget:value})} className={`min-h-12 rounded-xl font-black ${preferences.dailyTarget===value?"bg-[#F28C28] text-white":dark?"bg-white/6":"bg-black/5"}`}>{value} / day</button>)}</div></div></>}
 

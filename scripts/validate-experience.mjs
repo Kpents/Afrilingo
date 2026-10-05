@@ -11,6 +11,7 @@ let placement;
 let reviewScheduler;
 let personalization;
 let adaptiveLesson;
+let learnerMastery;
 try {
   ({ languages } = await server.ssrLoadModule("/src/data/languages.js"));
   progression = await server.ssrLoadModule("/src/utils/courseProgress.js");
@@ -19,6 +20,7 @@ try {
   reviewScheduler = await server.ssrLoadModule("/src/utils/reviewScheduler.js");
   personalization = await server.ssrLoadModule("/src/utils/learningPersonalization.js");
   adaptiveLesson = await server.ssrLoadModule("/src/utils/adaptiveLesson.js");
+  learnerMastery = await server.ssrLoadModule("/src/utils/learnerMastery.js");
 } finally {
   await server.close();
 }
@@ -153,10 +155,15 @@ check(adaptiveQueue.at(-1).retryAttempt === 2, "Repeated misses must remain in t
 const mastery = adaptiveLesson.lessonMasterySummary([{ questionId:"a", correct:false, retryAttempt:0 }, { questionId:"a", correct:true, retryAttempt:1 }, { questionId:"b", correct:true, retryAttempt:0 }]);
 check(mastery.secure === 2 && mastery.recovered === 1, "Lesson mastery must distinguish recovered concepts from first-pass recall.");
 
+const skillEvidence = learnerMastery.summarizeSkillEvidence([{ skill:"listening", correct:true }, { skill:"listening", correct:false }, { skill:"matching", correct:true }]);
+const learnerModel = learnerMastery.updateLearnerMastery({}, skillEvidence, reviewNow);
+check(learnerModel.skills.listening.attempts === 2 && learnerModel.skills.listening.accuracy === 50, "Skill mastery must aggregate answer evidence accurately.");
+check(learnerMastery.skillForQuestion({ type:"sentence-builder" }) === "sentences", "Exercise types must map to a reusable skill taxonomy.");
+
 if (failures.length) {
   console.error(`Experience validation failed with ${failures.length} issue${failures.length === 1 ? "" : "s"}:`);
   failures.forEach(failure => console.error(`- ${failure}`));
   process.exitCode = 1;
 } else {
-  console.log(`AfriLingo experience validation: ${Object.keys(languages).length} languages · progression, personalization, adaptive lessons and review, isolation, backup and recovery passed`);
+  console.log(`AfriLingo experience validation: ${Object.keys(languages).length} languages · progression, personalization, persistent mastery, adaptive lessons and review, isolation, backup and recovery passed`);
 }
