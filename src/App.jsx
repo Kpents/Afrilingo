@@ -33,6 +33,7 @@ const PracticePage = lazy(() => import("./pages/PracticePage"));
 const OnboardingPage = lazy(() => import("./pages/OnboardingPage"));
 const CourseOnboardingPage = lazy(() => import("./pages/CourseOnboardingPage"));
 const SettingsPage = lazy(() => import("./pages/SettingsPage"));
+const AudioStudioPage = lazy(() => import("./pages/AudioStudioPage"));
 const GlobalSearch = lazy(() => import("./components/navigation/GlobalSearch"));
 import RewardEvent from "./components/gamification/RewardEvent";
 
@@ -561,7 +562,7 @@ export default function App() {
 
                 {" • "}
 
-                {screen === "explore" ? "Explore Library" : screen === "immersion" ? `${currentLanguage.language} Immersion` : screen === "practice" ? "Daily Practice" : screen === "review" ? "Review Hub" : screen === "settings" ? "Settings & Help" : <>Unit {activeUnit + 1}</>}
+                {screen === "explore" ? "Explore Library" : screen === "immersion" ? `${currentLanguage.language} Immersion` : screen === "practice" ? "Daily Practice" : screen === "review" ? "Review Hub" : screen === "settings" ? "Settings & Help" : screen === "audio-studio" ? "Audio Studio" : <>Unit {activeUnit + 1}</>}
 
               </div>
 
@@ -916,7 +917,9 @@ export default function App() {
 
             )}
 
-            {screen === "settings" && <SettingsPage dark={dark} language={currentLanguage} preferences={preferences} onPreferencesChange={setPreferences} />}
+            {screen === "settings" && <SettingsPage dark={dark} language={currentLanguage} preferences={preferences} onPreferencesChange={setPreferences} onOpenAudioStudio={() => setScreen("audio-studio")} />}
+
+            {screen === "audio-studio" && <AudioStudioPage dark={dark} languages={languages} exploreLibraries={exploreLibraries} immersionLibraries={immersionLibraries} />}
 
             </Suspense>
 

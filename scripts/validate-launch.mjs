@@ -4,7 +4,7 @@ import { createServer } from "vite";
 
 const root = resolve(import.meta.dirname, "..");
 const server = await createServer({ root, appType:"custom", logLevel:"silent", server:{ middlewareMode:true } });
-let languages, progress, placement, adaptive, review, dailyPlan, mastery;
+let languages, progress, placement, adaptive, review, dailyPlan, mastery, audioCatalog;
 try {
   ({ languages } = await server.ssrLoadModule("/src/data/languages.js"));
   progress = await server.ssrLoadModule("/src/hooks/useCourseProgress.js");
@@ -13,6 +13,7 @@ try {
   review = await server.ssrLoadModule("/src/utils/reviewScheduler.js");
   dailyPlan = await server.ssrLoadModule("/src/utils/dailyPlan.js");
   mastery = await server.ssrLoadModule("/src/utils/learnerMastery.js");
+  audioCatalog = await server.ssrLoadModule("/src/utils/audioCatalog.js");
 } finally { await server.close(); }
 
 const failures=[];
@@ -55,5 +56,10 @@ await access(resolve(root,"public/sw.js"));
 await access(resolve(root,"public/app-icon.svg"));
 await access(resolve(root,"public/maskable-icon.svg"));
 
+const audioScripts=audioCatalog.buildAudioCatalog(languages,{},{});
+check(audioScripts.length>100,"The Audio Contributor Studio must expose a substantial source-script inventory.");
+check(new Set(audioScripts.map(item=>item.id)).size===audioScripts.length,"Audio script IDs must be unique and stable.");
+check(audioCatalog.safeAudioFilename(audioScripts[0]).startsWith(`${audioScripts[0].languageId}-`),"Audio filenames must remain language-scoped.");
+
 if(failures.length){console.error(`Launch validation failed with ${failures.length} issue${failures.length===1?"":"s"}:`);failures.forEach(item=>console.error(`- ${item}`));process.exitCode=1}
-else console.log(`Launch validation passed: ${Object.keys(languages).length} courses · onboarding, recovery, adaptivity, persistence, daily plan and offline shell ready`);
+else console.log(`Launch validation passed: ${Object.keys(languages).length} courses · onboarding, recovery, adaptivity, persistence, daily plan, audio workflow and offline shell ready`);
