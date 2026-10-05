@@ -26,7 +26,7 @@ export const initialProgress = {
 
 export const HEART_REGEN_MS = 30 * 60 * 1000;
 
-function regenerateHearts(progress, now = Date.now()) {
+export function regenerateHearts(progress, now = Date.now()) {
   if (progress.hearts >= 5 || !progress.heartUpdatedAt) return progress;
   const recovered = Math.floor((now - progress.heartUpdatedAt) / HEART_REGEN_MS);
   if (recovered <= 0) return progress;
@@ -34,12 +34,16 @@ function regenerateHearts(progress, now = Date.now()) {
   return { ...progress, hearts, heartUpdatedAt: hearts === 5 ? null : progress.heartUpdatedAt + recovered * HEART_REGEN_MS };
 }
 
+export function normalizeProgress(parsed = {}) {
+  return { ...initialProgress, ...parsed, unlockedAchievementIds: Array.isArray(parsed.unlockedAchievementIds) ? parsed.unlockedAchievementIds : [], reviewQueue: Array.isArray(parsed.reviewQueue) ? parsed.reviewQueue : [], daily: { ...initialProgress.daily, ...parsed.daily }, dailyPlan: { ...initialProgress.dailyPlan, ...parsed.dailyPlan, completedStepIds: Array.isArray(parsed.dailyPlan?.completedStepIds) ? parsed.dailyPlan.completedStepIds : [] }, weekly: { ...initialProgress.weekly, ...parsed.weekly }, reviewStreak: { ...initialProgress.reviewStreak, ...parsed.reviewStreak }, practice: { ...initialProgress.practice, ...parsed.practice }, explore: { ...initialProgress.explore, ...parsed.explore }, immersion: { ...initialProgress.immersion, ...parsed.immersion }, mastery: { ...initialProgress.mastery, ...parsed.mastery, skills: { ...initialProgress.mastery.skills, ...parsed.mastery?.skills }, checkpoints: Array.isArray(parsed.mastery?.checkpoints) ? parsed.mastery.checkpoints : [] } };
+}
+
 function readProgress(languageId) {
   try {
     const saved = localStorage.getItem(`afrilingo:${languageId}`);
     if (!saved) return { ...initialProgress };
     const parsed = JSON.parse(saved);
-    return regenerateHearts({ ...initialProgress, ...parsed, unlockedAchievementIds: Array.isArray(parsed.unlockedAchievementIds) ? parsed.unlockedAchievementIds : [], reviewQueue: Array.isArray(parsed.reviewQueue) ? parsed.reviewQueue : [], daily: { ...initialProgress.daily, ...parsed.daily }, dailyPlan: { ...initialProgress.dailyPlan, ...parsed.dailyPlan, completedStepIds: Array.isArray(parsed.dailyPlan?.completedStepIds) ? parsed.dailyPlan.completedStepIds : [] }, weekly: { ...initialProgress.weekly, ...parsed.weekly }, reviewStreak: { ...initialProgress.reviewStreak, ...parsed.reviewStreak }, practice: { ...initialProgress.practice, ...parsed.practice }, explore: { ...initialProgress.explore, ...parsed.explore }, immersion: { ...initialProgress.immersion, ...parsed.immersion }, mastery: { ...initialProgress.mastery, ...parsed.mastery, skills: { ...initialProgress.mastery.skills, ...parsed.mastery?.skills }, checkpoints: Array.isArray(parsed.mastery?.checkpoints) ? parsed.mastery.checkpoints : [] } });
+    return regenerateHearts(normalizeProgress(parsed));
   } catch {
     try {
       const damaged = localStorage.getItem(`afrilingo:${languageId}`);
