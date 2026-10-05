@@ -12,6 +12,7 @@ let reviewScheduler;
 let personalization;
 let adaptiveLesson;
 let learnerMastery;
+let dailyPlan;
 try {
   ({ languages } = await server.ssrLoadModule("/src/data/languages.js"));
   progression = await server.ssrLoadModule("/src/utils/courseProgress.js");
@@ -21,6 +22,7 @@ try {
   personalization = await server.ssrLoadModule("/src/utils/learningPersonalization.js");
   adaptiveLesson = await server.ssrLoadModule("/src/utils/adaptiveLesson.js");
   learnerMastery = await server.ssrLoadModule("/src/utils/learnerMastery.js");
+  dailyPlan = await server.ssrLoadModule("/src/utils/dailyPlan.js");
 } finally {
   await server.close();
 }
@@ -159,11 +161,16 @@ const skillEvidence = learnerMastery.summarizeSkillEvidence([{ skill:"listening"
 const learnerModel = learnerMastery.updateLearnerMastery({}, skillEvidence, reviewNow);
 check(learnerModel.skills.listening.attempts === 2 && learnerModel.skills.listening.accuracy === 50, "Skill mastery must aggregate answer evidence accurately.");
 check(learnerMastery.skillForQuestion({ type:"sentence-builder" }) === "sentences", "Exercise types must map to a reusable skill taxonomy.");
+let planProgress = { dailyPlan:{ date:"2026-10-03", completedStepIds:["review"] } };
+planProgress = { ...planProgress, dailyPlan:dailyPlan.completeDailyPlanStep(planProgress, "skill", "2026-10-05") };
+check(planProgress.dailyPlan.date === "2026-10-05" && planProgress.dailyPlan.completedStepIds.join() === "skill", "The daily plan must reset by local study date.");
+planProgress = { ...planProgress, dailyPlan:dailyPlan.completeDailyPlanStep(planProgress, "skill", "2026-10-05") };
+check(planProgress.dailyPlan.completedStepIds.length === 1, "Daily plan completion must remain idempotent.");
 
 if (failures.length) {
   console.error(`Experience validation failed with ${failures.length} issue${failures.length === 1 ? "" : "s"}:`);
   failures.forEach(failure => console.error(`- ${failure}`));
   process.exitCode = 1;
 } else {
-  console.log(`AfriLingo experience validation: ${Object.keys(languages).length} languages · progression, personalization, persistent mastery, adaptive lessons and review, isolation, backup and recovery passed`);
+  console.log(`AfriLingo experience validation: ${Object.keys(languages).length} languages · progression, daily planning, personalization, persistent mastery, adaptive lessons and review, isolation, backup and recovery passed`);
 }

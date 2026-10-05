@@ -52,6 +52,7 @@ import AppStatus from "./components/system/AppStatus";
 import { recordReviewStreak, recordWeeklyActivity } from "./utils/learningGoals";
 import { applyReviewOutcomes, recordReviewMiss, reviewKeyFor } from "./utils/reviewScheduler";
 import { skillForQuestion, updateLearnerMastery } from "./utils/learnerMastery";
+import { completeDailyPlanStep } from "./utils/dailyPlan";
 
 export default function App() {
   const lifecycle = useAppLifecycle();
@@ -362,7 +363,8 @@ export default function App() {
         explore: {
           masteredEntryIds: nextMastery,
           completedCategoryLevels: completedLevel ? [...new Set([...existing.completedCategoryLevels, categoryKey])] : existing.completedCategoryLevels
-        }
+        },
+        dailyPlan: completeDailyPlanStep(p, "vocabulary")
       };
     });
   };
@@ -381,7 +383,7 @@ export default function App() {
     showReward({ kind: "xp", label: `+${xp} Review XP` });
     setProgress((p) => {
       const evidence = outcomes.map(outcome => ({ skill: skillForQuestion((p.reviewQueue || []).find(item => item.reviewKey === outcome.reviewKey)?.question), correct: outcome.correct ? 1 : 0, attempts: 1 }));
-      return { ...p, xp: p.xp + xp, weekly: recordWeeklyActivity(p, { xp, review: true }), reviewStreak: recordReviewStreak(p), reviewResolved: (p.reviewResolved || 0) + strengthened, reviewQueue: applyReviewOutcomes(p.reviewQueue, outcomes), mastery: updateLearnerMastery(p.mastery, evidence) };
+      return { ...p, xp: p.xp + xp, weekly: recordWeeklyActivity(p, { xp, review: true }), reviewStreak: recordReviewStreak(p), reviewResolved: (p.reviewResolved || 0) + strengthened, reviewQueue: applyReviewOutcomes(p.reviewQueue, outcomes), mastery: updateLearnerMastery(p.mastery, evidence), dailyPlan: completeDailyPlanStep(p, "review") };
     });
   };
 
@@ -398,7 +400,7 @@ export default function App() {
       const nextStreak = p.lastStudyDate === today ? p.streak : p.lastStudyDate === yesterday ? p.streak + 1 : 1;
       const previousPractice = p.practice?.date === today ? p.practice : { date: today, sessions: 0, xp: 0, lastMode: null };
       const practiceSkill = mode.startsWith("topic:") || mode === "vocabulary" ? "vocabulary" : mode === "listening" ? "listening" : mode === "sentences" ? "sentences" : mode === "matching" ? "matching" : mode === "visual" ? "visual" : "vocabulary";
-      return { ...p, xp: p.xp + xp + (bonus ? 30 : 0), weekly: recordWeeklyActivity(p, { xp }), streak: nextStreak, lastStudyDate: today, daily: { date: today, completed: count, claimed: bonus || (p.daily?.date === today && p.daily.claimed) }, practice: { date: today, sessions: previousPractice.sessions + 1, xp: previousPractice.xp + xp, lastMode: mode }, mastery: updateLearnerMastery(p.mastery, [{ skill: practiceSkill, correct, attempts: total }]) };
+      return { ...p, xp: p.xp + xp + (bonus ? 30 : 0), weekly: recordWeeklyActivity(p, { xp }), streak: nextStreak, lastStudyDate: today, daily: { date: today, completed: count, claimed: bonus || (p.daily?.date === today && p.daily.claimed) }, practice: { date: today, sessions: previousPractice.sessions + 1, xp: previousPractice.xp + xp, lastMode: mode }, mastery: updateLearnerMastery(p.mastery, [{ skill: practiceSkill, correct, attempts: total }]), dailyPlan: completeDailyPlanStep(p, "skill") };
     });
     showReward(earnsDailyBonus ? { kind: "milestone", eyebrow: "Daily goal complete", title: `+${xp + 30} XP`, message: `${correct}/${total} correct · includes 30 bonus XP` } : { kind: "xp", label: `+${xp} Practice XP` });
   };
@@ -418,7 +420,8 @@ export default function App() {
         ...p,
         xp: p.xp + (alreadyRecorded ? 0 : xp),
         weekly: alreadyRecorded || !(xp > 0) ? p.weekly : recordWeeklyActivity(p, { xp }),
-        immersion: { ...existing, [field]: alreadyRecorded ? values : [...values, id], unlockedWorldCultureCards: rewardCardId && !alreadyRecorded ? [...new Set([...worldCards, rewardCardId])] : worldCards }
+        immersion: { ...existing, [field]: alreadyRecorded ? values : [...values, id], unlockedWorldCultureCards: rewardCardId && !alreadyRecorded ? [...new Set([...worldCards, rewardCardId])] : worldCards },
+        dailyPlan: xp > 0 ? completeDailyPlanStep(p, "immersion") : p.dailyPlan
       };
     });
   };
@@ -746,6 +749,9 @@ export default function App() {
                 learnerName={preferences.name}
                 dailyTarget={preferences.dailyTarget}
                 courseProfile={progress.onboarding}
+                exploreLibrary={exploreLibraries[activeLanguage]}
+                hasImmersion={Boolean(immersionLibraries[activeLanguage])}
+                onNavigate={setScreen}
 
                 onUnitChange={
                   setActiveUnit

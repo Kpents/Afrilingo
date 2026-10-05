@@ -7,6 +7,7 @@ import CourseSwitcher from "../components/navigation/CourseSwitcher";
 import UnitNavigator from "../components/navigation/UnitNavigator";
 import { getFurthestUnlockedUnit, isUnitUnlocked as getUnitUnlocked } from "../utils/courseProgress";
 import { dateKey } from "../utils/dateKey";
+import DailyLearningPlan from "../components/gamification/DailyLearningPlan";
 
 const motivationLabels = { travel:"Travel", family:"Family", culture:"Culture", relationships:"Relationships", general:"Balanced growth" };
 const focusPatterns = {
@@ -17,7 +18,7 @@ const focusPatterns = {
   general:/.*/i
 };
 
-export default function HomePage({ dark, progress, language, activeLanguage, onLanguageChange, onStartLesson, activeUnit, onUnitChange, progressByLanguage, startedLanguageIds, languageId, learnerName, dailyTarget, courseProfile }) {
+export default function HomePage({ dark, progress, language, activeLanguage, onLanguageChange, onStartLesson, onNavigate, activeUnit, onUnitChange, progressByLanguage, startedLanguageIds, languageId, learnerName, dailyTarget, courseProfile, exploreLibrary, hasImmersion }) {
   const units = language.units;
   const unit = units[activeUnit];
   const card = dark ? "border-white/10 bg-[#1A201E]" : "border-black/8 bg-white";
@@ -50,6 +51,8 @@ export default function HomePage({ dark, progress, language, activeLanguage, onL
 
     <aside className="min-w-0 space-y-4" aria-label="Learning progress">
       <LeboCoach dark={dark} progress={progress} completedInUnit={completedLessonsInUnit} totalInUnit={unit.lessons.length} languageId={languageId}/>
+
+      <DailyLearningPlan dark={dark} progress={progress} motivations={motivations} library={exploreLibrary} hasImmersion={hasImmersion} onNavigate={onNavigate}/>
 
       <section className={`rounded-[1.75rem] border p-5 ${card}`} aria-labelledby="today-title">
         <div className="flex items-center justify-between gap-3"><div><div className="text-xs font-black uppercase tracking-[.18em] text-[#F28C28]">Today</div><h2 id="today-title" className="mt-1 text-xl font-black">Keep your rhythm</h2></div><span className="grid size-12 place-items-center rounded-2xl bg-[#F28C28]/12 text-[#F28C28]"><Flame fill="currentColor"/></span></div>
