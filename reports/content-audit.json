@@ -1,81 +1,16 @@
 {
-  "generatedAt": "2026-09-17T13:13:01.153Z",
+  "generatedAt": "2026-10-05T06:48:34.832Z",
   "stats": {
     "languages": 14,
     "units": 392,
     "lessons": 1611,
-    "questions": 6812,
+    "questions": 7835,
     "cultureCards": 1611,
-    "exploreEntries": 4786,
-    "immersionItems": 379
+    "exploreEntries": 4728,
+    "immersionItems": 388
   },
   "errors": [],
   "warnings": [
-    {
-      "code": "DUPLICATE_CULTURE",
-      "path": "ga/unit-3/ga-unit-3-lesson-2",
-      "message": "Culture text duplicates ga/unit-3/ga-unit-3-lesson-1 and may be intentionally templated."
-    },
-    {
-      "code": "DUPLICATE_CULTURE",
-      "path": "ga/unit-4/ga-unit-4-lesson-2",
-      "message": "Culture text duplicates ga/unit-4/ga-unit-4-lesson-1 and may be intentionally templated."
-    },
-    {
-      "code": "DUPLICATE_CULTURE",
-      "path": "ga/unit-5/ga-unit-5-lesson-2",
-      "message": "Culture text duplicates ga/unit-5/ga-unit-5-lesson-1 and may be intentionally templated."
-    },
-    {
-      "code": "DUPLICATE_CULTURE",
-      "path": "ga/unit-21/ga-unit-21-lesson-2",
-      "message": "Culture text duplicates ga/unit-21/ga-unit-21-lesson-1 and may be intentionally templated."
-    },
-    {
-      "code": "EDITORIAL_REVIEW",
-      "path": "ga/explore/sport-review-beginner",
-      "message": "Entry is explicitly marked for editorial verification."
-    },
-    {
-      "code": "EDITORIAL_REVIEW",
-      "path": "ga/explore/sport-review-intermediate",
-      "message": "Entry is explicitly marked for editorial verification."
-    },
-    {
-      "code": "EDITORIAL_REVIEW",
-      "path": "ga/explore/sport-review-advanced",
-      "message": "Entry is explicitly marked for editorial verification."
-    },
-    {
-      "code": "EDITORIAL_REVIEW",
-      "path": "ga/explore/weather-review-beginner",
-      "message": "Entry is explicitly marked for editorial verification."
-    },
-    {
-      "code": "EDITORIAL_REVIEW",
-      "path": "ga/explore/weather-review-intermediate",
-      "message": "Entry is explicitly marked for editorial verification."
-    },
-    {
-      "code": "EDITORIAL_REVIEW",
-      "path": "ga/explore/weather-review-advanced",
-      "message": "Entry is explicitly marked for editorial verification."
-    },
-    {
-      "code": "EDITORIAL_REVIEW",
-      "path": "ga/explore/restaurant-review-beginner",
-      "message": "Entry is explicitly marked for editorial verification."
-    },
-    {
-      "code": "EDITORIAL_REVIEW",
-      "path": "ga/explore/restaurant-review-intermediate",
-      "message": "Entry is explicitly marked for editorial verification."
-    },
-    {
-      "code": "EDITORIAL_REVIEW",
-      "path": "ga/explore/restaurant-review-advanced",
-      "message": "Entry is explicitly marked for editorial verification."
-    },
     {
       "code": "DUPLICATE_CULTURE",
       "path": "ewe/unit-3/ewe-unit-3-lesson-2",

@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Lebo — Rive wave preview</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;background:#fff8ee;color:#292b27;font-family:ui-sans-serif,system-ui,sans-serif}main{max-width:920px;margin:auto;padding:32px 20px}.eyebrow{color:#a44e22;letter-spacing:.16em;font-size:11px;font-weight:800;text-transform:uppercase}h1{font-size:clamp(28px,5vw,42px);margin:10px 0}p{line-height:1.6;color:#63665e;margin:8px 0 20px}.stage{height:min(69vh,660px);min-height:340px;position:relative;background:radial-gradient(ellipse at 50% 46%,#fff0d4,white 75%);border:1px solid #eedcc0;border-radius:28px;overflow:hidden;box-shadow:0 18px 55px #a35a1010}canvas{height:100%;width:100%;display:block}.controls{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;margin:22px 0}button{min-height:48px;padding:0 26px;border:1px solid #dfd8cb;border-radius:14px;background:white;color:#292b27;font:750 15px ui-sans-serif,system-ui;cursor:pointer}button.primary{background:#f28c28;color:#fff;border-color:#f28c28}button:disabled{opacity:.4;cursor:wait}button:focus-visible{outline:3px solid #4338ca;outline-offset:3px}.caption{text-align:center;font-size:12px;color:#77796e}.error{color:#a32720}a{color:#24745b}footer{margin-top:24px;text-align:center;font-size:12px;color:#77796e}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
+  </style>
+</head>
+<body><main>
+  <div class="eyebrow">AfriLingo · character review 01</div>
+  <h1>A little hello from Lebo.</h1>
+  <p>The approved artwork, animated with a Rive bone and mesh rig. Play the wave and see how the paw and head feel.</p>
+  <div class="stage"><canvas id="lebo" aria-label="Lebo performing a happy paw wave"></canvas></div>
+  <div class="controls"><button class="primary" id="replay" disabled>Play wave</button><button id="pause" disabled>Pause</button></div>
+  <div class="caption" id="status" role="status">Loading Rive animation…</div>
+  <footer>3.6-second reaction · 5 bones · original Lebo artwork<br>Preview only — awaiting your approval.</footer>
+</main>
+<script src="./vendor/rive.js"></script>
+<script>
+  const status=document.getElementById('status'),replay=document.getElementById('replay'),pause=document.getElementById('pause');
+  function fail(message){status.textContent=message;status.classList.add('error')}
+  if(!window.rive){fail('Rive could not load. Please reload the preview.')}else{
+    rive.RuntimeLoader.setWasmUrl(new URL('./vendor/rive.wasm',location.href).href);
+    const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const player=new rive.Rive({src:'../lebo-rive/build/lebo-rive.riv',canvas:document.getElementById('lebo'),autoplay:!reduced,animations:'Happy wave',layout:new rive.Layout({fit:rive.Fit.Contain,alignment:rive.Alignment.Center}),
+      onLoad(){player.resizeDrawingSurfaceToCanvas();replay.disabled=false;pause.disabled=reduced;status.textContent=reduced?'Ready. Press Play wave to preview.':'Playing in the Rive runtime.'},
+      onLoadError(){fail('The Rive file could not load. Please reload the preview.')},
+      onStop(){pause.disabled=true;status.textContent='Wave complete. Replay whenever you like.'}
+    });
+    replay.onclick=()=>{player.reset({animations:'Happy wave',autoplay:true});pause.disabled=false;pause.textContent='Pause';status.textContent='Playing in the Rive runtime.'};
+    pause.onclick=()=>{if(player.isPlaying){player.pause();pause.textContent='Resume';status.textContent='Paused.'}else{player.play('Happy wave');pause.textContent='Pause';status.textContent='Playing in the Rive runtime.'}};
+    new ResizeObserver(()=>player.resizeDrawingSurfaceToCanvas()).observe(document.getElementById('lebo'));
+    window.addEventListener('pagehide',()=>player.cleanup(),{once:true});
+    window.leboPreview=player;
+  }
+</script></body></html>
