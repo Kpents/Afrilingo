@@ -5,21 +5,32 @@ import AudioButton from "../ui/AudioButton";
 import ConceptIcon from "../ui/ConceptIcon";
 import LearningVisual from "../ui/LearningVisual";
 import SafeArtwork from "../ui/SafeArtwork";
+import PronunciationRecorder from "../ui/PronunciationRecorder";
 import { hapticPress } from "../../utils/hapticFeedback";
+export { expectedAnswer, isAnswerComplete, normalizeAnswer } from "../../utils/answerEvaluation";
 
 const choiceTypes = new Set(["multiple-choice", "translate", "native-to-english", "english-to-native", "fill-in-the-blank", "conversation", "mini-conversation", "challenge"]);
 const shuffled = (values = []) => [...values].sort(() => Math.random() - 0.5);
 
 export default function QuestionRenderer({ question, dark, checked, value, onChange }) {
   const options = useMemo(() => shuffled(question.options), [question.id, question.retry, question.retryAttempt]);
-  if (question.type === "sentence-builder") return <SentenceBuilder question={question} value={value || []} onChange={onChange} dark={dark} checked={checked} />;
+  if (["sentence-builder", "word-bank"].includes(question.type)) return <SentenceBuilder question={question} value={value || []} onChange={onChange} dark={dark} checked={checked} />;
   if (["match", "matching"].includes(question.type)) return <Matching question={question} value={value || []} onChange={onChange} dark={dark} checked={checked} />;
   if (question.type === "listening") return <ChoiceGrid question={question} options={options} value={value} onChange={onChange} dark={dark} checked={checked} header={<AudioButton src={question.audio} label={question.prompt} className="mb-5 bg-[#4338CA] font-black text-white" />} />;
   if (question.type === "listen-and-select") return <ChoiceGrid question={question} options={options} value={value} onChange={onChange} dark={dark} checked={checked} images header={<AudioButton src={question.audio} label={question.prompt} className="mb-5 bg-[#4338CA] font-black text-white" />} />;
+  if (question.type === "listen-and-type") return <TypedAnswer question={question} value={value || ""} onChange={onChange} dark={dark} checked={checked} listening />;
+  if (question.type === "speaking") return <SpeakingExercise question={question} value={value} onChange={onChange} dark={dark} checked={checked} />;
   if (question.type === "image-to-word") return <ChoiceGrid question={question} options={options} value={value} onChange={onChange} dark={dark} checked={checked} header={<ConceptIcon iconId={question.iconId} className="mx-auto mb-6 h-40 w-full max-w-xs" />} />;
   if (question.type === "image-choice") return <ChoiceGrid question={question} options={options} value={value} onChange={onChange} dark={dark} checked={checked} images />;
   if (choiceTypes.has(question.type) || question.options) return <ChoiceGrid question={question} options={options} value={value} onChange={onChange} dark={dark} checked={checked} images={question.visualOptions} />;
   return <div className="rounded-2xl border border-[#C95D3A]/30 bg-[#C95D3A]/10 p-5 font-semibold">This exercise type is not available yet.</div>;
+}
+function TypedAnswer({ question, value, onChange, dark, checked, listening = false }) {
+  return <div>{listening && <AudioButton src={question.audio} label={question.prompt} className="mb-5 bg-[#4338CA] font-black text-white" />}<label className="block"><span className="sr-only">Type your answer</span><input autoComplete="off" autoCapitalize="none" spellCheck="false" disabled={checked} value={value} onChange={event => onChange(event.target.value)} placeholder={question.placeholder || "Type what you hear"} className={`min-h-16 w-full rounded-[1.4rem] border-2 px-5 text-lg font-black outline-none transition focus:border-[#F28C28] ${dark ? "border-white/12 bg-[#1A201E] text-white placeholder:text-white/25" : "border-black/10 bg-white placeholder:text-black/30"}`} /></label></div>;
+}
+
+function SpeakingExercise({ question, value, onChange, dark, checked }) {
+  return <div className={`rounded-[1.5rem] border p-5 ${dark ? "border-white/10 bg-[#1A201E]" : "border-black/8 bg-white"}`}><div className="text-sm font-bold opacity-55">Say this aloud</div><div className="mt-2 text-3xl font-black">{question.native || question.answer}</div>{question.audio && <AudioButton src={question.audio} label={`Hear ${question.native || question.answer}`} className="mt-4 bg-[#4338CA] font-black text-white" />}<PronunciationRecorder label={question.native || question.answer} dark={dark} onRecorded={recorded => !checked && onChange(recorded ? question.answer : null)} /><p className="mt-3 text-xs font-semibold opacity-45">Record and listen back. Pronunciation scoring will only be added after verified speech models are available.</p></div>;
 }
 
 function ChoiceGrid({ question, options, value, onChange, dark, checked, header, images = false }) {
@@ -82,20 +93,3 @@ function Matching({ question, value, onChange, dark, checked }) {
   </div>;
 }
 
-export function normalizeAnswer(question, value) {
-  if (question.type === "sentence-builder") return (value || []).join(" ");
-  if (["match", "matching"].includes(question.type)) return [...(value || [])].map(match => typeof match === "object" ? `${match.native}::${match.english}` : match).sort().join("|");
-  return value;
-}
-
-export function expectedAnswer(question) {
-  if (["match", "matching"].includes(question.type)) return (question.pairs || []).map(p => `${p.native}::${p.english}`).sort().join("|");
-  return question.answer;
-}
-
-export function isAnswerComplete(question, value) {
-  if (value == null) return false;
-  if (["match", "matching"].includes(question.type)) return Array.isArray(value) && value.length === (question.pairs || []).length;
-  if (Array.isArray(value)) return value.length > 0;
-  return true;
-}

@@ -7,12 +7,12 @@ import { playUiSound } from "../services/uiSound";
 import { hapticPress } from "../utils/hapticFeedback";
 import { isReviewDue, prioritizeReviewQueue, reviewDueLabel } from "../utils/reviewScheduler";
 
-export default function ReviewPage({ dark, progress, language, soundEnabled, onLoseHeart, onComplete }) {
+export default function ReviewPage({ dark, progress, language, soundEnabled, onLoseHeart, onAttempt, onComplete }) {
   const items = useMemo(() => prioritizeReviewQueue(progress.reviewQueue || []), [progress.reviewQueue]);
   const dueItems = useMemo(() => items.filter(item => isReviewDue(item)).slice(0, 10), [items]);
   const upcomingItems = useMemo(() => items.filter(item => !isReviewDue(item)), [items]);
   const [session, setSession] = useState(false);
-  if (session && dueItems.length) return <ReviewSession dark={dark} items={dueItems} hearts={progress.hearts} languageId={language.id} soundEnabled={soundEnabled} onLoseHeart={onLoseHeart} onExit={() => setSession(false)} onComplete={(result) => { onComplete(result); setSession(false); }} />;
+  if (session && dueItems.length) return <ReviewSession dark={dark} items={dueItems} hearts={progress.hearts} languageId={language.id} soundEnabled={soundEnabled} onLoseHeart={onLoseHeart} onAttempt={onAttempt} onExit={() => setSession(false)} onComplete={(result) => { onComplete(result); setSession(false); }} />;
   const card = dark ? "border-white/10 bg-[#1A201E]" : "border-black/8 bg-white";
   return <div className="mx-auto max-w-3xl">
     <section className="afri-pattern overflow-hidden rounded-[2rem] bg-gradient-to-br from-[#4338CA] to-[#24745B] p-6 text-white sm:p-8"><div className="flex items-center gap-5"><Lebo pose={dueItems.length ? "encourage" : "celebrate"} reaction={dueItems.length ? "idle" : "celebrate"} languageId={language.id} className="h-28 w-28 shrink-0" decorative/><div><div className="text-xs font-black uppercase tracking-[.24em] text-white/60">{language.language} practice</div><h1 className="mt-2 text-3xl font-black sm:text-4xl">Review Hub</h1><p className="mt-2 font-semibold text-white/70">Recall missed concepts at expanding intervals until they become lasting memories.</p></div></div></section>
@@ -20,11 +20,11 @@ export default function ReviewPage({ dark, progress, language, soundEnabled, onL
   </div>;
 }
 
-function ReviewSession({ dark, items, hearts, languageId, soundEnabled, onLoseHeart, onExit, onComplete }) {
-  const [index, setIndex] = useState(0); const [selected, setSelected] = useState(null); const [checked, setChecked] = useState(false); const [outcomes, setOutcomes] = useState([]); const [mistakes, setMistakes] = useState(0);
+function ReviewSession({ dark, items, hearts, languageId, soundEnabled, onLoseHeart, onAttempt, onExit, onComplete }) {
+  const [index, setIndex] = useState(0); const [selected, setSelected] = useState(null); const [checked, setChecked] = useState(false); const [outcomes, setOutcomes] = useState([]); const [mistakes, setMistakes] = useState(0); const [startedAt, setStartedAt] = useState(Date.now());
   const currentItem = items[index]; const current = currentItem.question; const correct = normalizeAnswer(current, selected) === expectedAnswer(current); const answerComplete = isAnswerComplete(current, selected); const progress = ((index + (checked ? 1 : 0)) / items.length) * 100;
-  const submit = () => { if (!answerComplete) return; setChecked(true); setOutcomes(results => [...results.filter(result => result.reviewKey !== currentItem.reviewKey), { reviewKey: currentItem.reviewKey, correct }]); playUiSound(correct ? "correct" : "incorrect", soundEnabled); if (!correct) { setMistakes(value => value + 1); onLoseHeart(); } };
-  const next = () => { if (index + 1 >= items.length) { const correctCount = outcomes.filter(outcome => outcome.correct).length; return onComplete({ outcomes, xp: correctCount * 5 }); } setIndex(value => value + 1); setSelected(null); setChecked(false); };
+  const submit = () => { if (!answerComplete) return; setChecked(true); setOutcomes(results => [...results.filter(result => result.reviewKey !== currentItem.reviewKey), { reviewKey: currentItem.reviewKey, correct }]); onAttempt?.({ question: current, source: { id: currentItem.sourceId, title: currentItem.sourceTitle }, correct, answer: normalizeAnswer(current, selected), responseTimeMs: Date.now() - startedAt, mode: "review" }); playUiSound(correct ? "correct" : "incorrect", soundEnabled); if (!correct) { setMistakes(value => value + 1); onLoseHeart(); } };
+  const next = () => { if (index + 1 >= items.length) { const correctCount = outcomes.filter(outcome => outcome.correct).length; return onComplete({ outcomes, xp: correctCount * 5 }); } setIndex(value => value + 1); setSelected(null); setChecked(false); setStartedAt(Date.now()); };
   return <div className="mx-auto max-w-2xl">
     <div className="mb-7 flex items-center gap-3"><button onClick={onExit} className={`grid size-11 place-items-center rounded-xl ${dark ? "bg-white/6" : "bg-black/5"}`} aria-label="Exit review"><RotateCcw size={19}/></button><div className={`h-3 flex-1 overflow-hidden rounded-full ${dark ? "bg-white/10" : "bg-black/10"}`}><motion.div className="h-full rounded-full bg-[#F28C28]" animate={{width:`${progress}%`}}/></div><div className="flex items-center gap-1 font-black text-[#EF5B5B]"><Heart size={20} fill="currentColor"/>{hearts}</div></div>
     <div className="text-xs font-black uppercase tracking-[.22em] text-[#4338CA]">Review · {currentItem.sourceTitle}</div>

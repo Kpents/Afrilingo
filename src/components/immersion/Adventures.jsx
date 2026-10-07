@@ -59,7 +59,7 @@ function buildAdventures(data) {
   });
 }
 
-export default function Adventures({ dark, data, progress, motivations = [], soundEnabled, onLoseHeart, onReward, companionId, initialMissionId }) {
+export default function Adventures({ dark, data, progress, motivations = [], soundEnabled, onLoseHeart, onReward, onAttempt, companionId, initialMissionId }) {
   const reduceMotion = useReducedMotion();
   const adventures = useMemo(() => buildAdventures(data), [data]);
   const companion = sidekicks.find(item => item.id === companionId) || sidekicks[0];
@@ -69,8 +69,8 @@ export default function Adventures({ dark, data, progress, motivations = [], sou
   const personalizedFeatured = useMemo(() => rankByMotivations(featured, motivations, mission => `${mission.title} ${mission.goal} ${mission.context || ""}`), [featured, motivations]);
   const featuredCompleted = featured.filter(mission => completed.includes(mission.id)).length;
 
-  if (active && featured.some(mission => mission.id === active.id)) return <SceneMission mission={active} companion={companion} languageId={data.languageId} dark={dark} hearts={progress.hearts} completed={completed.includes(active.id)} soundEnabled={soundEnabled} onLoseHeart={onLoseHeart} onReward={onReward} onExit={()=>setActive(null)}/>;
-  if (active) return <AdventureScene adventure={{...active, companion}} languageId={data.languageId} dark={dark} hearts={progress.hearts} completed={completed.includes(active.id)} soundEnabled={soundEnabled} onLoseHeart={onLoseHeart} onExit={() => setActive(null)} onReward={onReward}/>;
+  if (active && featured.some(mission => mission.id === active.id)) return <SceneMission mission={active} companion={companion} languageId={data.languageId} dark={dark} hearts={progress.hearts} completed={completed.includes(active.id)} soundEnabled={soundEnabled} onLoseHeart={onLoseHeart} onReward={onReward} onAttempt={onAttempt} onExit={()=>setActive(null)}/>;
+  if (active) return <AdventureScene adventure={{...active, companion}} languageId={data.languageId} dark={dark} hearts={progress.hearts} completed={completed.includes(active.id)} soundEnabled={soundEnabled} onLoseHeart={onLoseHeart} onExit={() => setActive(null)} onReward={onReward} onAttempt={onAttempt}/>;
 
   return <div>
     <div className="flex items-end justify-between gap-4"><div><div className="text-xs font-black uppercase tracking-[.22em] text-[#F28C28]">Walk in. Look around. Speak.</div><h1 className="mt-2 text-3xl font-black sm:text-4xl">{data.languageName} Adventures</h1><p className="mt-3 max-w-2xl leading-7 opacity-55">Enter everyday settings and talk with the people you meet. Adventures are optional and do not change your course path.</p><div className="mt-3 inline-flex items-center gap-2 rounded-full bg-[#F28C28]/10 py-1.5 pl-1.5 pr-3 text-sm font-black"><SidekickPortrait character={companion} className="size-8 rounded-full bg-white"/> {companion.name} is with you</div></div><MapPin className="hidden text-[#F28C28] sm:block" size={38}/></div>
@@ -87,7 +87,7 @@ export default function Adventures({ dark, data, progress, motivations = [], sou
   </div>;
 }
 
-function AdventureScene({ adventure, languageId, dark, hearts, completed, soundEnabled, onLoseHeart, onExit, onReward }) {
+function AdventureScene({ adventure, languageId, dark, hearts, completed, soundEnabled, onLoseHeart, onExit, onReward, onAttempt }) {
   const [step, setStep] = useState("explore");
   const [choice, setChoice] = useState(null);
   const [showTip, setShowTip] = useState(false);
@@ -98,7 +98,7 @@ function AdventureScene({ adventure, languageId, dark, hearts, completed, soundE
     if (choice) dialogueRef.current?.scrollTo({ top: dialogueRef.current.scrollHeight, behavior: "smooth" });
   }, [choice]);
   const finish = () => { playUiSound("complete", soundEnabled); onReward({ field: "completedAdventures", id: adventure.id, xp: adventure.xp }); setStep("complete"); };
-  const choose = value => { if (hearts <= 0) return; setChoice(value); const isCorrect=value===adventure.turn.answer; playUiSound(isCorrect?"correct":"incorrect",soundEnabled); if(!isCorrect) onLoseHeart?.(); };
+  const choose = value => { if (hearts <= 0) return; setChoice(value); const isCorrect=value===adventure.turn.answer; onAttempt?.({ question: { id: `adventure:${adventure.id}`, type: "conversation", prompt: adventure.turn.prompt, answer: adventure.turn.answer }, source: { id: adventure.id, title: adventure.title }, correct: isCorrect, answer: value, mode: "immersion:adventure" }); playUiSound(isCorrect?"correct":"incorrect",soundEnabled); if(!isCorrect) onLoseHeart?.(); };
 
   if(step==="complete") return <div className="relative mx-auto max-w-2xl overflow-hidden rounded-[2rem] px-4 py-8 text-center"><ConfettiBurst count={36}/><Lebo pose="celebrate" reaction="celebrate" languageId={languageId} className="mx-auto size-48" decorative/><h1 className="mt-3 text-4xl font-black">Adventure complete!</h1><p className="mt-2 font-semibold opacity-55">You handled a real-life interaction and earned {completed ? "more practice" : `${adventure.xp} XP`}.</p><button onClick={onExit} onPointerDown={hapticPress} className="afri-press mt-6 min-h-14 w-full rounded-2xl bg-[#F28C28] font-black text-white">Back to adventures</button></div>;
 

@@ -12,6 +12,7 @@ import LanguageWorld from "../components/immersion/LanguageWorld";
 import { languageWorlds } from "../data/worlds";
 import PronunciationRecorder from "../components/ui/PronunciationRecorder";
 import { motivationSummary, recommendedImmersionFeature } from "../utils/learningPersonalization";
+import { masteryInsights } from "../utils/learnerMastery";
 
 const baseFeatures = [
   ["cast", "Meet the Cast", "Get to know your learning companions", HeartHandshake, "#F28C28"],
@@ -25,7 +26,7 @@ const baseFeatures = [
   ["daily", "Daily Phrase", "Useful language every day", Sparkles, "#F28C28"]
 ];
 
-export default function ImmersionPage({ dark, data, progress, motivations = [], soundEnabled, onLoseHeart, onReward, companionId, onCompanionChange }) {
+export default function ImmersionPage({ dark, data, progress, motivations = [], soundEnabled, onLoseHeart, onReward, onAttempt, companionId, onCompanionChange }) {
   const [feature, setFeature] = useState(null);
   const features = data.pronunciation ? [...baseFeatures, ["pronunciation", "Tone & Pronunciation", "Notice sound patterns safely", Volume2, "#4338CA"]] : baseFeatures;
   const card = dark ? "border-white/10 bg-[#1A201E]" : "border-black/8 bg-white";
@@ -41,9 +42,12 @@ export default function ImmersionPage({ dark, data, progress, motivations = [], 
   const secondary = features.filter(([id]) => !["adventures", "coach", "stories", "missions", "daily"].includes(id));
   const journeyDone = journey.reduce((total, item) => total + (item.progress || 0), 0);
   const featureId = typeof feature === "string" ? feature : feature?.id;
-  const recommendedFeature = recommendedImmersionFeature(motivations);
-  const recommendedJourney = journey.find(item => item.id === recommendedFeature) || journey[0];
-  if (feature) return <div><button onClick={() => setFeature(null)} className={`mb-5 flex min-h-11 items-center gap-2 rounded-xl px-3 font-black ${dark ? "bg-white/6" : "bg-black/5"}`}><ArrowLeft size={18}/> Immersion home</button><Feature feature={featureId} initialMissionId={feature?.missionId} initialStoryId={feature?.storyId} world={world} onOpenActivity={activity=>setFeature(activity.missionId?{id:"adventures",missionId:activity.missionId}:activity.storyId?{id:"stories",storyId:activity.storyId}:activity.feature)} dark={dark} data={data} progress={progress} soundEnabled={soundEnabled} onLoseHeart={onLoseHeart} onReward={onReward} companionId={companionId} onCompanionChange={onCompanionChange}/></div>;
+  const weakestSkill = masteryInsights(progress.mastery).weakest?.[0];
+  const masteryFeature = { vocabulary:"adventures", visual:"adventures", matching:"adventures", conversation:"coach", speaking:"coach", pronunciation:"pronunciation", listening:"speakers", grammar:"grammar", sentences:"grammar" }[weakestSkill];
+  const recommendedFeature = masteryFeature || recommendedImmersionFeature(motivations);
+  const recommendedMeta = features.find(([id]) => id === recommendedFeature);
+  const recommendedJourney = journey.find(item => item.id === recommendedFeature) || { title: recommendedMeta?.[1] || "immersion", text: recommendedMeta?.[2] || "Use language in a meaningful context." };
+  if (feature) return <div><button onClick={() => setFeature(null)} className={`mb-5 flex min-h-11 items-center gap-2 rounded-xl px-3 font-black ${dark ? "bg-white/6" : "bg-black/5"}`}><ArrowLeft size={18}/> Immersion home</button><Feature feature={featureId} initialMissionId={feature?.missionId} initialStoryId={feature?.storyId} world={world} onOpenActivity={activity=>setFeature(activity.missionId?{id:"adventures",missionId:activity.missionId}:activity.storyId?{id:"stories",storyId:activity.storyId}:activity.feature)} dark={dark} data={data} progress={progress} soundEnabled={soundEnabled} onLoseHeart={onLoseHeart} onReward={onReward} onAttempt={onAttempt} companionId={companionId} onCompanionChange={onCompanionChange}/></div>;
   return <div className="mx-auto max-w-5xl">
     <section className="afri-pattern relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-[#C95D3A] via-[#F28C28] to-[#F6C445] p-6 text-white sm:p-9"><div className="relative z-10 max-w-2xl"><div className="text-xs font-black uppercase tracking-[.25em] text-white/70">{data.languageName} Immersion</div><h1 className="mt-2 text-3xl font-black sm:text-5xl">Step into the language.</h1><p className="mt-3 text-sm font-semibold leading-6 text-white/80 sm:mt-4 sm:text-base sm:leading-7"><span className="sm:hidden">Learn through real moments.</span><span className="hidden sm:inline">Meet characters, enter everyday settings, and learn through moments that feel alive.</span></p></div><div className="absolute -bottom-14 -right-10 size-56 rounded-full bg-white/10"/></section>
 
@@ -82,7 +86,7 @@ function Feature({ feature, ...props }) {
 function SectionTitle({ eyebrow, title, text }) { return <div><div className="text-xs font-black uppercase tracking-[.22em] text-[#F28C28]">{eyebrow}</div><h1 className="mt-2 text-3xl font-black sm:text-4xl">{title}</h1><p className="mt-3 max-w-2xl leading-7 opacity-55">{text}</p></div>; }
 const surface = (dark) => dark ? "border-white/10 bg-[#1A201E]" : "border-black/8 bg-white";
 
-function Coach({ dark, data, progress, onReward }) {
+function Coach({ dark, data, progress, onReward, onAttempt }) {
   const [level, setLevel] = useState("beginner");
   const [scenario, setScenario] = useState(null);
   const [turnIndex, setTurnIndex] = useState(0);

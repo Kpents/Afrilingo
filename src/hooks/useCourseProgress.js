@@ -19,6 +19,7 @@ export const initialProgress = {
   placement: null,
   onboarding: null,
   mastery: { skills: {}, checkpoints: [] },
+  learning: { schemaVersion: 1, attempts: [], concepts: {} },
   practice: { date: null, sessions: 0, xp: 0, lastMode: null },
   explore: { masteredEntryIds: [], completedCategoryLevels: [] },
   immersion: { savedPhrases: [], savedWords: [], completedConversations: [], completedMissions: [], completedGrammar: [], completedPronunciation: [], completedStories: [], completedAdventures: [], claimedDailyPhrases: [] }
@@ -35,7 +36,7 @@ export function regenerateHearts(progress, now = Date.now()) {
 }
 
 export function normalizeProgress(parsed = {}) {
-  return { ...initialProgress, ...parsed, unlockedAchievementIds: Array.isArray(parsed.unlockedAchievementIds) ? parsed.unlockedAchievementIds : [], reviewQueue: Array.isArray(parsed.reviewQueue) ? parsed.reviewQueue : [], daily: { ...initialProgress.daily, ...parsed.daily }, dailyPlan: { ...initialProgress.dailyPlan, ...parsed.dailyPlan, completedStepIds: Array.isArray(parsed.dailyPlan?.completedStepIds) ? parsed.dailyPlan.completedStepIds : [] }, weekly: { ...initialProgress.weekly, ...parsed.weekly }, reviewStreak: { ...initialProgress.reviewStreak, ...parsed.reviewStreak }, practice: { ...initialProgress.practice, ...parsed.practice }, explore: { ...initialProgress.explore, ...parsed.explore }, immersion: { ...initialProgress.immersion, ...parsed.immersion }, mastery: { ...initialProgress.mastery, ...parsed.mastery, skills: { ...initialProgress.mastery.skills, ...parsed.mastery?.skills }, checkpoints: Array.isArray(parsed.mastery?.checkpoints) ? parsed.mastery.checkpoints : [] } };
+  return { ...initialProgress, ...parsed, unlockedAchievementIds: Array.isArray(parsed.unlockedAchievementIds) ? parsed.unlockedAchievementIds : [], reviewQueue: Array.isArray(parsed.reviewQueue) ? parsed.reviewQueue : [], daily: { ...initialProgress.daily, ...parsed.daily }, dailyPlan: { ...initialProgress.dailyPlan, ...parsed.dailyPlan, completedStepIds: Array.isArray(parsed.dailyPlan?.completedStepIds) ? parsed.dailyPlan.completedStepIds : [] }, weekly: { ...initialProgress.weekly, ...parsed.weekly }, reviewStreak: { ...initialProgress.reviewStreak, ...parsed.reviewStreak }, practice: { ...initialProgress.practice, ...parsed.practice }, explore: { ...initialProgress.explore, ...parsed.explore }, immersion: { ...initialProgress.immersion, ...parsed.immersion }, mastery: { ...initialProgress.mastery, ...parsed.mastery, skills: { ...initialProgress.mastery.skills, ...parsed.mastery?.skills }, checkpoints: Array.isArray(parsed.mastery?.checkpoints) ? parsed.mastery.checkpoints : [] }, learning: { ...initialProgress.learning, ...parsed.learning, attempts: Array.isArray(parsed.learning?.attempts) ? parsed.learning.attempts : [], concepts: parsed.learning?.concepts && typeof parsed.learning.concepts === "object" ? parsed.learning.concepts : {} } };
 }
 
 function readProgress(languageId) {

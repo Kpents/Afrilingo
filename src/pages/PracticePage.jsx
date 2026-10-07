@@ -11,6 +11,7 @@ import { sidekicks } from "../data/sidekicks";
 import { isReviewDue, prioritizeReviewQueue } from "../utils/reviewScheduler";
 import { motivationSummary, preferredThemeIds } from "../utils/learningPersonalization";
 import { masteryInsights, skillDefinitions } from "../utils/learnerMastery";
+import { prioritizePracticeItems } from "../utils/learningTelemetry";
 
 const modes = [
   { id: "smart", title: "Smart practice", text: "Mistakes first, then concepts you have already met.", icon: Sparkles, color: "#F28C28" },
@@ -22,13 +23,10 @@ const modes = [
   { id: "topics", title: "Theme focus", text: "Choose one real-life category and practise its vocabulary in isolation.", icon: Shapes, color: "#F28C28" },
   { id: "speed", title: "Fluency sprint", text: "Complete a mixed ten-question session against your own clock.", icon: Timer, color: "#4338CA" },
   { id: "listening", title: "Listening-ready", text: "Practice audio questions when recordings are available.", icon: Headphones, color: "#4338CA" }
+  ,{ id: "speaking", title: "Speaking studio", text: "Record useful phrases, listen back, and build confidence without fake scoring.", icon: Target, color: "#C95D3A" }
 ];
 
-const practiceCrew = { smart:"zuri", review:"kobby", vocabulary:"nia", matching:"kobby", sentences:"zuri", visual:"nia", topics:"kobby", speed:"taji", listening:"taji" };
-
-function shuffle(items) {
-  return [...items].sort((a, b) => String(a.key).localeCompare(String(b.key)));
-}
+const practiceCrew = { smart:"zuri", review:"kobby", vocabulary:"nia", matching:"kobby", sentences:"zuri", visual:"nia", topics:"kobby", speed:"taji", listening:"taji", speaking:"taji" };
 
 function vocabularyQuestions(library, masteredIds) {
   if (!library?.entries?.length) return [];
@@ -90,32 +88,35 @@ function buildPools(language, progress, library) {
   const review = prioritizeReviewQueue(progress.reviewQueue || []).filter(item => isReviewDue(item)).map(item => ({ key: item.reviewKey, question: item.question, source: { id: item.sourceId, title: item.sourceTitle }, reviewKey: item.reviewKey }));
   const vocabulary = vocabularyQuestions(library, progress.explore?.masteredEntryIds || []);
   const listening = course.filter(item => item.question.type === "listening" && item.question.audio);
+  const speaking = course.filter(item => item.question.type === "speaking");
   const matching = [...course.filter(item => ["match", "matching"].includes(item.question.type)), ...matchingQuestions(library)];
   const sentences = [...course.filter(item => item.question.type === "sentence-builder"), ...sentenceQuestions(library)];
   const visual = course.filter(item => ["image-choice", "image-to-word"].includes(item.question.type) || item.question.visualOptions);
   const topics = topicQuestions(library);
-  return { course, review, vocabulary, listening, matching, sentences, visual, topics };
+  return { course, review, vocabulary, listening, speaking, matching, sentences, visual, topics };
 }
 
-export default function PracticePage({ dark, language, progress, library, motivations = [], dailyTarget = 3, soundEnabled, onLoseHeart, onReviewQuestion, onComplete }) {
+export default function PracticePage({ dark, language, progress, library, motivations = [], dailyTarget = 3, soundEnabled, onLoseHeart, onReviewQuestion, onAttempt, onComplete }) {
   const [mode, setMode] = useState(null);
   const [topic, setTopic] = useState(null);
   const pools = useMemo(() => buildPools(language, progress, library), [language, progress, library]);
   const selected = useMemo(() => {
     if (!mode) return [];
-    if (mode === "review") return pools.review.slice(0, 10);
-    if (mode === "vocabulary") return shuffle(pools.vocabulary).slice(0, 10);
-    if (mode === "matching") return shuffle(pools.matching).slice(0, 6);
-    if (mode === "sentences") return shuffle(pools.sentences).slice(0, 10);
-    if (mode === "visual") return shuffle(pools.visual).slice(0, 10);
-    if (mode === "topics") return shuffle(pools.topics[topic] || []).slice(0, 10);
-    if (mode === "speed") return shuffle([...pools.review, ...pools.course, ...pools.vocabulary]).slice(0, 10);
-    if (mode === "listening") return (pools.listening.length ? pools.listening : pools.vocabulary).slice(0, 10);
+    const ranked = items => prioritizePracticeItems(items, progress.learning);
+    if (mode === "review") return ranked(pools.review).slice(0, 10);
+    if (mode === "vocabulary") return ranked(pools.vocabulary).slice(0, 10);
+    if (mode === "matching") return ranked(pools.matching).slice(0, 6);
+    if (mode === "sentences") return ranked(pools.sentences).slice(0, 10);
+    if (mode === "visual") return ranked(pools.visual).slice(0, 10);
+    if (mode === "topics") return ranked(pools.topics[topic] || []).slice(0, 10);
+    if (mode === "speed") return ranked([...pools.review, ...pools.course, ...pools.vocabulary]).slice(0, 10);
+    if (mode === "listening") return ranked(pools.listening.length ? pools.listening : pools.vocabulary).slice(0, 10);
+    if (mode === "speaking") return ranked(pools.speaking).slice(0, 10);
     const keys = new Set();
-    return [...pools.review, ...pools.course, ...pools.vocabulary].filter(item => !keys.has(item.key) && keys.add(item.key)).slice(0, 10);
-  }, [mode, pools, topic]);
+    return ranked([...pools.review, ...pools.course, ...pools.vocabulary].filter(item => !keys.has(item.key) && keys.add(item.key))).slice(0, 10);
+  }, [mode, pools, topic, progress.learning]);
   if (mode === "topics" && !topic) return <div className="mx-auto max-w-4xl"><button onClick={() => setMode(null)} className={`grid size-11 place-items-center rounded-xl ${dark ? "bg-white/6" : "bg-black/5"}`} aria-label="Back to practice"><X size={19}/></button><div className="mt-5 text-xs font-black uppercase tracking-[.2em] text-[#F28C28]">Theme focus</div><h1 className="mt-2 text-4xl font-black">Choose a real-life category</h1><p className="mt-2 font-semibold opacity-55">Each session stays inside one {language.language} vocabulary theme.</p><div className="mt-6 grid gap-3 sm:grid-cols-2">{(library?.themes || []).filter(item => pools.topics[item.id]?.length).map(item => <button key={item.id} onClick={() => setTopic(item.id)} onPointerDown={hapticPress} className={`afri-press flex min-h-24 items-center gap-4 rounded-2xl border p-4 text-left ${dark ? "border-white/10 bg-[#1A201E]" : "border-black/8 bg-white"}`}><span className="text-4xl">{item.emoji}</span><span><span className="block text-xl font-black">{item.label}</span><span className="mt-1 block text-xs font-bold opacity-50">{pools.topics[item.id].length} questions</span></span></button>)}</div></div>;
-  if (mode && selected.length) return <PracticeSession dark={dark} mode={mode === "topics" ? `topic:${topic}` : mode} items={selected} hearts={progress.hearts} languageId={language.id} soundEnabled={soundEnabled} onLoseHeart={onLoseHeart} onReviewQuestion={onReviewQuestion} onExit={() => { setMode(null); setTopic(null); }} onComplete={(result) => { onComplete(result); setMode(null); setTopic(null); }} />;
+  if (mode && selected.length) return <PracticeSession dark={dark} mode={mode === "topics" ? `topic:${topic}` : mode} items={selected} hearts={progress.hearts} languageId={language.id} soundEnabled={soundEnabled} onLoseHeart={onLoseHeart} onReviewQuestion={onReviewQuestion} onAttempt={onAttempt} onExit={() => { setMode(null); setTopic(null); }} onComplete={(result) => { onComplete(result); setMode(null); setTopic(null); }} />;
   const card = dark ? "border-white/10 bg-[#1A201E]" : "border-black/8 bg-white";
   const todayCount = progress.daily?.date === dateKey() ? progress.daily.completed : 0;
   const todayPractice = progress.practice?.date === dateKey() ? progress.practice : { sessions:0, xp:0 };
@@ -133,20 +134,21 @@ export default function PracticePage({ dark, language, progress, library, motiva
     <section className="relative mt-5 overflow-hidden rounded-[2rem] bg-gradient-to-r from-[#F28C28] to-[#C95D3A] p-5 text-white sm:p-7"><div className="absolute -right-8 -top-10 text-[9rem] opacity-10">🎯</div><div className="relative grid items-center gap-5 sm:grid-cols-[minmax(0,1fr)_9rem]"><div><div className="text-xs font-black uppercase tracking-[.22em] text-white/65">{recommendedMode === "review" ? "Memory review due" : weakModeReady ? `Strengthen ${skillDefinitions[weakestSkill].label}` : `Recommended for ${motivationSummary(motivations)}`}</div><h2 className="mt-2 text-3xl font-black">{recommendedMode === "topics" ? library.themes.find(item => item.id === recommendedTopic)?.label : recommended.title}</h2><p className="mt-2 max-w-xl font-semibold leading-6 text-white/75">{recommendedMode==="review"?`${recommendedCount} missed ${recommendedCount===1?"concept is":"concepts are"} ready for another look.`:weakModeReady?`Your recent answers show this is the most useful skill to train next.`:recommendedMode === "topics" ? `Practise ${recommendedCount} useful words chosen from the goals you selected.` : recommended.text}</p><button disabled={!recommendedCount||progress.hearts===0} onClick={()=>{ if (recommendedMode === "topics") setTopic(recommendedTopic); setMode(recommendedMode); }} onPointerDown={hapticPress} className="afri-press mt-5 flex min-h-14 items-center gap-2 rounded-2xl bg-white px-6 font-black text-[#C95D3A] disabled:opacity-40">Start recommended session <ChevronRight size={19}/></button></div><SidekickPortrait character={guide} className="mx-auto size-36 rounded-[2rem] bg-white/15" eager/></div></section>
 
     <div className="mt-9 flex items-end justify-between"><div><div className="text-xs font-black uppercase tracking-[.2em] text-[#F28C28]">Your training journey</div><h2 className="mt-1 text-3xl font-black">Choose your focus</h2></div><div className="hidden items-center gap-2 rounded-full bg-[#F6C445]/15 px-3 py-2 text-xs font-black sm:flex"><Trophy size={16} className="text-[#F28C28]"/>{todayPractice.sessions} completed</div></div>
-    <div className="relative mt-6 space-y-4 before:absolute before:bottom-10 before:left-[1.45rem] before:top-10 before:w-1 before:rounded-full before:bg-gradient-to-b before:from-[#F28C28] before:via-[#24745B] before:to-[#4338CA] sm:before:left-[2rem]">{modes.map((item,index) => { const Icon=item.icon; const modePools={review:pools.review,vocabulary:pools.vocabulary,matching:pools.matching,sentences:pools.sentences,visual:pools.visual,topics:Object.values(pools.topics).flat(),speed:[...pools.review,...pools.course,...pools.vocabulary],listening:pools.listening.length?pools.listening:pools.vocabulary,smart:[...pools.review,...pools.course,...pools.vocabulary]}; const count=modePools[item.id]?.length||0; const unavailable=item.id==="review"?!pools.review.length:!count; const character=sidekicks.find(member=>member.id===practiceCrew[item.id]); return <button key={item.id} disabled={unavailable||progress.hearts===0} onClick={()=>setMode(item.id)} onPointerDown={hapticPress} className={`afri-press relative flex min-h-32 w-full items-center gap-4 rounded-[1.7rem] border p-4 pl-16 text-left disabled:cursor-not-allowed disabled:opacity-40 sm:gap-6 sm:p-6 sm:pl-24 ${card}`}><span className="absolute left-3 z-10 grid size-12 place-items-center rounded-2xl border-4 border-white text-lg font-black text-white shadow-lg sm:left-5 sm:size-14" style={{backgroundColor:item.color}}>{index+1}</span><SidekickPortrait character={character} className="hidden size-20 rounded-2xl bg-[#F6C445]/15 sm:block"/><span className="min-w-0 flex-1"><span className="flex items-center gap-2 text-xs font-black uppercase tracking-[.16em]" style={{color:item.color}}><Icon size={16}/>{unavailable?"Not ready":`${count} available`}</span><span className="mt-1 block text-2xl font-black">{item.title}</span><span className={`mt-1 block text-sm font-semibold leading-6 ${dark?"text-white/45":"text-black/45"}`}>{unavailable&&item.id==="review"?"Your review queue is clear — nice work.":item.id==="listening"&&!pools.listening.length?"Uses vocabulary practice until verified audio arrives.":item.text}</span></span><ChevronRight className="shrink-0 opacity-30"/></button>;})}</div>
+      <div className="relative mt-6 space-y-4 before:absolute before:bottom-10 before:left-[1.45rem] before:top-10 before:w-1 before:rounded-full before:bg-gradient-to-b before:from-[#F28C28] before:via-[#24745B] before:to-[#4338CA] sm:before:left-[2rem]">{modes.map((item,index) => { const Icon=item.icon; const modePools={review:pools.review,vocabulary:pools.vocabulary,matching:pools.matching,sentences:pools.sentences,visual:pools.visual,topics:Object.values(pools.topics).flat(),speed:[...pools.review,...pools.course,...pools.vocabulary],listening:pools.listening.length?pools.listening:pools.vocabulary,speaking:pools.speaking,smart:[...pools.review,...pools.course,...pools.vocabulary]}; const count=modePools[item.id]?.length||0; const unavailable=item.id==="review"?!pools.review.length:!count; const character=sidekicks.find(member=>member.id===practiceCrew[item.id]); return <button key={item.id} disabled={unavailable||progress.hearts===0} onClick={()=>setMode(item.id)} onPointerDown={hapticPress} className={`afri-press relative flex min-h-32 w-full items-center gap-4 rounded-[1.7rem] border p-4 pl-16 text-left disabled:cursor-not-allowed disabled:opacity-40 sm:gap-6 sm:p-6 sm:pl-24 ${card}`}><span className="absolute left-3 z-10 grid size-12 place-items-center rounded-2xl border-4 border-white text-lg font-black text-white shadow-lg sm:left-5 sm:size-14" style={{backgroundColor:item.color}}>{index+1}</span><SidekickPortrait character={character} className="hidden size-20 rounded-2xl bg-[#F6C445]/15 sm:block"/><span className="min-w-0 flex-1"><span className="flex items-center gap-2 text-xs font-black uppercase tracking-[.16em]" style={{color:item.color}}><Icon size={16}/>{unavailable?"Not ready":`${count} available`}</span><span className="mt-1 block text-2xl font-black">{item.title}</span><span className={`mt-1 block text-sm font-semibold leading-6 ${dark?"text-white/45":"text-black/45"}`}>{unavailable&&item.id==="review"?"Your review queue is clear — nice work.":item.id==="listening"&&!pools.listening.length?"Uses vocabulary practice until verified audio arrives.":item.text}</span></span><ChevronRight className="shrink-0 opacity-30"/></button>;})}</div>
     <div className={`mt-5 flex items-center gap-4 rounded-[1.5rem] border p-4 ${card}`}><span className="grid size-12 shrink-0 place-items-center rounded-2xl bg-[#24745B]/15 text-[#24745B]"><Target/></span><div><div className="font-black">Practice adapts as you learn</div><p className="mt-1 text-sm font-semibold opacity-50">Completed lessons, Explore vocabulary, and missed questions automatically shape these sessions.</p></div></div>
     {progress.hearts === 0 && <div className="mt-4 rounded-2xl bg-[#C95D3A]/10 p-4 text-center font-bold text-[#C95D3A]">Recover a heart before starting practice.</div>}
   </div>;
 }
 
-function PracticeSession({ dark, mode, items, hearts, languageId, soundEnabled, onLoseHeart, onReviewQuestion, onExit, onComplete }) {
+function PracticeSession({ dark, mode, items, hearts, languageId, soundEnabled, onLoseHeart, onReviewQuestion, onAttempt, onExit, onComplete }) {
   const [index, setIndex] = useState(0); const [selected, setSelected] = useState(null); const [checked, setChecked] = useState(false); const [correctCount, setCorrectCount] = useState(0); const [mistakes, setMistakes] = useState(0);
   const [elapsed, setElapsed] = useState(0);
   const questionHeadingRef = useRef(null);
+  const startedAtRef = useRef(Date.now());
   useEffect(() => { if (mode !== "speed") return undefined; const timer = window.setInterval(() => setElapsed(value => value + 1), 1000); return () => window.clearInterval(timer); }, [mode]);
-  useEffect(() => { questionHeadingRef.current?.focus({ preventScroll: true }); }, [index]);
+  useEffect(() => { questionHeadingRef.current?.focus({ preventScroll: true }); startedAtRef.current = Date.now(); }, [index]);
   const item = items[index]; const question = item.question; const correct = normalizeAnswer(question, selected) === expectedAnswer(question); const answerComplete = isAnswerComplete(question, selected); const percent = ((index + (checked ? 1 : 0)) / items.length) * 100;
-  const submit = () => { if (!answerComplete) return; setChecked(true); playUiSound(correct ? "correct" : "incorrect", soundEnabled); if (correct) setCorrectCount(value => value + 1); else { setMistakes(value => value + 1); onLoseHeart(); onReviewQuestion(question, item.source); } };
+  const submit = () => { if (!answerComplete) return; setChecked(true); playUiSound(correct ? "correct" : "incorrect", soundEnabled); onAttempt?.({ question, source: item.source, correct, answer: normalizeAnswer(question, selected), responseTimeMs: Date.now() - startedAtRef.current, mode: `practice:${mode}` }); if (correct) setCorrectCount(value => value + 1); else { setMistakes(value => value + 1); onLoseHeart(); onReviewQuestion(question, item.source); } };
   const next = () => { if (index + 1 >= items.length) return onComplete({ mode, xp: correctCount * 4, correct: correctCount, total: items.length, mistakes, elapsedSeconds: mode === "speed" ? elapsed : undefined }); setIndex(value => value + 1); setSelected(null); setChecked(false); };
   return <div className="mx-auto max-w-2xl">
     <div className="mb-7 flex items-center gap-3"><button onClick={onExit} className={`grid size-11 place-items-center rounded-xl ${dark ? "bg-white/6" : "bg-black/5"}`} aria-label="Exit practice"><X size={19}/></button><div role="progressbar" aria-label="Practice session progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow={Math.round(percent)} className={`h-3 flex-1 overflow-hidden rounded-full ${dark ? "bg-white/10" : "bg-black/10"}`}><motion.div className="h-full rounded-full bg-[#24745B]" animate={{width:`${percent}%`}}/></div><div aria-label={`${hearts} hearts remaining`} className="flex items-center gap-1 font-black text-[#EF5B5B]"><Heart size={20} fill="currentColor"/>{hearts}</div></div>

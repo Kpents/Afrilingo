@@ -6,7 +6,7 @@ import { hapticPress } from "../../utils/hapticFeedback";
 const surface = dark => dark ? "border-white/10 bg-[#1A201E]" : "border-black/8 bg-white";
 const normalizeToken = token => token.toLocaleLowerCase().replace(/[^\p{L}\p{M}]/gu, "");
 
-export default function Stories({ dark, data, progress, onReward, initialStoryId }) {
+export default function Stories({ dark, data, progress, onReward, onAttempt, initialStoryId }) {
   const [story, setStory] = useState(data.stories.find(item => item.id === initialStoryId) || data.stories[0]);
   const [translations, setTranslations] = useState({});
   const [word, setWord] = useState(null);
@@ -27,6 +27,7 @@ export default function Stories({ dark, data, progress, onReward, initialStoryId
   };
   const chooseAnswer = option => {
     setAnswer(option);
+    onAttempt?.({ question: { ...story.question, id: `story:${story.id}` }, source: { id: story.id, title: story.englishTitle || story.title }, correct: option === story.question.answer, answer: option, mode: "immersion:story" });
     if (option === story.question.answer && !completed.includes(story.id)) onReward({ field: "completedStories", id: story.id, xp: story.xp || 15 });
   };
   const correct = answer === story.question.answer;

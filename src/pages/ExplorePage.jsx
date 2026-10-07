@@ -11,7 +11,7 @@ import { motivationSummary, preferredThemeIds } from "../utils/learningPersonali
 
 const levelLabels = { beginner: "Beginner", intermediate: "Intermediate", advanced: "Advanced" };
 
-export default function ExplorePage({ dark, library, progress, motivations = [], soundEnabled, onLoseHeart, onReviewQuestion, onComplete }) {
+export default function ExplorePage({ dark, library, progress, motivations = [], soundEnabled, onLoseHeart, onReviewQuestion, onAttempt, onComplete }) {
   const [browseMode, setBrowseMode] = useState("themes");
   const [category, setCategory] = useState(null);
   const [level, setLevel] = useState("beginner");
@@ -61,7 +61,7 @@ export default function ExplorePage({ dark, library, progress, motivations = [],
   };
 
   if (session) {
-    return <ExploreSession dark={dark} entries={session.entries} categoryKey={session.categoryKey} categoryEntryIds={session.categoryEntryIds} title={session.title} hearts={progress.hearts} soundEnabled={soundEnabled} onLoseHeart={onLoseHeart} onReviewQuestion={onReviewQuestion} onExit={() => setSession(null)} onComplete={(result) => { onComplete(result); setSession(null); }} />;
+    return <ExploreSession dark={dark} entries={session.entries} categoryKey={session.categoryKey} categoryEntryIds={session.categoryEntryIds} title={session.title} hearts={progress.hearts} soundEnabled={soundEnabled} onLoseHeart={onLoseHeart} onReviewQuestion={onReviewQuestion} onAttempt={onAttempt} onExit={() => setSession(null)} onComplete={(result) => { onComplete(result); setSession(null); }} />;
   }
 
   const start = () => {
@@ -143,7 +143,7 @@ export default function ExplorePage({ dark, library, progress, motivations = [],
   );
 }
 
-function ExploreSession({ dark, entries, categoryKey, categoryEntryIds, title, hearts, soundEnabled, onLoseHeart, onReviewQuestion, onExit, onComplete }) {
+function ExploreSession({ dark, entries, categoryKey, categoryEntryIds, title, hearts, soundEnabled, onLoseHeart, onReviewQuestion, onAttempt, onExit, onComplete }) {
   const [stage, setStage] = useState("study");
   const [studyIndex, setStudyIndex] = useState(0);
   const [reveal, setReveal] = useState(0);
@@ -152,6 +152,7 @@ function ExploreSession({ dark, entries, categoryKey, categoryEntryIds, title, h
   const [quizIndex, setQuizIndex] = useState(0);
   const [selected, setSelected] = useState(null);
   const [checked, setChecked] = useState(false);
+  const [startedAt, setStartedAt] = useState(Date.now());
   const [mistakes, setMistakes] = useState(0);
   const quizHeadingRef = useRef(null);
   const entry = entries[studyIndex];
@@ -172,8 +173,8 @@ function ExploreSession({ dark, entries, categoryKey, categoryEntryIds, title, h
   const current = queue[quizIndex];
   const correct = normalizeAnswer(current, selected) === expectedAnswer(current);
   const answerComplete = isAnswerComplete(current, selected);
-  const submit = () => { if (!answerComplete) return; setChecked(true); playUiSound(correct ? "correct" : "incorrect", soundEnabled); if (!correct) { setMistakes((value) => value + 1); onLoseHeart(); onReviewQuestion?.(current, { id: categoryKey, title }); if (!queue.some((item, index) => index > quizIndex && item.id === current.id)) setQueue((items) => [...items, { ...current, retry: true }]); } };
-  const next = () => { if (quizIndex + 1 >= queue.length) { playUiSound("complete", soundEnabled); return setStage("complete"); } setQuizIndex((value) => value + 1); setSelected(null); setChecked(false); };
+  const submit = () => { if (!answerComplete) return; setChecked(true); onAttempt?.({ question: current, source: { id: categoryKey, title }, correct, answer: normalizeAnswer(current, selected), responseTimeMs: Date.now() - startedAt, mode: "explore" }); playUiSound(correct ? "correct" : "incorrect", soundEnabled); if (!correct) { setMistakes((value) => value + 1); onLoseHeart(); onReviewQuestion?.(current, { id: categoryKey, title }); if (!queue.some((item, index) => index > quizIndex && item.id === current.id)) setQueue((items) => [...items, { ...current, retry: true }]); } };
+  const next = () => { if (quizIndex + 1 >= queue.length) { playUiSound("complete", soundEnabled); return setStage("complete"); } setQuizIndex((value) => value + 1); setSelected(null); setChecked(false); setStartedAt(Date.now()); };
   return <div className="mx-auto max-w-2xl">
     <SessionHeader title={`${title} · Mini quiz`} onExit={onExit} progress={55 + ((quizIndex + (checked ? 1 : 0)) / queue.length) * 45} hearts={hearts}/>
     <div className="text-xs font-black uppercase tracking-[.22em] text-[#4338CA]">{current.retry ? "Review question" : "Mini quiz"}</div>

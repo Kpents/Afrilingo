@@ -45,7 +45,7 @@ export default function HomePage({ dark, progress, language, activeLanguage, onL
     <section className="min-w-0">
       <CourseSwitcher dark={dark} activeLanguage={activeLanguage} startedLanguageIds={startedLanguageIds} progressByLanguage={progressByLanguage} learnerName={learnerName} onLanguageChange={onLanguageChange} onContinue={() => { onUnitChange(recommendedUnitIndex); onStartLesson(nextLesson); }} nextLessonTitle={nextLesson?.title} nextUnitTitle={`Unit ${recommendedUnitIndex + 1} · ${recommendedUnit.title}`}/>
       <UnitNavigator dark={dark} language={language} units={units} activeUnit={activeUnit} completedLessonIds={completedIds} isUnitUnlocked={isUnitUnlocked} onUnitChange={onUnitChange}/>
-      <LessonPath lessons={unit.lessons} progress={progress} dark={dark} onStart={onStartLesson} languageId={languageId}/>
+      <LessonPath unit={unit} progress={progress} dark={dark} onStart={onStartLesson} onNavigate={onNavigate} hasImmersion={hasImmersion} languageId={languageId}/>
       {courseComplete && <CourseGraduation dark={dark} language={language} learnerName={learnerName} units={units} onReview={onStartLesson}/>}
     </section>
 

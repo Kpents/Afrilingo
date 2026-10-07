@@ -54,6 +54,7 @@ import AppStatus from "./components/system/AppStatus";
 import { recordReviewStreak, recordWeeklyActivity } from "./utils/learningGoals";
 import { applyReviewOutcomes, recordReviewMiss, reviewKeyFor } from "./utils/reviewScheduler";
 import { skillForQuestion, updateLearnerMastery } from "./utils/learnerMastery";
+import { createAttempt, recordAttempt } from "./utils/learningTelemetry";
 import { completeDailyPlanStep } from "./utils/dailyPlan";
 
 export default function App() {
@@ -375,6 +376,11 @@ export default function App() {
     setProgress((p) => ({ ...p, reviewQueue: recordReviewMiss(p.reviewQueue, question, source) }));
   };
 
+  const recordLearningAttempt = (details) => {
+    const attempt = createAttempt(details);
+    setProgress((p) => ({ ...p, learning: recordAttempt(p.learning, attempt) }));
+  };
+
   const strengthenReviewQuestion = (question, source = {}) => {
     const reviewKey = reviewKeyFor(question, source);
     setProgress((p) => ({ ...p, reviewQueue: applyReviewOutcomes(p.reviewQueue, [{ reviewKey, correct: true }]) }));
@@ -401,7 +407,7 @@ export default function App() {
       const bonus = count >= preferences.dailyTarget && !(p.daily?.date === today && p.daily.claimed);
       const nextStreak = p.lastStudyDate === today ? p.streak : p.lastStudyDate === yesterday ? p.streak + 1 : 1;
       const previousPractice = p.practice?.date === today ? p.practice : { date: today, sessions: 0, xp: 0, lastMode: null };
-      const practiceSkill = mode.startsWith("topic:") || mode === "vocabulary" ? "vocabulary" : mode === "listening" ? "listening" : mode === "sentences" ? "sentences" : mode === "matching" ? "matching" : mode === "visual" ? "visual" : "vocabulary";
+      const practiceSkill = mode.startsWith("topic:") || mode === "vocabulary" ? "vocabulary" : mode === "listening" ? "listening" : mode === "speaking" ? "speaking" : mode === "sentences" ? "sentences" : mode === "matching" ? "matching" : mode === "visual" ? "visual" : "vocabulary";
       return { ...p, xp: p.xp + xp + (bonus ? 30 : 0), weekly: recordWeeklyActivity(p, { xp }), streak: nextStreak, lastStudyDate: today, daily: { date: today, completed: count, claimed: bonus || (p.daily?.date === today && p.daily.claimed) }, practice: { date: today, sessions: previousPractice.sessions + 1, xp: previousPractice.xp + xp, lastMode: mode }, mastery: updateLearnerMastery(p.mastery, [{ skill: practiceSkill, correct, attempts: total }]), dailyPlan: completeDailyPlanStep(p, "skill") };
     });
     showReward(earnsDailyBonus ? { kind: "milestone", eyebrow: "Daily goal complete", title: `+${xp + 30} XP`, message: `${correct}/${total} correct · includes 30 bonus XP` } : { kind: "xp", label: `+${xp} Practice XP` });
@@ -814,6 +820,7 @@ export default function App() {
                   onLoseHeart={loseHeart}
                   onReviewQuestion={(question) => addToReview(question, { id: activeLesson.id, title: activeLesson.title })}
                   onStrengthenQuestion={(question) => strengthenReviewQuestion(question, { id: activeLesson.id, title: activeLesson.title })}
+                  onAttempt={recordLearningAttempt}
 
                   onRefillHearts={() => { showReward({ kind: "heart-gain", label: "+1 heart recovered" }); setProgress(p => ({ ...p, hearts: Math.min(5, p.hearts + 1), heartUpdatedAt: Date.now() })); }}
 
@@ -865,16 +872,17 @@ export default function App() {
                 soundEnabled={preferences.soundEnabled !== false}
                 onLoseHeart={loseHeart}
                 onReviewQuestion={(question, source) => addToReview(question, source)}
+                onAttempt={recordLearningAttempt}
                 onComplete={completeExploreSession}
               />
             )}
 
             {screen === "review" && (
-              <ReviewPage dark={dark} progress={progress} language={currentLanguage} soundEnabled={preferences.soundEnabled !== false} onLoseHeart={loseHeart} onComplete={completeReview} />
+              <ReviewPage dark={dark} progress={progress} language={currentLanguage} soundEnabled={preferences.soundEnabled !== false} onLoseHeart={loseHeart} onAttempt={recordLearningAttempt} onComplete={completeReview} />
             )}
 
             {screen === "practice" && (
-              <PracticePage dark={dark} language={currentLanguage} progress={progress} library={exploreLibraries[activeLanguage]} motivations={progress.onboarding?.motivations || preferences.motivations} dailyTarget={preferences.dailyTarget} soundEnabled={preferences.soundEnabled !== false} onLoseHeart={loseHeart} onReviewQuestion={addToReview} onComplete={completePractice} />
+              <PracticePage dark={dark} language={currentLanguage} progress={progress} library={exploreLibraries[activeLanguage]} motivations={progress.onboarding?.motivations || preferences.motivations} dailyTarget={preferences.dailyTarget} soundEnabled={preferences.soundEnabled !== false} onLoseHeart={loseHeart} onReviewQuestion={addToReview} onAttempt={recordLearningAttempt} onComplete={completePractice} />
             )}
 
             {screen === "immersion" && immersionLibraries[activeLanguage] && (
@@ -886,6 +894,7 @@ export default function App() {
                 soundEnabled={preferences.soundEnabled !== false}
                 onLoseHeart={loseHeart}
                 onReward={updateImmersion}
+                onAttempt={recordLearningAttempt}
                 companionId={preferences.companionId}
                 onCompanionChange={id => setPreferences(previous => ({ ...previous, companionId: id }))}
               />

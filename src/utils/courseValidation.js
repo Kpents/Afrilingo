@@ -2,7 +2,7 @@ import { findIconId, iconLibrary } from "../data/iconLibrary";
 
 export const supportedQuestionTypes = new Set([
   "multiple-choice", "translate", "native-to-english", "english-to-native",
-  "sentence-builder", "match", "matching", "listening", "listen-and-select", "image-choice", "image-to-word",
+  "sentence-builder", "word-bank", "match", "matching", "listening", "listen-and-select", "listen-and-type", "speaking", "image-choice", "image-to-word",
   "fill-in-the-blank", "conversation", "mini-conversation", "challenge"
 ]);
 

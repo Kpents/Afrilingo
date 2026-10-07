@@ -13,7 +13,7 @@ import { hapticPress } from "../utils/hapticFeedback";
 import { createLessonQueue, lessonMasterySummary, scheduleAdaptiveRetry } from "../utils/adaptiveLesson";
 import { skillForQuestion, summarizeSkillEvidence } from "../utils/learnerMastery";
 
-export default function LessonPage({ lesson, unit, dark, hearts, languageId, soundEnabled, isFirstLesson, isUnitChallenge, isCourseFinal, onExit, onLoseHeart, onReviewQuestion, onStrengthenQuestion, onRefillHearts, onComplete }) {
+export default function LessonPage({ lesson, unit, dark, hearts, languageId, soundEnabled, isFirstLesson, isUnitChallenge, isCourseFinal, onExit, onLoseHeart, onReviewQuestion, onStrengthenQuestion, onAttempt, onRefillHearts, onComplete }) {
   const [stage, setStage] = useState("conversation");
   const [queue, setQueue] = useState(() => createLessonQueue(lesson.questions));
   const [index, setIndex] = useState(0);
@@ -24,11 +24,13 @@ export default function LessonPage({ lesson, unit, dark, hearts, languageId, sou
   const [results, setResults] = useState([]);
   const reduceMotion = useReducedMotion();
   const questionRef = useRef(null);
+  const startedAtRef = useRef(Date.now());
 
   const current = queue[index];
 
   useEffect(() => {
     if (stage === "quiz") questionRef.current?.focus({ preventScroll: true });
+    startedAtRef.current = Date.now();
   }, [stage, index, current?.id]);
 
   if (stage === "hearts") {
@@ -115,6 +117,7 @@ export default function LessonPage({ lesson, unit, dark, hearts, languageId, sou
     if (!answerComplete) return;
     setChecked(true);
     playUiSound(correct ? "correct" : "incorrect", soundEnabled);
+    onAttempt?.({ question: current, source: { id: lesson.id, title: lesson.title }, correct, answer: submittedAnswer, responseTimeMs: Date.now() - startedAtRef.current, mode: "lesson" });
 
     if (submittedAnswer === expectedAnswer(current)) {
       setEarned(x => x + (current.retry ? 5 : 10));
@@ -259,10 +262,13 @@ function exerciseInstruction(type) {
     "mini-conversation": "Continue the conversation",
     challenge: "Challenge question",
     "sentence-builder": "Build the sentence",
+    "word-bank": "Build the sentence",
     match: "Match the pairs",
     matching: "Match the pairs",
     listening: "Listen and choose",
     "listen-and-select": "Listen and choose",
+    "listen-and-type": "Listen and type",
+    speaking: "Speak and listen back",
     "image-to-word": "Name what you see",
     "image-choice": "Choose the matching picture"
   };

@@ -1,6 +1,9 @@
 export const skillDefinitions = {
   vocabulary: { label: "Vocabulary", emoji: "📚" },
+  grammar: { label: "Grammar", emoji: "🧠" },
   listening: { label: "Listening", emoji: "🎧" },
+  speaking: { label: "Speaking", emoji: "🗣️" },
+  pronunciation: { label: "Pronunciation", emoji: "🎙️" },
   sentences: { label: "Sentence building", emoji: "🧩" },
   matching: { label: "Word matching", emoji: "🔗" },
   conversation: { label: "Conversation", emoji: "💬" },
@@ -8,8 +11,10 @@ export const skillDefinitions = {
 };
 
 export function skillForQuestion(question = {}) {
-  if (["listening", "listen-and-select"].includes(question.type)) return "listening";
-  if (question.type === "sentence-builder") return "sentences";
+  if (question.skill && skillDefinitions[question.skill]) return question.skill;
+  if (["listening", "listen-and-select", "listen-and-type"].includes(question.type)) return "listening";
+  if (question.type === "speaking") return question.pronunciationFocus ? "pronunciation" : "speaking";
+  if (["sentence-builder", "word-bank"].includes(question.type)) return question.grammarFocus ? "grammar" : "sentences";
   if (["match", "matching"].includes(question.type)) return "matching";
   if (["conversation", "mini-conversation"].includes(question.type)) return "conversation";
   if (["image-choice", "image-to-word"].includes(question.type) || question.visualOptions) return "visual";

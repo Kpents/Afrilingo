@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Mic, Play, RotateCcw, Square } from "lucide-react";
 import { hapticPress } from "../../utils/hapticFeedback";
 
-export default function PronunciationRecorder({ label, dark }) {
+export default function PronunciationRecorder({ label, dark, onRecorded }) {
   const [status, setStatus] = useState("idle");
   const [audioUrl, setAudioUrl] = useState("");
   const [message, setMessage] = useState("");
@@ -39,6 +39,7 @@ export default function PronunciationRecorder({ label, dark }) {
         const blob = new Blob(chunksRef.current, { type: recorder.mimeType || "audio/webm" });
         setAudioUrl(URL.createObjectURL(blob));
         setStatus("ready");
+        onRecorded?.(true);
         clearStream();
       };
       recorder.start();
@@ -60,6 +61,7 @@ export default function PronunciationRecorder({ label, dark }) {
     setAudioUrl("");
     setMessage("");
     setStatus("idle");
+    onRecorded?.(false);
   };
 
   return <div className={`mt-4 rounded-2xl p-4 ${dark ? "bg-white/5" : "bg-black/[0.035]"}`}>

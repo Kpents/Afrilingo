@@ -14,7 +14,7 @@ const crewCast = {
   kofi: { id:"nia", name:"Taffy", species:"Giraffe", image:"images/sidekicks/nia.png", color:"#4338CA" }
 };
 
-export default function SceneMission({ mission, companion, languageId, dark, hearts, completed, soundEnabled, onLoseHeart, onReward, onExit }) {
+export default function SceneMission({ mission, companion, languageId, dark, hearts, completed, soundEnabled, onLoseHeart, onReward, onAttempt, onExit }) {
   const [stage, setStage] = useState("arrival");
   const [stepIndex, setStepIndex] = useState(0);
   const [choice, setChoice] = useState(null);
@@ -35,6 +35,7 @@ export default function SceneMission({ mission, companion, languageId, dark, hea
     if (hearts <= 0 || correct || claimed) return;
     setChoice(value);
     const matched = value === step.answer;
+    onAttempt?.({ question: { id: `${mission.id}:${step.id}`, type: "conversation", prompt: step.prompt, answer: step.answer }, source: { id: mission.id, title: mission.title }, correct: matched, answer: value, mode: "immersion:adventure" });
     playUiSound(matched ? "correct" : "incorrect", soundEnabled);
     if (!matched) onLoseHeart();
   };
