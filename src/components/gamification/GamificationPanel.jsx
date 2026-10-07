@@ -18,7 +18,7 @@ export default function GamificationPanel({ dark, progress, dailyTarget = 3, lan
   const heartMinutes = progress.hearts < 5 && progress.heartUpdatedAt ? Math.max(1, Math.ceil((HEART_REGEN_MS - (Date.now() - progress.heartUpdatedAt)) / 60000)) : null;
 
   return <>
-    {heartMinutes && <div className={`rounded-[1.75rem] border p-4 ${card}`}><div className="text-xs font-black uppercase tracking-wider text-[#EF5B5B]">Heart recovery</div><div className="mt-1 font-black">Next heart in ~{heartMinutes} min</div><div className={`mt-1 text-xs font-semibold ${dark ? "text-white/40" : "text-black/40"}`}>{progress.hearts}/5 hearts available</div></div>}
+    {heartMinutes && <div className={`rounded-[1.75rem] border p-4 ${card}`}><div className="text-xs font-black uppercase tracking-wider text-[#EF5B5B]">Heart recovery</div><div className="mt-1 font-black">Next heart in ~{heartMinutes} min</div><div className={`mt-1 text-xs font-semibold ${dark ? "text-white/55" : "text-black/55"}`}>{progress.hearts}/5 hearts available</div></div>}
     <div className={`rounded-[1.75rem] border p-5 ${card}`}>
       <div className="flex items-center gap-2 text-[#F6C445]"><Swords size={20}/><span className="text-xs font-black uppercase tracking-wider">Daily challenge</span></div>
       <h3 className="mt-3 text-xl font-black">Complete {questTarget} activit{questTarget === 1 ? "y" : "ies"}</h3>

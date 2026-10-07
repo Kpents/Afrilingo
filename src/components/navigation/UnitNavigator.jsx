@@ -45,7 +45,7 @@ export default function UnitNavigator({ dark, language, units, activeUnit, compl
             <div className={`mt-3 rounded-[1.6rem] border p-4 ${dark ? "border-white/10 bg-[#1A201E]" : "border-black/8 bg-white"}`}>
               {phaseGroups.map((phase, phaseIndex) => (
                 <div key={phase.id} className={phaseIndex > 0 ? "mt-5 border-t border-current/10 pt-5" : ""}>
-                  <div className={`mb-3 text-xs font-black uppercase tracking-[0.18em] ${dark ? "text-white/40" : "text-black/40"}`}>Section {phaseIndex + 1} · {phase.title}</div>
+                  <div className={`mb-3 text-xs font-black uppercase tracking-[0.18em] ${dark ? "text-white/55" : "text-black/55"}`}>Section {phaseIndex + 1} · {phase.title}</div>
                   <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 xl:grid-cols-4">
                     {phase.units.map(({ unit, index }) => {
                       const unlocked = isUnitUnlocked(index);

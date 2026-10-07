@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 
 import Lebo from "./components/ui/Lebo";
+import BottomSheet from "./components/ui/BottomSheet";
 
 const HomePage = lazy(() => import("./pages/HomePage"));
 const LessonPage = lazy(() => import("./pages/LessonPage"));
@@ -523,7 +524,7 @@ export default function App() {
         }`}
       >
 
-        <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
+        <div className="mx-auto flex max-w-5xl items-center justify-between gap-2 px-3 py-3 sm:px-4">
 
           {/* Logo */}
 
@@ -537,20 +538,20 @@ export default function App() {
                 null
               );
             }}
-            className="flex items-center gap-3"
+            className="min-w-0 flex items-center gap-2 sm:gap-3"
           >
 
             <div className="grid h-11 w-11 place-items-center rounded-2xl bg-[#F28C28] text-xl font-black text-white shadow-lg shadow-orange-500/20">
               A
             </div>
 
-            <div className="text-left">
+            <div className="min-w-0 text-left">
 
               <div className="text-xl font-black leading-none">
                 AfriLingo
               </div>
 
-              <div className="mt-1 text-xs font-bold uppercase tracking-[0.24em] text-[#F28C28]">
+              <div className={`mt-1 hidden truncate text-xs font-bold uppercase tracking-[0.24em] min-[360px]:block ${dark ? "text-[#F28C28]" : "text-[#934014]"}`}>
 
                 {
                   currentLanguage.flag
@@ -574,7 +575,7 @@ export default function App() {
           {/* PLAYER STATS */}
           {/* ================================================= */}
 
-          <div className="flex items-center gap-2">
+          <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
 
             <button onClick={() => setSearchOpen(true)} className={`grid h-11 w-11 place-items-center rounded-xl border transition ${dark ? "border-white/10 bg-white/5 hover:bg-white/10" : "border-black/10 bg-white hover:bg-black/5"}`} aria-label="Search AfriLingo" title="Search · Ctrl K"><Search size={18}/></button>
 
@@ -593,6 +594,7 @@ export default function App() {
                 dark
               }
               color="text-[#F6C445]"
+              hideNarrow
             />
 
             <Status
@@ -1007,16 +1009,16 @@ export default function App() {
         {searchOpen && <Suspense fallback={null}><GlobalSearch dark={dark} progressByLanguage={progressByLanguage} onClose={() => setSearchOpen(false)} onSelect={openSearchResult} /></Suspense>}
       </AnimatePresence>
 
-      <AnimatePresence>
-        {moreOpen && <motion.div className="fixed inset-0 z-[85] flex items-end bg-black/55 p-3 backdrop-blur-sm" initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} onClick={() => setMoreOpen(false)}><motion.div ref={moreDialogRef} role="dialog" aria-modal="true" aria-label="More AfriLingo navigation" initial={{y:30}} animate={{y:0}} exit={{y:30}} onClick={event => event.stopPropagation()} className={`mx-auto w-full max-w-md rounded-[1.7rem] border p-3 shadow-2xl ${dark ? "border-white/10 bg-[#1A201E]" : "border-black/10 bg-white"}`}><div className="px-3 py-2 text-xs font-black uppercase tracking-[.2em] opacity-40">More AfriLingo</div>{tabs.slice(4).map(tab => { const Icon=tab.icon; return <button key={tab.id} onClick={() => { setScreen(tab.id); setMoreOpen(false); }} className={`flex min-h-14 w-full items-center gap-3 rounded-2xl px-4 font-black ${screen === tab.id ? "bg-[#F28C28] text-white" : dark ? "hover:bg-white/6" : "hover:bg-black/5"}`}><Icon size={21}/>{tab.label}</button>; })}</motion.div></motion.div>}
-      </AnimatePresence>
+      <BottomSheet ref={moreDialogRef} open={moreOpen} onClose={() => setMoreOpen(false)} dark={dark} label="More AfriLingo navigation" className="max-w-md p-3 pt-0 sm:pt-3">
+        <div className="px-3 py-2 text-xs font-black uppercase tracking-[.2em] opacity-40">More AfriLingo</div>{tabs.slice(4).map(tab => { const Icon=tab.icon; return <button key={tab.id} onClick={() => { setScreen(tab.id); setMoreOpen(false); }} className={`flex min-h-14 w-full items-center gap-3 rounded-2xl px-4 font-black ${screen === tab.id ? "bg-[#F28C28] text-white" : dark ? "hover:bg-white/6" : "hover:bg-black/5"}`}><Icon size={21}/>{tab.label}</button>; })}
+      </BottomSheet>
 
     </div>
   );
 }
 
 function PageLoader({ dark, languageId }) {
-  return <div className="grid min-h-[58vh] place-items-center" role="status" aria-live="polite"><div className="text-center"><Lebo pose="learn" reaction="learn" languageId={languageId} className="mx-auto h-32 w-32" decorative /><div className="mt-3 text-sm font-black uppercase tracking-[.2em] text-[#F28C28]">Lebo is getting things ready</div><div className={`mx-auto mt-3 h-2 w-40 overflow-hidden rounded-full ${dark ? "bg-white/10" : "bg-black/10"}`}><motion.div className="h-full w-1/2 rounded-full bg-[#F6C445]" animate={{ x: ["-100%", "200%"] }} transition={{ duration: 1.1, repeat: Infinity, ease: "easeInOut" }} /></div></div></div>;
+  return <div className="mx-auto min-h-[58vh] w-full max-w-3xl py-8" role="status" aria-live="polite"><div className="text-center"><Lebo pose="learn" reaction="learn" languageId={languageId} animate={false} className="mx-auto h-28 w-28" decorative /><div className="mt-2 text-sm font-black uppercase tracking-[.18em] text-[#F28C28]">Getting your next step ready</div><div className={`mx-auto mt-3 h-2 w-40 overflow-hidden rounded-full ${dark ? "bg-white/10" : "bg-black/10"}`}><motion.div className="h-full w-1/2 rounded-full bg-[#F6C445]" animate={{ x: ["-100%", "200%"] }} transition={{ duration: 1.1, repeat: Infinity, ease: "easeInOut" }} /></div></div><div aria-hidden className="mt-8 space-y-4"><div className={`h-28 animate-pulse rounded-[1.75rem] ${dark ? "bg-white/[.055]" : "bg-black/[.045]"}`}/><div className="grid grid-cols-2 gap-4 sm:grid-cols-3">{[0,1,2].map(item=><div key={item} className={`h-24 animate-pulse rounded-2xl ${item===2?"hidden sm:block":""} ${dark ? "bg-white/[.045]" : "bg-black/[.035]"}`}/>)}</div><div className={`h-16 animate-pulse rounded-2xl ${dark ? "bg-white/[.04]" : "bg-black/[.03]"}`}/></div><span className="sr-only">Loading AfriLingo content</span></div>;
 }
 
 /*
@@ -1030,7 +1032,8 @@ function Status({
   value,
   dark,
   color,
-  hideMobile = false
+  hideMobile = false,
+  hideNarrow = false
 }) {
   return (
 
@@ -1039,7 +1042,7 @@ function Status({
         hideMobile
           ? "hidden sm:flex"
           : "flex"
-      } items-center gap-1.5 rounded-xl border px-2.5 py-2 text-sm font-black ${
+      } ${hideNarrow ? "hidden min-[420px]:flex" : ""} items-center gap-1.5 rounded-xl border px-2.5 py-2 text-sm font-black ${
         dark
           ? "border-white/10 bg-white/5"
           : "border-black/10 bg-white"

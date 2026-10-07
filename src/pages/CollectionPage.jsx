@@ -39,7 +39,7 @@ export default function CollectionPage({ dark, progressByLanguage, activeLanguag
         Lessons, stories, and cultural discoveries unlock collectible insights.
       </p>
 
-      <section className="mt-6 overflow-hidden rounded-[1.7rem] bg-gradient-to-br from-[#7C3F18] via-[#C95D3A] to-[#F28C28] p-5 text-white sm:p-6"><div className="flex items-center gap-4"><span className="grid size-16 shrink-0 place-items-center rounded-2xl bg-white/15 text-3xl"><BookMarked/></span><div className="min-w-0 flex-1"><div className="text-xs font-black uppercase tracking-[.2em] text-white/65">Your cultural atlas</div><div className="mt-1 text-2xl font-black">{collectionStats.unlocked} of {collectionStats.total} discoveries</div><div className="mt-3 h-3 overflow-hidden rounded-full bg-black/20"><div className="h-full rounded-full bg-[#F6C445] transition-[width]" style={{width:`${collectionStats.percent}%`}}/></div></div><div className="text-right"><div className="text-3xl font-black">{collectionStats.percent}%</div><div className="text-xs font-bold text-white/60">collected</div></div></div></section>
+      <section className="mt-6 overflow-hidden rounded-[1.7rem] bg-gradient-to-br from-[#7C3F18] via-[#C95D3A] to-[#F28C28] p-5 text-white sm:p-6"><div className="flex items-center gap-4"><span className="grid size-16 shrink-0 place-items-center rounded-2xl bg-white/15 text-3xl"><BookMarked/></span><div className="min-w-0 flex-1"><div className="text-xs font-black uppercase tracking-[.2em] text-white/75">Your cultural atlas</div><div className="mt-1 text-2xl font-black">{collectionStats.unlocked} of {collectionStats.total} discoveries</div><div role="progressbar" aria-label="Culture cards collected" aria-valuemin="0" aria-valuemax="100" aria-valuenow={collectionStats.percent} className="mt-3 h-3 overflow-hidden rounded-full bg-black/25"><div className="h-full rounded-full bg-[#F6C445] transition-[width]" style={{width:`${collectionStats.percent}%`}}/></div></div><div className="text-right"><div className="text-3xl font-black">{collectionStats.percent}%</div><div className="text-xs font-bold text-white/75">collected</div></div></div></section>
 
       <div className={`mt-6 rounded-[1.5rem] border p-3 ${dark ? "border-white/10 bg-[#1A201E]" : "border-black/8 bg-white"}`}>
         <label className="flex min-h-12 items-center gap-3 px-2"><Search size={19} className="opacity-40"/><span className="sr-only">Search culture cards</span><input value={query} onChange={event => setQuery(event.target.value)} placeholder="Search culture cards" className="min-w-0 flex-1 bg-transparent outline-none placeholder:opacity-40"/></label>
@@ -86,11 +86,11 @@ export default function CollectionPage({ dark, progressByLanguage, activeLanguag
             <div key={card.id} className={`grid min-h-64 place-items-center rounded-[2rem] border border-dashed p-6 text-center ${dark ? "border-white/12 bg-[#1A201E]" : "border-black/10 bg-white"}`}>
               <div>
                 <div className={`mx-auto grid h-14 w-14 place-items-center rounded-2xl ${dark ? "bg-white/7" : "bg-black/5"}`}>
-                  <Lock size={24} className={dark ? "text-white/30" : "text-black/30"} />
+                  <Lock size={24} className={dark ? "text-white/55" : "text-black/55"} />
                 </div>
                 <div className="mt-4 font-black">Locked Culture Card</div>
                 <div className="mt-2 text-xs font-black uppercase tracking-wider text-[#F28C28]">{card.category}{card.unitNumber ? ` · Unit ${card.unitNumber}` : " · Story reward"}</div>
-                <div className={`mt-2 text-sm font-semibold ${dark ? "text-white/40" : "text-black/40"}`}>
+                <div className={`mt-2 text-sm font-semibold ${dark ? "text-white/55" : "text-black/55"}`}>
                   {card.unlockLabel}
                 </div>
               </div>
@@ -104,5 +104,5 @@ export default function CollectionPage({ dark, progressByLanguage, activeLanguag
 }
 
 function FilterButton({ active, onClick, dark, children }) {
-  return <button onClick={onClick} className={`min-h-11 min-w-max rounded-xl px-3 text-sm font-black transition ${active ? "bg-[#F28C28] text-white" : dark ? "bg-white/6 text-white/55" : "bg-black/5 text-black/55"}`}>{children}</button>;
+  return <button aria-pressed={active} onClick={onClick} className={`min-h-11 min-w-max rounded-xl px-3 text-sm font-black transition ${active ? "bg-[#F28C28] text-white" : dark ? "bg-white/6 text-white/60" : "bg-black/5 text-black/60"}`}>{children}</button>;
 }

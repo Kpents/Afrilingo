@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { CheckCircle2, Heart, RotateCcw, Sparkles, X, XCircle } from "lucide-react";
 import MiniConversation from "../components/MiniConversation";
 import CultureCard from "../components/CultureCard";
 import QuestionRenderer, { expectedAnswer, isAnswerComplete, normalizeAnswer } from "../components/lessons/QuestionRenderer";
+import LessonReaction from "../components/lessons/LessonReaction";
 import Lebo from "../components/ui/Lebo";
 import LearningVisual from "../components/ui/LearningVisual";
 import ConfettiBurst from "../components/ui/ConfettiBurst";
@@ -21,8 +22,14 @@ export default function LessonPage({ lesson, unit, dark, hearts, languageId, sou
   const [earned, setEarned] = useState(0);
   const [mistakes, setMistakes] = useState(0);
   const [results, setResults] = useState([]);
+  const reduceMotion = useReducedMotion();
+  const questionRef = useRef(null);
 
   const current = queue[index];
+
+  useEffect(() => {
+    if (stage === "quiz") questionRef.current?.focus({ preventScroll: true });
+  }, [stage, index, current?.id]);
 
   if (stage === "hearts") {
     return <OutOfHearts dark={dark} onExit={onExit} onRefill={() => { onRefillHearts(); setStage("quiz"); }} />;
@@ -134,7 +141,7 @@ export default function LessonPage({ lesson, unit, dark, hearts, languageId, sou
             <span className="text-[#F28C28]">{index + 1} / {queue.length}</span>
           </div>
           <div role="progressbar" aria-label="Lesson progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow={Math.round(progress)} className={`h-3 flex-1 overflow-hidden rounded-full ${dark ? "bg-white/10" : "bg-black/10"}`}>
-            <motion.div className="h-full rounded-full bg-gradient-to-r from-[#F28C28] to-[#F6C445]" animate={{ width: `${progress}%` }} />
+            <motion.div className="h-full rounded-full bg-gradient-to-r from-[#F28C28] to-[#F6C445]" animate={{ width: `${progress}%` }} transition={{ type:"spring", stiffness:150, damping:22 }} />
           </div>
         </div>
         <div aria-label={`${hearts} hearts remaining`} className="flex min-w-12 items-center justify-end gap-1.5 font-black text-[#EF5B5B]">
@@ -142,56 +149,67 @@ export default function LessonPage({ lesson, unit, dark, hearts, languageId, sou
         </div>
       </div>
 
-      {current.retry && (
-        <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-[#4338CA]/12 px-3 py-1.5 text-xs font-black uppercase tracking-wider text-[#7067FF]">
-          <RotateCcw size={15} /> Review
-        </div>
-      )}
-
-      <div className={`mb-5 rounded-[1.75rem] border p-5 sm:p-7 ${dark ? "border-white/10 bg-[#1A201E]" : "border-black/8 bg-white shadow-sm"}`}>
-        <div className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.2em] text-[#4338CA]">
-          <span className="grid size-7 place-items-center rounded-lg bg-[#4338CA]/10">{current.retry ? <RotateCcw size={14} /> : "✦"}</span>
-          {instruction}
-        </div>
-        <h1 className="mt-4 text-2xl font-black leading-tight sm:text-4xl">{current.prompt}</h1>
-      </div>
-
-      <QuestionRenderer question={current} dark={dark} checked={checked} value={selected} onChange={setSelected} />
-
       <AnimatePresence mode="wait">
-        {checked && (
-          <motion.div
-            role="status"
-            aria-live="polite"
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            className={`mt-6 rounded-[1.5rem] border p-4 sm:p-5 ${
-              correct
-                ? "border-[#24745B]/30 bg-[#24745B]/12"
-                : "border-[#C95D3A]/30 bg-[#C95D3A]/12"
-            }`}
-          >
-            <div className="flex items-start gap-3">
-              <Lebo key={`${current.id}-${correct}`} pose={correct ? "encourage" : "learn"} reaction={correct ? "correct" : "encourage"} languageId={languageId} className="hidden h-20 w-20 shrink-0 sm:block" decorative />
-              <div className={`grid size-10 shrink-0 place-items-center rounded-xl ${correct ? "bg-[#24745B] text-white" : "bg-[#C95D3A] text-white"}`}>
-                {correct ? <CheckCircle2 size={24} /> : <XCircle size={24} />}
-              </div>
-              <div className="min-w-0">
-                <div className={`text-lg font-black ${correct ? "text-[#53B98A]" : "text-[#E47A5D]"}`}>
-                  {correct ? "Excellent!" : "Not quite."}
-                </div>
-                <div className={`mt-1 text-sm font-semibold ${dark ? "text-white/60" : "text-black/60"}`}>
-                  {current.explanation}
-                </div>
-                {!correct && (
-                  <div className="mt-2 text-sm font-black">
-                    Correct answer: <span className="text-[#24745B]">{current.answer || "Match each pair"}</span>
-                  </div>
-                )}
-              </div>
+        <motion.section
+          ref={questionRef}
+          tabIndex={-1}
+          aria-labelledby="lesson-question-prompt"
+          key={`${current.id}-${current.retryAttempt || 0}`}
+          initial={reduceMotion ? { opacity: 0 } : { opacity: 0, x: 24, scale: .985 }}
+          animate={{ opacity: 1, x: 0, scale: 1 }}
+          exit={reduceMotion ? { opacity: 0 } : { opacity: 0, x: -20, scale: .985 }}
+          transition={{ duration: .22, ease: "easeOut" }}
+        >
+          {current.retry && (
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-[#4338CA]/12 px-3 py-1.5 text-xs font-black uppercase tracking-wider text-[#7067FF]">
+              <RotateCcw size={15} /> Review
             </div>
-          </motion.div>
-        )}
+          )}
+
+          <div className={`mb-5 rounded-[1.6rem] border p-4 sm:rounded-[1.75rem] sm:p-7 ${dark ? "border-white/10 bg-[#1A201E]" : "border-black/8 bg-white shadow-sm"}`}>
+            <div className="flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.16em] text-[#4338CA] sm:text-xs sm:tracking-[0.2em]">
+              <span className="grid size-7 place-items-center rounded-lg bg-[#4338CA]/10">{current.retry ? <RotateCcw size={14} /> : "✦"}</span>
+              {instruction}
+            </div>
+            <h1 id="lesson-question-prompt" className="mt-3 text-[1.45rem] font-black leading-[1.15] sm:mt-4 sm:text-4xl">{current.prompt}</h1>
+          </div>
+
+          <QuestionRenderer question={current} dark={dark} checked={checked} value={selected} onChange={setSelected} />
+
+          {checked && (
+            <motion.div
+              role="status"
+              aria-live="polite"
+              initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 18, scale: .98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              className={`mt-5 rounded-[1.5rem] border p-4 sm:mt-6 sm:p-5 ${
+                correct
+                  ? "border-[#24745B]/30 bg-[#24745B]/12"
+                  : "border-[#C95D3A]/30 bg-[#C95D3A]/12"
+              }`}
+            >
+              <div className="flex items-start gap-3">
+                <div className={`grid size-10 shrink-0 place-items-center rounded-xl ${correct ? "bg-[#24745B] text-white" : "bg-[#C95D3A] text-white"}`}>
+                  {correct ? <CheckCircle2 size={24} /> : <XCircle size={24} />}
+                </div>
+                <div className="min-w-0">
+                  <div className={`text-lg font-black ${correct ? dark ? "text-[#53B98A]" : "text-[#17664F]" : dark ? "text-[#E98B72]" : "text-[#9F3D27]"}`}>
+                    {correct ? "Excellent!" : "Not quite."}
+                  </div>
+                  <div className={`mt-1 text-sm font-semibold leading-5 ${dark ? "text-white/60" : "text-black/60"}`}>
+                    {current.explanation}
+                  </div>
+                  {!correct && (
+                    <div className="mt-2 text-sm font-black">
+                      Correct answer: <span className="text-[#24745B]">{current.answer || "Match each pair"}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+              <LessonReaction correct={correct} questionIndex={index} languageId={languageId} dark={dark} />
+            </motion.div>
+          )}
+        </motion.section>
       </AnimatePresence>
 
       <div className={`fixed inset-x-0 bottom-0 z-30 border-t p-3 pb-[max(.75rem,env(safe-area-inset-bottom))] backdrop-blur-xl sm:static sm:mt-8 sm:border-0 sm:bg-transparent sm:p-0 ${dark ? "border-white/10 bg-[#101312]/95" : "border-black/8 bg-[#FFF8EE]/95"}`}>
@@ -263,32 +281,34 @@ function OutOfHearts({ dark, onExit, onRefill }) {
 
 function Completion({ dark, lesson, unit, languageId, earned, mistakes, mastery, soundEnabled, isFirstLesson, isUnitChallenge, isCourseFinal, onContinue }) {
   const reduceMotion = useReducedMotion();
+  const headingRef = useRef(null);
   const learnedWords = new Set((unit?.lessons || []).flatMap(item => item.vocabulary || []).map(item => item.native)).size;
   useEffect(() => playUiSound(isUnitChallenge ? "unit" : "complete", soundEnabled), [isUnitChallenge, soundEnabled]);
+  useEffect(() => { headingRef.current?.focus({ preventScroll: true }); }, []);
   return (
     <div className="relative mx-auto max-w-2xl overflow-hidden rounded-[2rem] px-1 pb-2 text-center" aria-live="polite">
       <ConfettiBurst count={isUnitChallenge ? 42 : 28} />
-      <motion.div initial={{ scale: 0.75, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ type: "spring", stiffness: 170, damping: 12 }} className="relative mx-auto h-52 w-52 sm:h-60 sm:w-60">
+      <motion.div initial={{ scale: 0.75, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ type: "spring", stiffness: 170, damping: 12 }} className="relative mx-auto h-44 w-44 sm:h-60 sm:w-60">
         <div className="absolute inset-6 rounded-full bg-[#F6C445]/20 blur-sm" />
         {!reduceMotion && <motion.div aria-hidden className="absolute inset-0 rounded-full border-2 border-dashed border-[#F6C445]/45" animate={{rotate:360,scale:[.94,1.03,.94]}} transition={{rotate:{duration:12,repeat:Infinity,ease:"linear"},scale:{duration:2.2,repeat:Infinity,ease:"easeInOut"}}}/>} 
         <Lebo pose="celebrate" reaction="celebrate" languageId={languageId} className="relative h-full w-full" decorative />
         <motion.span initial={reduceMotion?false:{scale:0,rotate:-20}} animate={{scale:1,rotate:0}} transition={{delay:.35,type:"spring",stiffness:220}} className="absolute bottom-3 right-2 grid h-14 w-14 place-items-center rounded-2xl bg-[#F6C445] text-3xl shadow-xl" aria-hidden>🏆</motion.span>
       </motion.div>
 
-      <h1 className="mt-6 text-4xl font-black">{isCourseFinal ? "Twi path complete!" : isUnitChallenge ? "Unit complete!" : "Lesson complete!"}</h1>
+      <h1 ref={headingRef} tabIndex={-1} className="mt-4 text-3xl font-black sm:mt-6 sm:text-4xl">{isCourseFinal ? "Course path complete!" : isUnitChallenge ? "Unit complete!" : "Lesson complete!"}</h1>
       <p className={`mt-2 font-semibold ${dark ? "text-white/55" : "text-black/55"}`}>
         {mistakes === 0 ? "Perfect run. Beautiful work." : "You finished strong — and reviewed what you missed."}
       </p>
 
-      <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3">
+      <div className="mt-5 grid grid-cols-3 gap-2 sm:mt-6 sm:gap-3">
         <Reward dark={dark} label="Lesson XP" value={`+${lesson.xp + (isUnitChallenge ? 50 : 0)} XP`} accent="#F6C445" />
         <Reward dark={dark} label="Practice XP" value={`+${earned} XP`} accent="#F28C28" />
         <Reward dark={dark} label="Accuracy" value={`${Math.round((lesson.questions.length / (lesson.questions.length + mistakes)) * 100)}%`} accent="#53B98A" />
       </div>
 
-      {mastery.recovered > 0 && <div className={`mt-5 rounded-[1.5rem] border p-4 text-left ${dark ? "border-[#4338CA]/30 bg-[#4338CA]/12" : "border-[#4338CA]/20 bg-[#4338CA]/10"}`}><div className="text-xs font-black uppercase tracking-wider text-[#7067FF]">Adaptive practice complete</div><div className="mt-1 text-lg font-black">{mastery.recovered} {mastery.recovered === 1 ? "concept" : "concepts"} recovered before finishing</div><p className="mt-1 text-sm font-semibold opacity-55">Missed ideas returned after a short gap, so you had to recall them—not simply copy the correction.</p></div>}
+      {mastery.recovered > 0 && <div className={`mt-5 rounded-[1.5rem] border p-4 text-left ${dark ? "border-[#4338CA]/30 bg-[#4338CA]/12" : "border-[#4338CA]/20 bg-[#4338CA]/10"}`}><div className="text-xs font-black uppercase tracking-wider text-[#7067FF]">Adaptive practice complete</div><div className="mt-1 text-base font-black sm:text-lg">{mastery.recovered} {mastery.recovered === 1 ? "concept" : "concepts"} recovered before finishing</div><p className="mt-1 hidden text-sm font-semibold opacity-55 sm:block">Missed ideas returned after a short gap, so you had to recall them—not simply copy the correction.</p></div>}
 
-      {isUnitChallenge && <div className={`mt-5 rounded-[1.5rem] border p-5 text-left ${dark ? "border-white/10 bg-white/5" : "border-black/8 bg-white"}`}><div className="text-xs font-black uppercase tracking-[.18em] text-[#4338CA]">What you can do now</div><div className="mt-2 text-xl font-black">{unit?.title}</div><p className="mt-2 text-sm font-semibold leading-6 opacity-55">{unit?.subtitle || "Use this unit’s language in context."}</p><div className="mt-3 inline-flex rounded-full bg-[#24745B]/15 px-3 py-1.5 text-xs font-black text-[#24745B]">{learnedWords} key expressions practised</div></div>}
+      {isUnitChallenge && <div className={`mt-5 rounded-[1.5rem] border p-4 text-left sm:p-5 ${dark ? "border-white/10 bg-white/5" : "border-black/8 bg-white"}`}><div className="text-xs font-black uppercase tracking-[.18em] text-[#4338CA]">What you can do now</div><div className="mt-2 text-xl font-black">{unit?.title}</div><p className="mt-2 hidden text-sm font-semibold leading-6 opacity-55 sm:block">{unit?.subtitle || "Use this unit’s language in context."}</p><div className="mt-3 inline-flex rounded-full bg-[#24745B]/15 px-3 py-1.5 text-xs font-black text-[#24745B]">{learnedWords} key expressions practised</div></div>}
 
       {(isFirstLesson || isUnitChallenge || mistakes === 0) && <motion.div initial={{opacity:0, scale:.96}} animate={{opacity:1, scale:1}} className={`mt-5 rounded-[1.5rem] border p-4 text-left ${dark ? "border-[#F6C445]/25 bg-[#F6C445]/10" : "border-[#F6C445]/35 bg-[#F6C445]/15"}`}><div className="text-xs font-black uppercase tracking-wider text-[#F28C28]">{isFirstLesson ? "New achievement" : isUnitChallenge ? "Unit reward" : "Perfect lesson"}</div><div className="mt-1 text-lg font-black">{isFirstLesson ? "👣 First Steps unlocked" : isUnitChallenge ? "🏆 Challenge cleared · +50 bonus XP" : "✨ Flawless finish"}</div></motion.div>}
 
@@ -309,9 +329,9 @@ function Completion({ dark, lesson, unit, languageId, earned, mistakes, mastery,
 
 function Reward({ dark, label, value, accent }) {
   return (
-    <div className={`rounded-[1.5rem] border p-4 ${dark ? "border-white/10 bg-[#1A201E]" : "border-black/8 bg-white"}`}>
-      <div className={`text-xs font-black uppercase tracking-wider ${dark ? "text-white/40" : "text-black/40"}`}>{label}</div>
-      <div className="mt-1 text-2xl font-black" style={{ color: accent }}>{value}</div>
+    <div className={`rounded-[1.1rem] border p-2.5 sm:rounded-[1.5rem] sm:p-4 ${dark ? "border-white/10 bg-[#1A201E]" : "border-black/8 bg-white"}`}>
+      <div className={`text-[9px] font-black uppercase tracking-wide sm:text-xs sm:tracking-wider ${dark ? "text-white/40" : "text-black/40"}`}>{label}</div>
+      <div className="mt-1 text-lg font-black sm:text-2xl" style={{ color: accent }}>{value}</div>
     </div>
   );
 }

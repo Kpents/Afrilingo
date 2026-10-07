@@ -1,10 +1,10 @@
 import { useMemo, useRef, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
 import { ArrowLeft, ArrowRight, BookOpen, ChevronDown, ChevronRight, MapPin, Search, X } from "lucide-react";
 import { languageList } from "../../data/languages";
 import { initialProgress } from "../../hooks/useCourseProgress";
 import Lebo from "../ui/Lebo";
 import useDialogFocus from "../../hooks/useDialogFocus";
+import BottomSheet from "../ui/BottomSheet";
 
 function courseStats(course, progressByLanguage) {
   if (!course?.units?.length) return { completed: 0, total: 0, percent: 0 };
@@ -83,9 +83,9 @@ export default function CourseSwitcher({ dark, activeLanguage, startedLanguageId
       <div className="mt-7 flex items-center justify-between">
         <div>
           <h2 className="text-xl font-black">My Courses</h2>
-          <p className={`text-sm font-semibold ${dark ? "text-white/40" : "text-black/40"}`}>{myCourses.length === 1 ? "Your learning journey starts here." : "Switch courses without losing your place."}</p>
+          <p className={`text-sm font-semibold ${dark ? "text-white/55" : "text-black/55"}`}>{myCourses.length === 1 ? "Your learning journey starts here." : "Switch courses without losing your place."}</p>
         </div>
-        <button onClick={openCatalog} className="min-h-11 rounded-xl px-3 text-sm font-black text-[#F28C28] transition hover:bg-[#F28C28]/10">{myCourses.length === 1 ? "Add a course" : "View all"}</button>
+        <button onClick={openCatalog} className={`min-h-11 rounded-xl px-3 text-sm font-black transition hover:bg-[#F28C28]/10 ${dark ? "text-[#F28C28]" : "text-[#934014]"}`}>{myCourses.length === 1 ? "Add a course" : "View all"}</button>
       </div>
 
       {preview.length > 1 && <div className="mt-3 grid gap-3">
@@ -105,9 +105,7 @@ export default function CourseSwitcher({ dark, activeLanguage, startedLanguageId
       </div>}
     </section>
 
-    <AnimatePresence>
-      {open && <motion.div className="fixed inset-0 z-[70] flex items-end justify-center bg-black/55 p-0 backdrop-blur-sm sm:items-center sm:p-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => { setOpen(false); setPreviewCourse(null); }}>
-        <motion.section ref={dialogRef} role="dialog" aria-modal="true" aria-label="All language courses" onClick={event => event.stopPropagation()} initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 30 }} className={`max-h-[88vh] w-full max-w-2xl overflow-hidden rounded-t-[2rem] border shadow-2xl sm:rounded-[2rem] ${dark ? "border-white/10 bg-[#101312]" : "border-black/10 bg-[#FFF8EE]"}`}>
+    <BottomSheet ref={dialogRef} open={open} onClose={() => { setOpen(false); setPreviewCourse(null); }} dark={dark} label="All language courses" className="max-w-2xl" zIndex="z-[70]">
           <div className="flex items-center justify-between p-5 pb-3 sm:p-6 sm:pb-3">
             <div className="flex items-center gap-3">{previewCourse && <button onClick={()=>setPreviewCourse(null)} aria-label="Back to all courses" className={`grid size-11 place-items-center rounded-xl ${dark?"bg-white/7":"bg-black/5"}`}><ArrowLeft size={20}/></button>}<div><h2 className="text-2xl font-black">{previewCourse ? previewCourse.language : "All Courses"}</h2><p className={`mt-1 text-sm font-semibold ${dark ? "text-white/45" : "text-black/45"}`}>{previewCourse ? previewCourse.nativeName : `${readyCourses.length} ready · ${comingSoonCount} coming soon`}</p></div></div>
             <button onClick={() => { setOpen(false); setPreviewCourse(null); }} aria-label="Close all courses" className={`grid h-11 w-11 place-items-center rounded-xl ${dark ? "bg-white/7" : "bg-black/5"}`}><X size={20} /></button>
@@ -128,9 +126,7 @@ export default function CourseSwitcher({ dark, activeLanguage, startedLanguageId
           </div>
           </>}
           {previewCourse && <CoursePreview course={previewCourse} dark={dark} card={card} onStart={()=>choose(previewCourse.id)} />}
-        </motion.section>
-      </motion.div>}
-    </AnimatePresence>
+    </BottomSheet>
   </>;
 }
 

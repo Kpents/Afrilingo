@@ -8,8 +8,9 @@
     "validate:content": "node scripts/validate-content.mjs",
     "validate:experience": "node scripts/validate-experience.mjs",
     "validate:launch": "node scripts/validate-launch.mjs",
+    "validate:artwork": "node scripts/validate-artwork.mjs",
     "validate:bundle": "node scripts/validate-bundle.mjs",
-    "build": "npm run validate:content && npm run validate:experience && npm run validate:launch && vite build && npm run validate:bundle",
+    "build": "npm run validate:content && npm run validate:experience && npm run validate:launch && npm run validate:artwork && vite build && npm run validate:bundle",
     "preview": "vite preview"
   },
   "dependencies": {

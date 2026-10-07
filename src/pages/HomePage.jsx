@@ -74,7 +74,7 @@ export default function HomePage({ dark, progress, language, activeLanguage, onL
         <div className="space-y-4 border-t border-current/10 p-4"><div className="grid grid-cols-2 gap-3"><MiniStat Icon={Gift} value={`${completedLessonsInUnit}/${unit.lessons.length}`} label="Unit lessons"/><MiniStat Icon={LibraryBig} value={`${cultureCount}/${unit.lessons.length}`} label="Culture cards"/></div><GamificationPanel dark={dark} progress={progress} dailyTarget={dailyTarget} languageName={language.language}/></div>
       </details>
 
-      {language.sourceNotes && <p title={language.sourceNotes.varietyNote} className={`px-2 text-center text-[11px] font-bold leading-5 ${dark ? "text-white/32" : "text-black/35"}`}>Text is source-aligned. Native-speaker audio remains pending.</p>}
+      {language.sourceNotes && <p title={language.sourceNotes.varietyNote} className={`px-2 text-center text-[11px] font-bold leading-5 ${dark ? "text-white/55" : "text-black/55"}`}>Text is source-aligned. Native-speaker audio remains pending.</p>}
     </aside>
   </div>;
 }

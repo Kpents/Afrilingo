@@ -66,8 +66,13 @@ button, [role="button"], input, select {
 }
 
 :focus-visible {
-  outline: 3px solid var(--sunrise);
-  outline-offset: 3px;
+  outline: 3px solid #4338CA !important;
+  outline-offset: 3px !important;
+  box-shadow: 0 0 0 2px #fff, 0 0 0 6px #4338CA !important;
+}
+
+input:focus-visible, select:focus-visible, textarea:focus-visible {
+  border-color: #4338CA !important;
 }
 
 @media (pointer: coarse) {
@@ -118,6 +123,12 @@ button, [role="button"], input, select {
 
 @media (prefers-reduced-motion: reduce) {
   .afri-press { transition: none; }
+}
+
+@media (forced-colors: active) {
+  :focus-visible { outline: 3px solid Highlight !important; box-shadow: none !important; }
+  .afri-press { box-shadow: none; border: 2px solid ButtonText; }
+  button:disabled { border-color: GrayText; color: GrayText; }
 }
 
 @media print {

@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { getIcon } from "../../data/iconLibrary";
 import { assetPath } from "../../utils/assetPath";
+import SafeArtwork from "./SafeArtwork";
 
 const art = {
   bread: CookingPot, fish: Fish, chicken: Drumstick, egg: Egg, banana: Banana, apple: Apple, orange: Citrus,
@@ -44,7 +45,7 @@ export default function ConceptIcon({ iconId, className = "", label, showPlaceho
   const accessibleLabel = label || concept?.label || "Missing concept image";
   if (swatches[iconId]) return <span role="img" aria-label={accessibleLabel} className={`block rounded-full border-2 border-black/10 shadow-inner ${className}`} style={{ backgroundColor: swatches[iconId] }} />;
   if (emojiArt[iconId]) return <span role="img" aria-label={accessibleLabel} className={`grid place-items-center rounded-2xl bg-gradient-to-br from-[#F6C445]/20 via-white/40 to-[#53B98A]/15 text-[clamp(2.5rem,7vw,5rem)] shadow-inner ${className}`}><span aria-hidden="true">{emojiArt[iconId]}</span></span>;
-  if (concept?.asset?.startsWith("/")) return <span role="img" aria-label={accessibleLabel} className={`grid place-items-center overflow-hidden rounded-2xl bg-gradient-to-br from-[#F6C445]/15 to-[#F28C28]/10 ${className}`}><img src={assetPath(concept.asset)} alt="" className="h-[88%] w-[88%] object-contain drop-shadow-sm" loading="lazy" /></span>;
+  if (concept?.asset?.startsWith("/")) return <span role="img" aria-label={accessibleLabel} className={`grid place-items-center overflow-hidden rounded-2xl bg-gradient-to-br from-[#F6C445]/15 to-[#F28C28]/10 ${className}`}><SafeArtwork src={assetPath(concept.asset)} alt="" fallbackLabel={accessibleLabel} className="h-[88%] w-[88%] object-contain drop-shadow-sm" /></span>;
   if (!concept || concept.status !== "ready" || !Icon) return <span role="img" aria-label={`${accessibleLabel}; artwork pending`} className={`grid place-items-center rounded-2xl border-2 border-dashed border-current/15 bg-current/[0.035] ${className}`}><ImageOff className="opacity-25" />{showPlaceholderLabel && <span className="mt-1 px-1 text-center text-[9px] font-black uppercase opacity-35">Artwork pending</span>}</span>;
   return <span role="img" aria-label={accessibleLabel} className={`grid place-items-center rounded-2xl bg-gradient-to-br from-[#F6C445]/20 to-[#F28C28]/10 text-[#24745B] ${className}`}><Icon className="h-[58%] w-[58%]" strokeWidth={2.25} /></span>;
 }
