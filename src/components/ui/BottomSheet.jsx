@@ -1,4 +1,4 @@
-import { forwardRef, useEffect } from "react";
+import { forwardRef } from "react";
 import { AnimatePresence, motion, useDragControls, useReducedMotion } from "framer-motion";
 
 const BottomSheet = forwardRef(function BottomSheet({
@@ -12,13 +12,6 @@ const BottomSheet = forwardRef(function BottomSheet({
 }, forwardedRef) {
   const dragControls = useDragControls();
   const reduceMotion = useReducedMotion();
-
-  useEffect(() => {
-    if (!open) return undefined;
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => { document.body.style.overflow = previousOverflow; };
-  }, [open]);
 
   const closeFromDrag = (_, info) => {
     if (info.offset.y > 90 || info.velocity.y > 650) onClose?.();
