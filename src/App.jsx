@@ -928,7 +928,7 @@ export default function App() {
 
             )}
 
-            {screen === "settings" && <SettingsPage dark={dark} language={currentLanguage} preferences={preferences} onPreferencesChange={setPreferences} onOpenAudioStudio={() => setScreen("audio-studio")} />}
+            {screen === "settings" && <SettingsPage dark={dark} language={currentLanguage} unit={currentLanguage.units[activeUnit]} preferences={preferences} onPreferencesChange={setPreferences} onOpenAudioStudio={() => setScreen("audio-studio")} />}
 
             {screen === "audio-studio" && <AudioStudioPage dark={dark} languages={languages} exploreLibraries={exploreLibraries} immersionLibraries={immersionLibraries} />}
 

@@ -4,7 +4,7 @@ import { createServer } from "vite";
 
 const root = resolve(import.meta.dirname, "..");
 const server = await createServer({ root, appType:"custom", logLevel:"silent", server:{ middlewareMode:true } });
-let languages, progress, placement, adaptive, review, dailyPlan, mastery, audioCatalog;
+let languages, progress, placement, adaptive, review, dailyPlan, mastery, audioCatalog, testerReport;
 try {
   ({ languages } = await server.ssrLoadModule("/src/data/languages.js"));
   progress = await server.ssrLoadModule("/src/hooks/useCourseProgress.js");
@@ -14,6 +14,7 @@ try {
   dailyPlan = await server.ssrLoadModule("/src/utils/dailyPlan.js");
   mastery = await server.ssrLoadModule("/src/utils/learnerMastery.js");
   audioCatalog = await server.ssrLoadModule("/src/utils/audioCatalog.js");
+  testerReport = await server.ssrLoadModule("/src/utils/testerReport.js");
 } finally { await server.close(); }
 
 const failures=[];
@@ -61,5 +62,11 @@ check(audioScripts.length>100,"The Audio Contributor Studio must expose a substa
 check(new Set(audioScripts.map(item=>item.id)).size===audioScripts.length,"Audio script IDs must be unique and stable.");
 check(audioCatalog.safeAudioFilename(audioScripts[0]).startsWith(`${audioScripts[0].languageId}-`),"Audio filenames must remain language-scoped.");
 
+const reportUrl=testerReport.buildTesterIssueUrl({language:languages.twi,unit:languages.twi.units[0],area:"Lesson question",happened:"The answer was marked incorrectly.",expected:"The correct answer should keep my heart.",online:true,userAgent:"Launch validator"});
+const parsedReport=new URL(reportUrl);
+check(parsedReport.hostname==="github.com"&&parsedReport.pathname==="/Kpents/Afrilingo/issues/new","Tester feedback must open only the AfriLingo GitHub issue form.");
+check(parsedReport.searchParams.get("body").includes("Language: Twi")&&parsedReport.searchParams.get("body").includes(languages.twi.units[0].title),"Tester feedback must include active course and unit context.");
+check(parsedReport.searchParams.get("body").includes("Launch validator")&&parsedReport.searchParams.get("labels")==="tester-feedback","Tester feedback must include device context and a consistent triage label.");
+
 if(failures.length){console.error(`Launch validation failed with ${failures.length} issue${failures.length===1?"":"s"}:`);failures.forEach(item=>console.error(`- ${item}`));process.exitCode=1}
-else console.log(`Launch validation passed: ${Object.keys(languages).length} courses · onboarding, recovery, adaptivity, persistence, daily plan, audio workflow and offline shell ready`);
+else console.log(`Launch validation passed: ${Object.keys(languages).length} courses · onboarding, recovery, adaptivity, persistence, daily plan, tester reports, audio workflow and offline shell ready`);
