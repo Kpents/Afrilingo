@@ -31,6 +31,24 @@ body {
   bottom: max(.75rem, env(safe-area-inset-bottom, 0px));
 }
 
+.afri-quiz-shell {
+  height: 100vh;
+  height: 100dvh;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  overflow: hidden;
+}
+
+.afri-question-stage {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(242, 140, 40, .45) transparent;
+}
+
+@media (max-height: 700px) {
+  .afri-quiz-shell { min-height: 0; }
+  .afri-question-stage { font-size: .94rem; }
+}
+
 .afri-skip-link {
   position: fixed;
   left: 1rem;

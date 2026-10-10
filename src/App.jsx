@@ -522,7 +522,7 @@ export default function App() {
       {/* HEADER */}
       {/* ================================================= */}
 
-      <header
+      {screen !== "lesson" && <header
         className={`sticky top-0 z-40 border-b backdrop-blur-xl ${
           dark
             ? "border-white/8 bg-[#101312]/90"
@@ -670,13 +670,13 @@ export default function App() {
 
         </div>
 
-      </header>
+      </header>}
 
       {/* ================================================= */}
       {/* MAIN CONTENT */}
       {/* ================================================= */}
 
-      <main ref={mainRef} id="main-content" tabIndex={-1} className="afri-main relative mx-auto max-w-5xl px-4 pt-6">
+      <main ref={mainRef} id="main-content" tabIndex={-1} className={screen === "lesson" ? "relative mx-auto max-w-5xl px-4" : "afri-main relative mx-auto max-w-5xl px-4 pt-6"}>
 
         <AnimatePresence mode="wait">
 
