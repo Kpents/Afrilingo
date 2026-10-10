@@ -66,6 +66,7 @@ export default function App() {
   const [rewardEvent, setRewardEvent] = useState(null);
   const [searchOpen, setSearchOpen] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
+  const [mobileCoursesOpen, setMobileCoursesOpen] = useState(false);
   const moreDialogRef = useRef(null);
   const mainRef = useRef(null);
   useDialogFocus(moreDialogRef, moreOpen, () => setMoreOpen(false));
@@ -185,7 +186,7 @@ export default function App() {
   useEffect(() => {
     const openSearch = event => {
       if ((event.ctrlKey || event.metaKey) && event.key.toLocaleLowerCase() === "k") { event.preventDefault(); setSearchOpen(true); }
-      if (event.key === "Escape") { setSearchOpen(false); setMoreOpen(false); }
+      if (event.key === "Escape") { setSearchOpen(false); setMoreOpen(false); setMobileCoursesOpen(false); }
     };
     window.addEventListener("keydown", openSearch);
     return () => window.removeEventListener("keydown", openSearch);
@@ -562,7 +563,7 @@ export default function App() {
                 null
               );
             }}
-            className="min-w-0 flex items-center gap-2 sm:gap-3 lg:hidden"
+            className="hidden min-w-0 items-center gap-2 sm:flex sm:gap-3 lg:hidden"
           >
 
             <div className="grid h-11 w-11 place-items-center rounded-2xl bg-[#F28C28] text-xl font-black text-white shadow-lg shadow-orange-500/20">
@@ -599,9 +600,11 @@ export default function App() {
           {/* PLAYER STATS */}
           {/* ================================================= */}
 
-          <div className="flex shrink-0 items-center gap-1.5 sm:gap-2 lg:ml-auto">
+          <div className="flex w-full shrink-0 items-center gap-1.5 sm:w-auto sm:gap-2 lg:ml-auto">
 
-            <button onClick={() => setSearchOpen(true)} className={`grid h-11 w-11 place-items-center rounded-xl border transition ${dark ? "border-white/10 bg-white/5 hover:bg-white/10" : "border-black/10 bg-white hover:bg-black/5"}`} aria-label="Search AfriLingo" title="Search · Ctrl K"><Search size={18}/></button>
+            <button type="button" onClick={() => setMobileCoursesOpen(value => !value)} aria-expanded={mobileCoursesOpen} aria-controls="mobile-course-tray" aria-label={`Current course: ${currentLanguage.language}. Switch course`} className={`flex h-11 min-w-12 items-center justify-center gap-1 rounded-xl border px-2 text-xl transition sm:hidden ${mobileCoursesOpen ? "border-[#F28C28] bg-[#F28C28]/12" : dark ? "border-white/10 bg-white/5" : "border-black/10 bg-white"}`}>{currentLanguage.flag}<ChevronDown size={13} className={`text-[#F28C28] transition ${mobileCoursesOpen ? "rotate-180" : ""}`}/></button>
+
+            <button onClick={() => setSearchOpen(true)} className={`hidden h-11 w-11 place-items-center rounded-xl border transition sm:grid ${dark ? "border-white/10 bg-white/5 hover:bg-white/10" : "border-black/10 bg-white hover:bg-black/5"}`} aria-label="Search AfriLingo" title="Search · Ctrl K"><Search size={18}/></button>
 
             <Status
               icon={
@@ -618,7 +621,6 @@ export default function App() {
                 dark
               }
               color="text-[#F6C445]"
-              hideNarrow
             />
 
             <Status
@@ -653,14 +655,13 @@ export default function App() {
                 dark
               }
               color="text-[#24745B]"
-              hideMobile
             />
 
             {/* Theme toggle */}
 
             <button
               onClick={toggleTheme}
-              className={`grid h-11 w-11 place-items-center rounded-xl border transition ${
+              className={`ml-auto grid h-11 w-11 place-items-center rounded-xl border transition sm:ml-0 ${
                 dark
                   ? "border-white/10 bg-white/5 hover:bg-white/10"
                   : "border-black/10 bg-white hover:bg-black/5"
@@ -687,6 +688,10 @@ export default function App() {
           </div>
 
         </div>
+
+        <AnimatePresence>
+          {mobileCoursesOpen && <MobileCourseTray dark={dark} activeLanguage={activeLanguage} startedLanguageIds={preferences.startedLanguageIds || []} progressByLanguage={progressByLanguage} onChoose={id => { selectLanguage(id); setMobileCoursesOpen(false); setScreen("home"); }} />}
+        </AnimatePresence>
 
       </header>}
 
@@ -1042,6 +1047,26 @@ export default function App() {
 
     </div>
   );
+}
+
+function MobileCourseTray({ dark, activeLanguage, startedLanguageIds, progressByLanguage, onChoose }) {
+  const started = new Set([activeLanguage, ...startedLanguageIds]);
+  const myCourses = languageList.filter(course => course.available && started.has(course.id));
+  const otherCourses = languageList.filter(course => course.available && !started.has(course.id));
+  const completion = course => {
+    const lessons = course.units.flatMap(unit => unit.lessons);
+    const completed = new Set(progressByLanguage?.[course.id]?.completedLessonIds || []);
+    return lessons.length ? Math.round(lessons.filter(lesson => completed.has(lesson.id)).length / lessons.length * 100) : 0;
+  };
+
+  return <motion.div id="mobile-course-tray" initial={{ opacity:0, y:-10 }} animate={{ opacity:1, y:0 }} exit={{ opacity:0, y:-8 }} transition={{ duration:.16 }} className={`absolute inset-x-0 top-full z-50 border-b px-3 pb-3 pt-2 shadow-2xl sm:hidden ${dark ? "border-white/10 bg-[#131917]" : "border-black/10 bg-white"}`}>
+    <div className="flex gap-2 overflow-x-auto pb-1" aria-label="My courses">
+      {myCourses.map(course => <button key={course.id} onClick={() => onChoose(course.id)} className={`flex min-w-[76px] flex-col items-center rounded-2xl border px-2 py-2 text-center transition ${course.id === activeLanguage ? "border-[#F28C28] bg-[#F28C28]/12 text-[#F28C28]" : dark ? "border-white/8 bg-white/4" : "border-black/8 bg-black/[.025]"}`}>
+        <span className="text-3xl" aria-hidden>{course.flag}</span><span className="mt-1 max-w-[68px] truncate text-[11px] font-black">{course.language}</span><span className="text-[9px] font-bold opacity-45">{completion(course)}%</span>
+      </button>)}
+    </div>
+    {otherCourses.length > 0 && <details className="mt-2 rounded-xl border border-current/10"><summary className="flex min-h-11 cursor-pointer list-none items-center px-3 text-xs font-black text-[#F28C28]">＋ Add a new course <ChevronDown size={14} className="ml-auto"/></summary><div className="grid max-h-44 grid-cols-2 gap-1 overflow-y-auto border-t border-current/10 p-2">{otherCourses.map(course => <button key={course.id} onClick={() => onChoose(course.id)} className={`flex min-h-11 items-center gap-2 rounded-xl px-2 text-left text-xs font-black ${dark ? "hover:bg-white/6" : "hover:bg-black/5"}`}><span className="text-xl">{course.flag}</span><span className="truncate">{course.language}</span></button>)}</div></details>}
+  </motion.div>;
 }
 
 function DesktopSidebar({ dark, tabs, screen, onNavigate, currentLanguage, activeLanguage, startedLanguageIds, progressByLanguage, onLanguageChange, onSearch }) {

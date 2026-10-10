@@ -77,32 +77,8 @@ export default function CourseSwitcher({ dark, activeLanguage, startedLanguageId
           <div className="absolute inset-5 rounded-full bg-[#F6C445]/90 shadow-2xl" />
           <Lebo pose="wave" languageId={activeLanguage} animate={false} className="relative h-full w-full" decorative />
         </div>
-        <button onClick={openCatalog} aria-label={`Switch from ${active.language} or add another course`} className="absolute right-5 top-4 flex min-h-11 items-center gap-2 rounded-2xl bg-white/15 px-3 py-2 text-sm font-black backdrop-blur transition hover:bg-white/25">{active.flag} {active.language}<ChevronDown size={15}/></button>
       </div>
 
-      <div className="mt-7 flex items-center justify-between">
-        <div>
-          <h2 className="text-xl font-black">My Courses</h2>
-          <p className={`text-sm font-semibold ${dark ? "text-white/55" : "text-black/55"}`}>{myCourses.length === 1 ? "Your learning journey starts here." : "Switch courses without losing your place."}</p>
-        </div>
-        <button onClick={openCatalog} className={`min-h-11 rounded-xl px-3 text-sm font-black transition hover:bg-[#F28C28]/10 ${dark ? "text-[#F28C28]" : "text-[#934014]"}`}>{myCourses.length === 1 ? "Add a course" : "View all"}</button>
-      </div>
-
-      {preview.length > 1 && <div className="mt-3 grid gap-3">
-        {preview.map(course => {
-          const stats = courseStats(course, progressByLanguage);
-          const selected = course.id === activeLanguage;
-          return <button key={course.id} onClick={() => choose(course.id)} className={`flex min-h-[78px] items-center gap-4 rounded-[1.4rem] border p-4 text-left shadow-sm transition hover:-translate-y-0.5 ${selected ? "border-[#F28C28]/45 ring-2 ring-[#F28C28]/10" : ""} ${card}`}>
-            <span className={`grid h-12 w-12 shrink-0 place-items-center rounded-full text-2xl ${dark ? "bg-white/7" : "bg-[#FFF8EE]"}`}>{course.flag}</span>
-            <span className="min-w-0 flex-1">
-              <span className="flex items-center gap-2 font-black"><span className="truncate">{course.language}</span>{selected && <span className="rounded-full bg-[#F28C28]/15 px-2 py-0.5 text-[9px] uppercase tracking-wider text-[#F28C28]">Active</span>}</span>
-              <span className={`mt-1 block text-xs font-bold ${dark ? "text-white/42" : "text-black/42"}`}>{stats.completed}/{stats.total} lessons · {stats.percent}%</span>
-              <span className={`mt-2 block h-1.5 overflow-hidden rounded-full ${dark ? "bg-white/10" : "bg-black/8"}`}><span className="block h-full rounded-full bg-[#F28C28]" style={{ width: `${stats.percent}%` }} /></span>
-            </span>
-            <ChevronRight size={20} className={dark ? "text-white/25" : "text-black/25"} />
-          </button>;
-        })}
-      </div>}
     </section>
 
     <BottomSheet ref={dialogRef} open={open} onClose={() => { setOpen(false); setPreviewCourse(null); }} dark={dark} label="All language courses" className="max-w-2xl" zIndex="z-[70]">
