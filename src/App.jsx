@@ -2,6 +2,8 @@ import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react"
 import { AnimatePresence, motion } from "framer-motion";
 import {
   Flame,
+  CheckCircle2,
+  ChevronDown,
   Heart,
   Home,
   Compass,
@@ -39,7 +41,8 @@ const GlobalSearch = lazy(() => import("./components/navigation/GlobalSearch"));
 import RewardEvent from "./components/gamification/RewardEvent";
 
 import {
-  languages
+  languages,
+  languageList
 } from "./data/languages";
 import useCourseProgress from "./hooks/useCourseProgress";
 import { dateKey } from "./utils/dateKey";
@@ -518,6 +521,21 @@ export default function App() {
 
       </div>
 
+      {screen !== "lesson" && (
+        <DesktopSidebar
+          dark={dark}
+          tabs={tabs}
+          screen={screen}
+          onNavigate={setScreen}
+          currentLanguage={currentLanguage}
+          activeLanguage={activeLanguage}
+          startedLanguageIds={preferences.startedLanguageIds || []}
+          progressByLanguage={progressByLanguage}
+          onLanguageChange={selectLanguage}
+          onSearch={() => setSearchOpen(true)}
+        />
+      )}
+
       {/* ================================================= */}
       {/* HEADER */}
       {/* ================================================= */}
@@ -527,10 +545,10 @@ export default function App() {
           dark
             ? "border-white/8 bg-[#101312]/90"
             : "border-black/8 bg-[#FFF8EE]/90"
-        }`}
+        } lg:ml-64`}
       >
 
-        <div className="mx-auto flex max-w-5xl items-center justify-between gap-2 px-3 py-3 sm:px-4">
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-2 px-3 py-3 sm:px-4 lg:px-6">
 
           {/* Logo */}
 
@@ -544,7 +562,7 @@ export default function App() {
                 null
               );
             }}
-            className="min-w-0 flex items-center gap-2 sm:gap-3"
+            className="min-w-0 flex items-center gap-2 sm:gap-3 lg:hidden"
           >
 
             <div className="grid h-11 w-11 place-items-center rounded-2xl bg-[#F28C28] text-xl font-black text-white shadow-lg shadow-orange-500/20">
@@ -581,7 +599,7 @@ export default function App() {
           {/* PLAYER STATS */}
           {/* ================================================= */}
 
-          <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
+          <div className="flex shrink-0 items-center gap-1.5 sm:gap-2 lg:ml-auto">
 
             <button onClick={() => setSearchOpen(true)} className={`grid h-11 w-11 place-items-center rounded-xl border transition ${dark ? "border-white/10 bg-white/5 hover:bg-white/10" : "border-black/10 bg-white hover:bg-black/5"}`} aria-label="Search AfriLingo" title="Search · Ctrl K"><Search size={18}/></button>
 
@@ -676,7 +694,7 @@ export default function App() {
       {/* MAIN CONTENT */}
       {/* ================================================= */}
 
-      <main ref={mainRef} id="main-content" tabIndex={-1} className={screen === "lesson" ? "relative mx-auto max-w-5xl px-4" : "afri-main relative mx-auto max-w-5xl px-4 pt-6"}>
+      <main ref={mainRef} id="main-content" tabIndex={-1} className={screen === "lesson" ? "relative mx-auto max-w-5xl px-4" : "afri-main relative mx-auto max-w-6xl px-4 pt-6 lg:ml-64 lg:px-6"}>
 
         <AnimatePresence mode="wait">
 
@@ -949,7 +967,7 @@ export default function App() {
 
         <nav
           aria-label="Primary navigation"
-          className={`afri-bottom-nav fixed left-1/2 z-50 w-[calc(100%-1.5rem)] max-w-md -translate-x-1/2 rounded-[1.6rem] border p-2 shadow-2xl backdrop-blur-xl ${
+          className={`afri-bottom-nav fixed left-1/2 z-50 w-[calc(100%-1.5rem)] max-w-md -translate-x-1/2 rounded-[1.6rem] border p-2 shadow-2xl backdrop-blur-xl lg:hidden ${
             dark
               ? "border-white/10 bg-[#1A201E]/95"
               : "border-black/10 bg-white/95"
@@ -1023,6 +1041,63 @@ export default function App() {
       </BottomSheet>
 
     </div>
+  );
+}
+
+function DesktopSidebar({ dark, tabs, screen, onNavigate, currentLanguage, activeLanguage, startedLanguageIds, progressByLanguage, onLanguageChange, onSearch }) {
+  const [coursesOpen, setCoursesOpen] = useState(false);
+  const started = new Set([activeLanguage, ...startedLanguageIds]);
+  const myCourses = languageList.filter(course => course.available && started.has(course.id));
+  const newCourses = languageList.filter(course => course.available && !started.has(course.id));
+  const completion = course => {
+    const lessons = course.units.flatMap(unit => unit.lessons);
+    const completed = new Set(progressByLanguage?.[course.id]?.completedLessonIds || []);
+    return lessons.length ? Math.round(lessons.filter(lesson => completed.has(lesson.id)).length / lessons.length * 100) : 0;
+  };
+  const chooseLanguage = id => {
+    onLanguageChange(id);
+    setCoursesOpen(false);
+    onNavigate("home");
+  };
+
+  return (
+    <aside className={`fixed inset-y-0 left-0 z-50 hidden w-64 flex-col border-r px-4 py-5 lg:flex ${dark ? "border-white/8 bg-[#131917]" : "border-black/8 bg-white"}`} aria-label="Desktop navigation">
+      <button onClick={() => onNavigate("home")} className="flex min-h-14 items-center gap-3 rounded-2xl px-3 text-left focus:outline-none focus-visible:ring-4 focus-visible:ring-[#F28C28]/25">
+        <span className="grid size-11 place-items-center rounded-2xl bg-[#F28C28] text-xl font-black text-white shadow-lg shadow-orange-500/20">A</span>
+        <span><span className="block text-xl font-black leading-none">AfriLingo</span><span className="mt-1 block text-[9px] font-black uppercase tracking-[.2em] text-[#F28C28]">Learn Africa</span></span>
+      </button>
+
+      <div className="relative mt-5">
+        <button type="button" onClick={() => setCoursesOpen(value => !value)} aria-expanded={coursesOpen} aria-controls="desktop-course-menu" className={`flex min-h-14 w-full items-center gap-3 rounded-2xl border px-3 text-left transition focus:outline-none focus-visible:ring-4 focus-visible:ring-[#F28C28]/25 ${coursesOpen ? "border-[#F28C28]/55 bg-[#F28C28]/10" : dark ? "border-white/10 bg-white/5 hover:bg-white/8" : "border-black/10 bg-[#FFF8EE] hover:bg-[#FFF0DA]"}`}>
+          <span className={`grid size-10 shrink-0 place-items-center rounded-xl text-2xl ${dark ? "bg-white/8" : "bg-white"}`} aria-hidden>{currentLanguage.flag}</span>
+          <span className="min-w-0 flex-1"><span className="block truncate text-[10px] font-black uppercase tracking-[.16em] opacity-45">Current language</span><span className="block truncate font-black">{currentLanguage.language}</span></span>
+          <ChevronDown size={17} className={`shrink-0 text-[#F28C28] transition ${coursesOpen ? "rotate-180" : ""}`}/>
+        </button>
+
+        <AnimatePresence>
+          {coursesOpen && <motion.div id="desktop-course-menu" initial={{ opacity:0, y:-8, scale:.98 }} animate={{ opacity:1, y:0, scale:1 }} exit={{ opacity:0, y:-6, scale:.98 }} transition={{ duration:.16 }} className={`absolute left-0 top-[calc(100%+.55rem)] z-[80] w-[340px] overflow-hidden rounded-[1.4rem] border shadow-2xl ${dark ? "border-white/10 bg-[#1A201E]" : "border-black/10 bg-white"}`}>
+            <div className="border-b border-current/10 px-4 py-3 text-[10px] font-black uppercase tracking-[.18em] opacity-45">My courses</div>
+            <div className="max-h-72 overflow-y-auto p-2">
+              {myCourses.map(course => <button key={course.id} onClick={() => chooseLanguage(course.id)} className={`flex min-h-16 w-full items-center gap-3 rounded-xl px-3 text-left transition ${course.id === activeLanguage ? "bg-[#24745B]/15 text-[#24745B]" : dark ? "hover:bg-white/6" : "hover:bg-black/5"}`}>
+                <span className="text-2xl" aria-hidden>{course.flag}</span><span className="min-w-0 flex-1"><span className="block font-black">{course.language}</span><span className="block text-[10px] font-bold opacity-45">{completion(course)}% of verified lessons</span></span>{course.id === activeLanguage && <CheckCircle2 size={17}/>}</button>)}
+            </div>
+            {newCourses.length > 0 && <details className="border-t border-current/10"><summary className="flex min-h-14 cursor-pointer list-none items-center gap-2 px-4 text-sm font-black text-[#F28C28]"><span className="text-lg">＋</span> Start another course</summary><div className="max-h-52 overflow-y-auto border-t border-current/10 p-2">{newCourses.map(course => <button key={course.id} onClick={() => chooseLanguage(course.id)} className={`flex min-h-12 w-full items-center gap-3 rounded-xl px-3 text-left text-sm font-black ${dark ? "hover:bg-white/6" : "hover:bg-black/5"}`}><span className="text-xl">{course.flag}</span>{course.language}</button>)}</div></details>}
+          </motion.div>}
+        </AnimatePresence>
+      </div>
+
+      <nav className="mt-5 flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto py-1" aria-label="Primary navigation">
+        {tabs.map(tab => {
+          const Icon = tab.icon;
+          const active = screen === tab.id;
+          return <button key={tab.id} onClick={() => { onNavigate(tab.id); setCoursesOpen(false); }} aria-current={active ? "page" : undefined} className={`group flex min-h-12 items-center gap-3 rounded-2xl border px-3 text-sm font-black transition focus:outline-none focus-visible:ring-4 focus-visible:ring-[#F28C28]/25 ${active ? "border-[#F28C28]/45 bg-[#F28C28]/12 text-[#F28C28]" : "border-transparent opacity-65 hover:border-current/10 hover:bg-current/[.04] hover:opacity-100"}`}>
+            <span className={`grid size-9 place-items-center rounded-xl transition ${active ? "bg-[#F28C28] text-white shadow-md shadow-orange-500/20" : dark ? "bg-white/6" : "bg-black/5"}`}><Icon size={19} strokeWidth={2.6}/></span>{tab.label}
+          </button>;
+        })}
+      </nav>
+
+      <button onClick={onSearch} className={`mt-3 flex min-h-12 items-center gap-3 rounded-2xl border px-3 text-sm font-black transition ${dark ? "border-white/10 bg-white/4 hover:bg-white/8" : "border-black/8 bg-black/[.025] hover:bg-black/5"}`}><span className="grid size-9 place-items-center rounded-xl bg-[#4338CA]/12 text-[#4338CA]"><Search size={18}/></span>Search <span className="ml-auto text-[10px] opacity-35">Ctrl K</span></button>
+    </aside>
   );
 }
 

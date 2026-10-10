@@ -20,22 +20,26 @@ import { bembaCourse, bembaUnits } from "./bemba/course";
 import { chichewaCourse, chichewaUnits } from "./chichewa/course";
 import { kinyarwandaCourse, kinyarwandaUnits } from "./kinyarwanda/course";
 import { kirundiCourse, kirundiUnits } from "./kirundi/course";
+import { withMasterCurriculum } from "../utils/curriculumMigration";
+
+const prepareLanguage = (id, course, units, region) =>
+  withMasterCurriculum(prepareCourse(course, units, region), id);
 
 export const languages = {
-  twi: prepareCourse(twiCourse, twiUnits, "Ghana · Akan regions"),
-  ga: prepareCourse(gaCourse, gaUnits, "Ghana · Greater Accra"),
-  ewe: prepareCourse(eweCourse, eweUnits, "Ghana · Volta Region and southern Togo"),
-  swahili: prepareCourse(swahiliCourse, swahiliUnits, "East Africa · Kenya, Tanzania and the Swahili coast"),
-  yoruba: prepareCourse(yorubaCourse, yorubaUnits, "West Africa · Southwestern Nigeria and neighboring regions"),
-  hausa: prepareCourse(hausaCourse, hausaUnits, "West Africa · Northern Nigeria, Niger and neighboring regions"),
-  igbo: prepareCourse(igboCourse, igboUnits, "West Africa · Southeastern Nigeria and neighboring communities"),
-  shona: prepareCourse(shonaCourse, shonaUnits, "Southern Africa · Zimbabwe and neighboring communities"),
-  ndebele: prepareCourse(ndebeleCourse, ndebeleUnits, "Southern Africa · Zimbabwean Matabeleland and neighboring communities"),
-  zulu: prepareCourse(zuluCourse, zuluUnits, "Southern Africa · South Africa, especially KwaZulu-Natal"),
-  bemba: prepareCourse(bembaCourse, bembaUnits, "Southern Africa · Zambia and neighboring communities"),
-  chichewa: prepareCourse(chichewaCourse, chichewaUnits, "Southern Africa · Malawi and neighboring communities"),
-  kinyarwanda: prepareCourse(kinyarwandaCourse, kinyarwandaUnits, "East Africa · Rwanda and neighboring communities"),
-  kirundi: prepareCourse(kirundiCourse, kirundiUnits, "East Africa · Burundi and neighboring communities")
+  twi: prepareLanguage("twi", twiCourse, twiUnits, "Ghana · Akan regions"),
+  ga: prepareLanguage("ga", gaCourse, gaUnits, "Ghana · Greater Accra"),
+  ewe: prepareLanguage("ewe", eweCourse, eweUnits, "Ghana · Volta Region and southern Togo"),
+  swahili: prepareLanguage("swahili", swahiliCourse, swahiliUnits, "East Africa · Kenya, Tanzania and the Swahili coast"),
+  yoruba: prepareLanguage("yoruba", yorubaCourse, yorubaUnits, "West Africa · Southwestern Nigeria and neighboring regions"),
+  hausa: prepareLanguage("hausa", hausaCourse, hausaUnits, "West Africa · Northern Nigeria, Niger and neighboring regions"),
+  igbo: prepareLanguage("igbo", igboCourse, igboUnits, "West Africa · Southeastern Nigeria and neighboring communities"),
+  shona: prepareLanguage("shona", shonaCourse, shonaUnits, "Southern Africa · Zimbabwe and neighboring communities"),
+  ndebele: prepareLanguage("ndebele", ndebeleCourse, ndebeleUnits, "Southern Africa · Zimbabwean Matabeleland and neighboring communities"),
+  zulu: prepareLanguage("zulu", zuluCourse, zuluUnits, "Southern Africa · South Africa, especially KwaZulu-Natal"),
+  bemba: prepareLanguage("bemba", bembaCourse, bembaUnits, "Southern Africa · Zambia and neighboring communities"),
+  chichewa: prepareLanguage("chichewa", chichewaCourse, chichewaUnits, "Southern Africa · Malawi and neighboring communities"),
+  kinyarwanda: prepareLanguage("kinyarwanda", kinyarwandaCourse, kinyarwandaUnits, "East Africa · Rwanda and neighboring communities"),
+  kirundi: prepareLanguage("kirundi", kirundiCourse, kirundiUnits, "East Africa · Burundi and neighboring communities")
 };
 
 export const courseValidationErrors = Object.values(languages).flatMap(course =>
