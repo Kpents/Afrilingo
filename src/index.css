@@ -39,6 +39,14 @@ body {
   overflow: hidden;
 }
 
+.afri-completion-shell {
+  height: 100vh;
+  height: 100dvh;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  overflow: hidden;
+}
+
 .afri-question-stage {
   scrollbar-width: thin;
   scrollbar-color: rgba(242, 140, 40, .45) transparent;

@@ -2,7 +2,6 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { BookOpen, CheckCircle2, ChevronDown, Heart, RotateCcw, Sparkles, X, XCircle } from "lucide-react";
 import MiniConversation from "../components/MiniConversation";
-import CultureCard from "../components/CultureCard";
 import QuestionRenderer, { expectedAnswer, isAnswerComplete, normalizeAnswer } from "../components/lessons/QuestionRenderer";
 import LessonReaction from "../components/lessons/LessonReaction";
 import Lebo from "../components/ui/Lebo";
@@ -22,12 +21,14 @@ export default function LessonPage({ lesson, unit, dark, hearts, languageId, sou
   const [earned, setEarned] = useState(0);
   const [mistakes, setMistakes] = useState(0);
   const [results, setResults] = useState([]);
+  const [milestoneShown, setMilestoneShown] = useState(false);
   const reduceMotion = useReducedMotion();
   const questionRef = useRef(null);
   const startedAtRef = useRef(Date.now());
   const introducedWordsRef = useRef(new Set());
   const wordIntroductionByQuestionRef = useRef(new Map());
   const [wordOpen, setWordOpen] = useState(false);
+  const vocabularyMilestoneTarget = useMemo(() => Math.min(3, new Set((lesson.vocabulary || []).map(word => word.native).filter(Boolean)).size), [lesson.vocabulary]);
 
   const current = queue[index];
   const featuredWord = useMemo(() => findFeaturedWord(current, lesson.vocabulary), [current, lesson.vocabulary]);
@@ -92,7 +93,7 @@ export default function LessonPage({ lesson, unit, dark, hearts, languageId, sou
         unit={unit}
         soundEnabled={soundEnabled}
         onContinue={() => onComplete({
-          xp: lesson.xp + (isUnitChallenge ? 50 : 0),
+          xp: lesson.xp + earned + (isUnitChallenge ? 50 : 0),
           cultureCardId: lesson.cultureCard.id,
           mastery: lessonMasterySummary(results),
           skillEvidence: summarizeSkillEvidence(results),
@@ -100,6 +101,21 @@ export default function LessonPage({ lesson, unit, dark, hearts, languageId, sou
         })}
       />
     );
+  }
+
+  if (stage === "milestone") {
+    return <VocabularyMilestone
+      dark={dark}
+      languageId={languageId}
+      words={(lesson.vocabulary || []).filter(word => introducedWordsRef.current.has(word.native)).slice(0, vocabularyMilestoneTarget)}
+      soundEnabled={soundEnabled}
+      onContinue={() => {
+        setIndex(value => value + 1);
+        setSelected(null);
+        setChecked(false);
+        setStage("quiz");
+      }}
+    />;
   }
 
   const submittedAnswer = normalizeAnswer(current, selected);
@@ -115,6 +131,11 @@ export default function LessonPage({ lesson, unit, dark, hearts, languageId, sou
     }
     if (index + 1 >= queue.length) {
       setStage("complete");
+      return;
+    }
+    if (!milestoneShown && vocabularyMilestoneTarget > 0 && introducedWordsRef.current.size >= vocabularyMilestoneTarget) {
+      setMilestoneShown(true);
+      setStage("milestone");
       return;
     }
     setIndex(i => i + 1);
@@ -263,6 +284,26 @@ function OutOfHearts({ dark, onExit, onRefill }) {
   return <div className="mx-auto max-w-xl py-8 text-center"><motion.div initial={{scale:.7, opacity:0}} animate={{scale:1, opacity:1}} className="mx-auto grid h-24 w-24 place-items-center rounded-[2rem] bg-[#EF5B5B]/15 text-5xl">💔</motion.div><h1 className="mt-6 text-4xl font-black">Out of hearts</h1><p className={`mx-auto mt-3 max-w-md leading-7 ${dark ? "text-white/55" : "text-black/55"}`}>One heart regenerates every 30 minutes. Recover one now with a quick practice refill and continue from the same question.</p><button onClick={onRefill} onPointerDown={hapticPress} data-tone="green" className="afri-press mt-6 flex min-h-14 w-full items-center justify-center gap-2 rounded-[1.4rem] bg-[#24745B] px-5 text-lg font-black text-white"><Sparkles size={20}/>Practice refill · +1 heart</button><button onClick={onExit} className={`mt-3 min-h-12 w-full rounded-[1.2rem] font-black ${dark ? "bg-white/6" : "bg-black/5"}`}>Return to path</button></div>;
 }
 
+function VocabularyMilestone({ dark, languageId, words, soundEnabled, onContinue }) {
+  const reduceMotion = useReducedMotion();
+  useEffect(() => playUiSound("correct", soundEnabled), [soundEnabled]);
+  return <div className="afri-quiz-shell relative mx-auto max-w-2xl text-center" aria-live="polite">
+    <ConfettiBurst count={18}/>
+    <div/>
+    <div className="flex min-h-0 flex-col items-center justify-center px-3 py-5">
+      <motion.div initial={reduceMotion ? false : {opacity:0,scale:.78,rotate:-4}} animate={{opacity:1,scale:1,rotate:0}} transition={{type:"spring",stiffness:180,damping:14}} className="relative size-40 sm:size-48">
+        <div className="absolute inset-5 rounded-full bg-[#F6C445]/20 blur-md"/>
+        <Lebo pose="celebrate" reaction="celebrate" languageId={languageId} className="relative size-full" decorative/>
+      </motion.div>
+      <div className="mt-2 text-xs font-black uppercase tracking-[.22em] text-[#F28C28]">Vocabulary milestone</div>
+      <h1 className="mt-2 text-3xl font-black sm:text-4xl">You unlocked {words.length} new {words.length === 1 ? "word" : "words"}!</h1>
+      <p className={`mt-2 max-w-md text-sm font-semibold ${dark ? "text-white/55" : "text-black/55"}`}>You met them in context. Now keep going and turn recognition into recall.</p>
+      <div className="mt-5 flex max-w-lg flex-wrap justify-center gap-2">{words.map(word => <span key={word.native} className={`rounded-xl border px-3 py-2 text-sm font-black ${dark ? "border-white/10 bg-white/6" : "border-black/8 bg-white"}`}><span className="text-[#F28C28]">{word.native}</span><span className="mx-1.5 opacity-25">·</span><span className="opacity-60">{word.english}</span></span>)}</div>
+    </div>
+    <div className={`-mx-4 border-t px-4 py-3 pb-[max(.75rem,env(safe-area-inset-bottom))] sm:mx-0 sm:rounded-t-[1.5rem] sm:border-x ${dark ? "border-white/10 bg-[#101312]" : "border-black/8 bg-[#FFF8EE]"}`}><button onClick={onContinue} onPointerDown={hapticPress} data-tone="green" className="afri-press min-h-14 w-full rounded-[1.2rem] bg-[#24745B] px-5 font-black uppercase tracking-wide text-white">Keep learning</button></div>
+  </div>;
+}
+
 function Completion({ dark, lesson, unit, languageId, earned, mistakes, mastery, soundEnabled, isFirstLesson, isUnitChallenge, isCourseFinal, onContinue }) {
   const reduceMotion = useReducedMotion();
   const headingRef = useRef(null);
@@ -270,43 +311,32 @@ function Completion({ dark, lesson, unit, languageId, earned, mistakes, mastery,
   useEffect(() => playUiSound(isUnitChallenge ? "unit" : "complete", soundEnabled), [isUnitChallenge, soundEnabled]);
   useEffect(() => { headingRef.current?.focus({ preventScroll: true }); }, []);
   return (
-    <div className="relative mx-auto max-w-2xl overflow-hidden rounded-[2rem] px-1 pb-2 pt-5 text-center sm:pt-8" aria-live="polite">
+    <div className="afri-completion-shell relative mx-auto max-w-2xl text-center" aria-live="polite">
       <ConfettiBurst count={isUnitChallenge ? 42 : 28} />
-      <motion.div initial={{ scale: 0.75, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ type: "spring", stiffness: 170, damping: 12 }} className="relative mx-auto h-44 w-44 sm:h-60 sm:w-60">
-        <div className="absolute inset-6 rounded-full bg-[#F6C445]/20 blur-sm" />
-        {!reduceMotion && <motion.div aria-hidden className="absolute inset-0 rounded-full border-2 border-dashed border-[#F6C445]/45" animate={{rotate:360,scale:[.94,1.03,.94]}} transition={{rotate:{duration:12,repeat:Infinity,ease:"linear"},scale:{duration:2.2,repeat:Infinity,ease:"easeInOut"}}}/>} 
-        <Lebo pose="celebrate" reaction="celebrate" languageId={languageId} className="relative h-full w-full" decorative />
-        <motion.span initial={reduceMotion?false:{scale:0,rotate:-20}} animate={{scale:1,rotate:0}} transition={{delay:.35,type:"spring",stiffness:220}} className="absolute bottom-3 right-2 grid h-14 w-14 place-items-center rounded-2xl bg-[#F6C445] text-3xl shadow-xl" aria-hidden>🏆</motion.span>
-      </motion.div>
+      <div className="min-h-0 overflow-y-auto px-1 py-4 sm:py-6">
+        <div className="grid items-center gap-2 sm:grid-cols-[11rem_1fr] sm:text-left">
+          <motion.div initial={{ scale: 0.75, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ type: "spring", stiffness: 170, damping: 12 }} className="relative mx-auto size-36 sm:size-44">
+            <div className="absolute inset-5 rounded-full bg-[#F6C445]/20 blur-sm" />
+            {!reduceMotion && <motion.div aria-hidden className="absolute inset-0 rounded-full border-2 border-dashed border-[#F6C445]/45" animate={{rotate:360,scale:[.94,1.03,.94]}} transition={{rotate:{duration:12,repeat:Infinity,ease:"linear"},scale:{duration:2.2,repeat:Infinity,ease:"easeInOut"}}}/>}
+            <Lebo pose="celebrate" reaction="celebrate" languageId={languageId} className="relative size-full" decorative />
+            <motion.span initial={reduceMotion?false:{scale:0,rotate:-20}} animate={{scale:1,rotate:0}} transition={{delay:.35,type:"spring",stiffness:220}} className="absolute bottom-1 right-0 grid size-12 place-items-center rounded-2xl bg-[#F6C445] text-2xl shadow-xl" aria-hidden>🏆</motion.span>
+          </motion.div>
+          <div><div className="text-xs font-black uppercase tracking-[.2em] text-[#F28C28]">{isCourseFinal ? "Course milestone" : isUnitChallenge ? "Unit reward" : "Learning streak"}</div><h1 ref={headingRef} tabIndex={-1} className="mt-2 text-3xl font-black sm:text-4xl">{isCourseFinal ? "Course path complete!" : isUnitChallenge ? "Unit complete!" : "Lesson complete!"}</h1><p className={`mt-2 text-sm font-semibold ${dark ? "text-white/55" : "text-black/55"}`}>{mistakes === 0 ? "Perfect run. Beautiful work." : mastery.recovered > 0 ? `You recovered ${mastery.recovered} ${mastery.recovered === 1 ? "concept" : "concepts"} before finishing.` : "You finished strong and saved missed ideas for review."}</p></div>
+        </div>
 
-      <h1 ref={headingRef} tabIndex={-1} className="mt-4 text-3xl font-black sm:mt-6 sm:text-4xl">{isCourseFinal ? "Course path complete!" : isUnitChallenge ? "Unit complete!" : "Lesson complete!"}</h1>
-      <p className={`mt-2 font-semibold ${dark ? "text-white/55" : "text-black/55"}`}>
-        {mistakes === 0 ? "Perfect run. Beautiful work." : "You finished strong — and reviewed what you missed."}
-      </p>
+        <div className="mt-4 grid grid-cols-3 gap-2 sm:mt-5 sm:gap-3">
+          <Reward dark={dark} label="Total XP" value={`+${lesson.xp + earned + (isUnitChallenge ? 50 : 0)}`} accent="#F6C445" />
+          <Reward dark={dark} label="Accuracy" value={`${Math.round((lesson.questions.length / (lesson.questions.length + mistakes)) * 100)}%`} accent="#53B98A" />
+          <Reward dark={dark} label="Recovered" value={mastery.recovered} accent="#7067FF" />
+        </div>
 
-      <div className="mt-5 grid grid-cols-3 gap-2 sm:mt-6 sm:gap-3">
-        <Reward dark={dark} label="Lesson XP" value={`+${lesson.xp + (isUnitChallenge ? 50 : 0)} XP`} accent="#F6C445" />
-        <Reward dark={dark} label="Practice XP" value={`+${earned} XP`} accent="#F28C28" />
-        <Reward dark={dark} label="Accuracy" value={`${Math.round((lesson.questions.length / (lesson.questions.length + mistakes)) * 100)}%`} accent="#53B98A" />
+        <motion.div initial={{opacity:0,y:10}} animate={{opacity:1,y:0}} className={`mt-4 flex items-center gap-3 rounded-[1.25rem] border p-3 text-left ${dark ? "border-[#F6C445]/25 bg-[#F6C445]/10" : "border-[#F6C445]/35 bg-[#F6C445]/15"}`}><span className="grid size-12 shrink-0 place-items-center rounded-xl bg-[#F6C445] text-2xl text-[#252525]">{lesson.cultureCard.emoji}</span><span className="min-w-0 flex-1"><span className="block text-[10px] font-black uppercase tracking-[.16em] text-[#F28C28]">Culture card unlocked</span><span className="mt-0.5 block truncate font-black">{lesson.cultureCard.title}</span><span className="hidden truncate text-xs font-semibold opacity-50 sm:block">{lesson.cultureCard.text}</span></span><Sparkles className="shrink-0 text-[#F6C445]" size={20}/></motion.div>
+
+        {(isFirstLesson || isUnitChallenge || mistakes === 0) && <div className={`mt-3 flex items-center gap-3 rounded-xl px-3 py-2.5 text-left ${dark ? "bg-white/5" : "bg-black/[.035]"}`}><span className="text-2xl">{isFirstLesson ? "👣" : isUnitChallenge ? "🏆" : "✨"}</span><span className="min-w-0"><span className="block text-[9px] font-black uppercase tracking-wider opacity-45">{isFirstLesson ? "Achievement unlocked" : isUnitChallenge ? "Challenge cleared" : "Perfect lesson"}</span><span className="block truncate text-sm font-black">{isFirstLesson ? "First Steps" : isUnitChallenge ? `+50 bonus XP · ${learnedWords} expressions practised` : "Flawless finish"}</span></span></div>}
+
+        {isUnitChallenge && <div className={`mt-3 rounded-xl p-3 text-left ${dark ? "bg-[#4338CA]/12" : "bg-[#4338CA]/8"}`}><div className="text-[10px] font-black uppercase tracking-wider text-[#7067FF]">What you can do now</div><div className="mt-1 font-black">{unit?.title}</div><p className="mt-1 text-xs font-semibold opacity-50">{unit?.subtitle || "Use this unit’s language in context."}</p></div>}
       </div>
-
-      {mastery.recovered > 0 && <div className={`mt-5 rounded-[1.5rem] border p-4 text-left ${dark ? "border-[#4338CA]/30 bg-[#4338CA]/12" : "border-[#4338CA]/20 bg-[#4338CA]/10"}`}><div className="text-xs font-black uppercase tracking-wider text-[#7067FF]">Adaptive practice complete</div><div className="mt-1 text-base font-black sm:text-lg">{mastery.recovered} {mastery.recovered === 1 ? "concept" : "concepts"} recovered before finishing</div><p className="mt-1 hidden text-sm font-semibold opacity-55 sm:block">Missed ideas returned after a short gap, so you had to recall them—not simply copy the correction.</p></div>}
-
-      {isUnitChallenge && <div className={`mt-5 rounded-[1.5rem] border p-4 text-left sm:p-5 ${dark ? "border-white/10 bg-white/5" : "border-black/8 bg-white"}`}><div className="text-xs font-black uppercase tracking-[.18em] text-[#4338CA]">What you can do now</div><div className="mt-2 text-xl font-black">{unit?.title}</div><p className="mt-2 hidden text-sm font-semibold leading-6 opacity-55 sm:block">{unit?.subtitle || "Use this unit’s language in context."}</p><div className="mt-3 inline-flex rounded-full bg-[#24745B]/15 px-3 py-1.5 text-xs font-black text-[#24745B]">{learnedWords} key expressions practised</div></div>}
-
-      {(isFirstLesson || isUnitChallenge || mistakes === 0) && <motion.div initial={{opacity:0, scale:.96}} animate={{opacity:1, scale:1}} className={`mt-5 rounded-[1.5rem] border p-4 text-left ${dark ? "border-[#F6C445]/25 bg-[#F6C445]/10" : "border-[#F6C445]/35 bg-[#F6C445]/15"}`}><div className="text-xs font-black uppercase tracking-wider text-[#F28C28]">{isFirstLesson ? "New achievement" : isUnitChallenge ? "Unit reward" : "Perfect lesson"}</div><div className="mt-1 text-lg font-black">{isFirstLesson ? "👣 First Steps unlocked" : isUnitChallenge ? "🏆 Challenge cleared · +50 bonus XP" : "✨ Flawless finish"}</div></motion.div>}
-
-      <div className="mt-5 text-left">
-        <CultureCard card={lesson.cultureCard} dark={dark} collectible />
-      </div>
-
-      <button
-        onClick={onContinue}
-        onPointerDown={hapticPress}
-        className="afri-press mt-6 w-full rounded-[1.4rem] bg-[#F28C28] py-4 text-lg font-black uppercase text-white"
-      >
-        {isCourseFinal ? "Claim graduation reward" : "Collect & continue"}
-      </button>
+      <div className={`-mx-4 border-t px-4 py-3 pb-[max(.75rem,env(safe-area-inset-bottom))] sm:mx-0 sm:rounded-t-[1.5rem] sm:border-x ${dark ? "border-white/10 bg-[#101312]" : "border-black/8 bg-[#FFF8EE]"}`}><button onClick={onContinue} onPointerDown={hapticPress} className="afri-press min-h-14 w-full rounded-[1.2rem] bg-[#F28C28] px-5 font-black uppercase tracking-wide text-white">{isCourseFinal ? "Claim graduation reward" : "Collect & continue"}</button></div>
     </div>
   );
 }
