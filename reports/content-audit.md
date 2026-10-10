@@ -1,6 +1,6 @@
 # AfriLingo Content Audit
 
-Generated: 2026-10-05T09:05:38.645Z
+Generated: 2026-10-10T21:12:27.919Z
 
 ## Summary
 
@@ -9,10 +9,10 @@ Generated: 2026-10-05T09:05:38.645Z
 - 1611 lessons
 - 7835 questions
 - 1611 culture cards
-- 4728 Explore entries
+- 4937 Explore entries
 - 388 Immersion items
 - 0 blocking errors
-- 301 editorial warnings
+- 510 editorial warnings
 
 ## Blocking errors
 
@@ -20,8 +20,8 @@ None. ✅
 
 ## Editorial review queue
 
+- **EDITORIAL_REVIEW** — 242 items
 - **DUPLICATE_CULTURE** — 242 items
-- **EDITORIAL_REVIEW** — 33 items
 - **COURSE_EDITORIAL_REVIEW** — 26 items
 
 Detailed warning records are available in `content-audit.json`.

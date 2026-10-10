@@ -1,16 +1,1061 @@
 {
-  "generatedAt": "2026-10-05T09:05:38.652Z",
+  "generatedAt": "2026-10-10T21:12:27.927Z",
   "stats": {
     "languages": 14,
     "units": 392,
     "lessons": 1611,
     "questions": 7835,
     "cultureCards": 1611,
-    "exploreEntries": 4728,
+    "exploreEntries": 4937,
     "immersionItems": 388
   },
   "errors": [],
   "warnings": [
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-001",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-002",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-003",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-004",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-005",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-006",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-007",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-008",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-009",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-010",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-011",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-012",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-013",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-014",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-015",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-016",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-017",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-018",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-019",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-020",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-021",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-022",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-023",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-024",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-025",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-026",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-027",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-028",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-029",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-030",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-031",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-032",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-033",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-034",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-035",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-036",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-037",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-038",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-039",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-040",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-041",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-042",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-043",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-044",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-045",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-046",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-047",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-048",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-049",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-050",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-051",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-052",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-053",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-054",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-055",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-056",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-057",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-058",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-059",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-060",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-061",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-062",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-063",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-064",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-065",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-066",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-067",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-068",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-069",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-070",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-071",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-072",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-073",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-074",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-075",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-076",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-077",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-078",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-079",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-080",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-081",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-082",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-083",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-084",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-085",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-086",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-087",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-088",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-089",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-090",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-091",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-092",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-093",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-094",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-095",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-097",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-098",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-099",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-verb-reference-100",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-001",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-002",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-003",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-004",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-005",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-006",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-007",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-008",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-009",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-010",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-011",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-012",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-013",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-014",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-015",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-016",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-017",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-018",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-019",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-020",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-021",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-022",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-023",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-024",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-025",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-026",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-027",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-028",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-029",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-030",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-031",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-032",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-033",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-034",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-035",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-036",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-037",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-038",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-039",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-040",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-041",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-042",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-043",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-044",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-045",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-046",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-047",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-048",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-049",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-050",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-051",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-052",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-053",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-054",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-055",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-056",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-057",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-058",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-059",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-060",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-061",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-062",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-063",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-064",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-065",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-066",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-067",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-068",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-069",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-070",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-071",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-072",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-073",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-074",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-075",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-076",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-077",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-078",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-079",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-080",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-081",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-082",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-083",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-084",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-085",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-086",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-087",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-088",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-089",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-090",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-091",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-092",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-093",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-094",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-095",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-096",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-097",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-098",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-099",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-100",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-101",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-102",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-103",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-104",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-105",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-106",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-107",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-108",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-109",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
+    {
+      "code": "EDITORIAL_REVIEW",
+      "path": "twi/explore/twi-animal-reference-110",
+      "message": "Entry is explicitly marked for editorial verification."
+    },
     {
       "code": "DUPLICATE_CULTURE",
       "path": "ewe/unit-3/ewe-unit-3-lesson-2",
