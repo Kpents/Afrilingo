@@ -2,6 +2,7 @@ import { twiUnits } from "../twi/course";
 import { findIconId } from "../iconLibrary";
 import { twiVerbReferenceEntries } from "./twiVerbReference";
 import { twiAnimalReferenceEntries } from "./twiAnimalReference";
+import { twiOccupationReferenceEntries } from "./twiOccupationReference";
 
 const levels=["beginner","intermediate","advanced"];
 const wordTypes=[["nouns","Nouns","📦"],["verbs","Verbs","🏃🏾"],["adjectives","Adjectives","✨"],["pronouns","Pronouns","👥"],["adverbs","Adverbs","⚡"],["question-words","Question Words","❓"],["numbers","Numbers","🔢"],["common-expressions","Common Expressions","💬"]].map(([id,label,emoji])=>({id,label,emoji}));
@@ -35,6 +36,8 @@ const attestedCourseVerbs=new Set(courseEntries.filter(item=>item.wordType==="ve
 const verbReferenceEntries=twiVerbReferenceEntries.filter(item=>!attestedCourseVerbs.has(clean(item.native)));
 const attestedCourseAnimals=new Set(courseEntries.filter(item=>item.theme==="animals").map(item=>clean(item.native)));
 const animalReferenceEntries=twiAnimalReferenceEntries.filter(item=>!attestedCourseAnimals.has(clean(item.native)));
+const attestedCourseOccupations=new Set(courseEntries.filter(item=>item.theme==="work").map(item=>clean(item.native)));
+const occupationReferenceEntries=twiOccupationReferenceEntries.filter(item=>!attestedCourseOccupations.has(clean(item.native)));
 const supplements=[
   ["pronoun-me","Me","I / me","pronouns","relationships"],["pronoun-wo","Wo","you — singular","pronouns","relationships"],["pronoun-yen","Yɛn","we / us","pronouns","relationships"],
   ["animal-akraman","Ɔkraman","dog","nouns","animals"],["animal-ɔkra","Ɔkra","cat","nouns","animals"],
@@ -51,4 +54,4 @@ const supplements=[
   ["restaurant-water","Nsuo","water","nouns","restaurant","Peace Corps Ghana · Twi For All","A practical word for ordering or asking for a drink."]
 ].flatMap(([id,native,english,wordType,theme,source="course reference",contextNote="Optional linguistic detail will expand after editorial review."])=>levels.map(level=>({id:`${id}-${level}`,native,english,wordType,theme,level,audio:"",iconId:findIconId(english),exampleNative:native,exampleEnglish:english,source,verificationStatus:"source-aligned",contextNote,linguistic:{}})));
 const seen=new Set();
-export const twiExploreLibrary={languageId:"twi",languageName:"Twi",nativeName:"Twi",levels,wordTypes,themes,entries:[...supplements,...courseEntries,...verbReferenceEntries,...animalReferenceEntries].filter(item=>{const key=`${item.native}|${item.english}|${item.theme}|${item.level}`;if(seen.has(key))return false;seen.add(key);return true;})};
+export const twiExploreLibrary={languageId:"twi",languageName:"Twi",nativeName:"Twi",levels,wordTypes,themes,entries:[...supplements,...courseEntries,...verbReferenceEntries,...animalReferenceEntries,...occupationReferenceEntries].filter(item=>{const key=`${item.native}|${item.english}|${item.theme}|${item.level}`;if(seen.has(key))return false;seen.add(key);return true;})};
