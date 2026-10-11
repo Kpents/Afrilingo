@@ -989,9 +989,9 @@ export default function App() {
                 const Icon =
                   tab.icon;
 
-                const active =
-                  screen ===
-                  tab.id;
+                const active = tab.id === "more"
+                  ? moreOpen || tabs.slice(4).some((item) => item.id === screen)
+                  : screen === tab.id;
 
                 return (
 
@@ -1002,28 +1002,30 @@ export default function App() {
 
                     onClick={() => tab.id === "more" ? setMoreOpen(true) : setScreen(tab.id)}
                     aria-current={active ? "page" : undefined}
+                    aria-label={tab.label}
+                    title={tab.label}
 
-                    className={`flex flex-col items-center gap-1 rounded-2xl py-2.5 text-xs font-extrabold transition ${
+                    className={`relative isolate flex min-h-14 items-center justify-center rounded-2xl transition ${
                       active
-                        ? "bg-[#F28C28] text-white shadow-lg shadow-orange-500/15"
+                        ? "text-white"
                         : dark
-                        ? "text-white/50 hover:bg-white/5 hover:text-white"
+                        ? "text-white/55 hover:bg-white/5 hover:text-white"
                         : "text-black/45 hover:bg-black/5 hover:text-black"
                     }`}
                   >
-
-                    <Icon
-                      size={
-                        20
-                      }
-                      strokeWidth={
-                        2.5
-                      }
-                    />
-
-                    {
-                      tab.label
-                    }
+                    {active && <motion.span
+                      layoutId="mobile-nav-active"
+                      className="absolute inset-0 -z-10 rounded-2xl bg-gradient-to-br from-[#F28C28] to-[#E6741A] shadow-lg shadow-orange-500/20"
+                      transition={{ type: "spring", stiffness: 420, damping: 31 }}
+                    />}
+                    <motion.span
+                      className="grid place-items-center"
+                      animate={active ? { y: [0, -3, 0], scale: [1, 1.12, 1] } : { y: 0, scale: 1 }}
+                      transition={active ? { duration: .34, ease: "easeOut" } : { duration: .15 }}
+                    >
+                      <Icon size={26} strokeWidth={2.6}/>
+                    </motion.span>
+                    <span className="sr-only">{tab.label}</span>
 
                   </button>
 
