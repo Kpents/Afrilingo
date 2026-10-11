@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { languages } from "../data/languages";
+import { migrateLessonRepetitions } from "../utils/lessonRepetition";
 
 export const initialProgress = {
   xp: 0,
@@ -12,6 +13,7 @@ export const initialProgress = {
   weekly: { week: null, activities: 0, reviews: 0, xp: 0 },
   reviewStreak: { count: 0, lastDate: null, best: 0 },
   completedLessonIds: [],
+  lessonRepetitions: {},
   unlockedCultureCards: [],
   unlockedAchievementIds: [],
   reviewResolved: 0,
@@ -36,7 +38,7 @@ export function regenerateHearts(progress, now = Date.now()) {
 }
 
 export function normalizeProgress(parsed = {}) {
-  return { ...initialProgress, ...parsed, unlockedAchievementIds: Array.isArray(parsed.unlockedAchievementIds) ? parsed.unlockedAchievementIds : [], reviewQueue: Array.isArray(parsed.reviewQueue) ? parsed.reviewQueue : [], daily: { ...initialProgress.daily, ...parsed.daily }, dailyPlan: { ...initialProgress.dailyPlan, ...parsed.dailyPlan, completedStepIds: Array.isArray(parsed.dailyPlan?.completedStepIds) ? parsed.dailyPlan.completedStepIds : [] }, weekly: { ...initialProgress.weekly, ...parsed.weekly }, reviewStreak: { ...initialProgress.reviewStreak, ...parsed.reviewStreak }, practice: { ...initialProgress.practice, ...parsed.practice }, explore: { ...initialProgress.explore, ...parsed.explore }, immersion: { ...initialProgress.immersion, ...parsed.immersion }, mastery: { ...initialProgress.mastery, ...parsed.mastery, skills: { ...initialProgress.mastery.skills, ...parsed.mastery?.skills }, checkpoints: Array.isArray(parsed.mastery?.checkpoints) ? parsed.mastery.checkpoints : [] }, learning: { ...initialProgress.learning, ...parsed.learning, attempts: Array.isArray(parsed.learning?.attempts) ? parsed.learning.attempts : [], concepts: parsed.learning?.concepts && typeof parsed.learning.concepts === "object" ? parsed.learning.concepts : {} } };
+  return { ...initialProgress, ...parsed, lessonRepetitions: migrateLessonRepetitions(parsed), unlockedAchievementIds: Array.isArray(parsed.unlockedAchievementIds) ? parsed.unlockedAchievementIds : [], reviewQueue: Array.isArray(parsed.reviewQueue) ? parsed.reviewQueue : [], daily: { ...initialProgress.daily, ...parsed.daily }, dailyPlan: { ...initialProgress.dailyPlan, ...parsed.dailyPlan, completedStepIds: Array.isArray(parsed.dailyPlan?.completedStepIds) ? parsed.dailyPlan.completedStepIds : [] }, weekly: { ...initialProgress.weekly, ...parsed.weekly }, reviewStreak: { ...initialProgress.reviewStreak, ...parsed.reviewStreak }, practice: { ...initialProgress.practice, ...parsed.practice }, explore: { ...initialProgress.explore, ...parsed.explore }, immersion: { ...initialProgress.immersion, ...parsed.immersion }, mastery: { ...initialProgress.mastery, ...parsed.mastery, skills: { ...initialProgress.mastery.skills, ...parsed.mastery?.skills }, checkpoints: Array.isArray(parsed.mastery?.checkpoints) ? parsed.mastery.checkpoints : [] }, learning: { ...initialProgress.learning, ...parsed.learning, attempts: Array.isArray(parsed.learning?.attempts) ? parsed.learning.attempts : [], concepts: parsed.learning?.concepts && typeof parsed.learning.concepts === "object" ? parsed.learning.concepts : {} } };
 }
 
 function readProgress(languageId) {

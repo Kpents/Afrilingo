@@ -59,6 +59,7 @@ import { applyReviewOutcomes, recordReviewMiss, reviewKeyFor } from "./utils/rev
 import { skillForQuestion, updateLearnerMastery } from "./utils/learnerMastery";
 import { createAttempt, recordAttempt } from "./utils/learningTelemetry";
 import { completeDailyPlanStep } from "./utils/dailyPlan";
+import { recordLessonRepetition } from "./utils/lessonRepetition";
 
 export default function App() {
   const lifecycle = useAppLifecycle();
@@ -236,6 +237,7 @@ export default function App() {
   }) => {
     const completedLessonId =
       activeLesson.id;
+    const firstPathCompletion = !progress.completedLessonIds.includes(completedLessonId);
     const today = dateKey();
     const dailyCompleted = progress.daily?.date === today ? progress.daily.completed + 1 : 1;
     const earnsDailyBonus = dailyCompleted >= preferences.dailyTarget && !(progress.daily?.date === today && progress.daily.claimed);
@@ -264,6 +266,7 @@ export default function App() {
       daily: { date: today, completed: dailyCompleted, claimed: earnsDailyBonus || (p.daily?.date === today && p.daily.claimed) },
       weekly: recordWeeklyActivity(p, { xp }),
       mastery,
+      lessonRepetitions: recordLessonRepetition(p.lessonRepetitions, completedLessonId),
 
       /*
         Lesson completion
@@ -332,6 +335,7 @@ export default function App() {
 
     if (
       completedFinalLesson &&
+      firstPathCompletion &&
       anotherUnitExists
     ) {
       setActiveUnit(
@@ -339,7 +343,7 @@ export default function App() {
       );
     }
 
-    if (completedFinalLesson) showReward({ kind: "milestone", eyebrow: anotherUnitExists ? "New unit unlocked" : "Course milestone", title: anotherUnitExists ? currentLanguage.units[activeUnit + 1].title : `${currentLanguage.language} path complete!`, message: earnsDailyBonus ? `Plus ${xp + 30} XP and today’s challenge bonus.` : `Lebo is proud of you · +${xp} XP` });
+    if (completedFinalLesson && firstPathCompletion) showReward({ kind: "milestone", eyebrow: anotherUnitExists ? "New unit unlocked" : "Course milestone", title: anotherUnitExists ? currentLanguage.units[activeUnit + 1].title : `${currentLanguage.language} path complete!`, message: earnsDailyBonus ? `Plus ${xp + 30} XP and today’s challenge bonus.` : `Lebo is proud of you · +${xp} XP` });
     else if (earnsDailyBonus) showReward({ kind: "milestone", eyebrow: "Daily challenge complete", title: "+30 bonus XP", message: `${preferences.dailyTarget} activities today—beautiful consistency!` });
     else showReward({ kind: "xp", label: `+${xp} XP` });
 
