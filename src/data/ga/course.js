@@ -5,6 +5,7 @@ import { gaExtendedUnits } from "./extendedUnits";
 import { gaAdvancedUnits } from "./advancedUnits";
 import { deepenCourse } from "../twi/courseDepth";
 import { polishGaCultureCards } from "./cultureCards";
+import { alignGaCourseToGuide, gaGuideCoverage } from "./guideAlignment";
 
 const rawGaUnits = [
   gaUnit1,
@@ -13,7 +14,7 @@ const rawGaUnits = [
   ...gaAdvancedUnits
 ];
 
-export const gaUnits = polishGaCultureCards(deepenCourse(rawGaUnits, "Ga"));
+export const gaUnits = alignGaCourseToGuide(polishGaCultureCards(deepenCourse(rawGaUnits, "Ga")));
 
 export const gaCourse = {
   id: "ga",
@@ -22,13 +23,26 @@ export const gaCourse = {
   flag: "🇬🇭",
   accent: "#C95D3A",
   sourceNotes: gaSourceNotes,
+  guideCoverage: gaGuideCoverage,
 
   phases: [
     {
       id: "foundations",
       title: "Foundations",
-
-      units: gaUnits
+      outcome: "Greet people, introduce yourself, count, and manage essential everyday exchanges.",
+      units: gaUnits.slice(0, 9)
+    },
+    {
+      id: "everyday-life",
+      title: "Everyday Life",
+      outcome: "Navigate time, markets, school, travel, health, and practical life in Ga.",
+      units: gaUnits.slice(9, 20)
+    },
+    {
+      id: "communication-culture",
+      title: "Communication & Culture",
+      outcome: "Sustain connected conversations and apply Ga across realistic cultural contexts.",
+      units: gaUnits.slice(20)
     }
   ]
 };

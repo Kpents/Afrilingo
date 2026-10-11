@@ -1,6 +1,6 @@
 # AfriLingo Content Audit
 
-Generated: 2026-10-10T21:23:57.425Z
+Generated: 2026-10-11T21:14:44.538Z
 
 ## Summary
 
@@ -10,7 +10,7 @@ Generated: 2026-10-10T21:23:57.425Z
 - 7835 questions
 - 1611 culture cards
 - 4971 Explore entries
-- 388 Immersion items
+- 396 Immersion items
 - 0 blocking errors
 - 544 editorial warnings
 

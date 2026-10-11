@@ -7,18 +7,20 @@ const wordTypes = [
   ["numbers", "Numbers", "🔢"], ["common-expressions", "Common Expressions", "💬"]
 ].map(([id, label, emoji]) => ({ id, label, emoji }));
 const themes = [
+  ["greetings", "Greetings & Courtesy", "👋"], ["conversation-repair", "Keep Talking", "🔁"],
   ["home", "Home", "🏠"], ["food-drinks", "Food & Drinks", "🍲"], ["restaurant", "Restaurant", "🍽️"],
   ["family", "Family", "👨‍👩‍👧"], ["school", "School", "🏫"], ["work", "Work", "💼"],
   ["market-shopping", "Market & Shopping", "🛒"], ["transport", "Transport", "🚕"], ["health", "Health", "🏥"],
+  ["time-calendar", "Time & Calendar", "🕒"], ["feelings-needs", "Feelings & Needs", "❤️"],
   ["clothing", "Clothing", "👕"], ["animals", "Animals", "🐕"], ["weather", "Weather", "🌦️"],
   ["sports", "Sports", "⚽"], ["relationships", "Relationships", "❤️"], ["places-directions", "Places & Directions", "🗺️"],
   ["body", "Body", "🧍"], ["colours", "Colours", "🎨"]
 ].map(([id, label, emoji]) => ({ id, label, emoji }));
 const unitThemes = [
-  "relationships", "market-shopping", "relationships", "home", "family", "food-drinks", "home",
-  "colours", "relationships", "places-directions", "work", "market-shopping", "relationships", "school",
-  "transport", "relationships", "health", "weather", "work", "relationships", "relationships", "school",
-  "home", "transport", "health", "relationships", "relationships", "relationships"
+  "greetings", "market-shopping", "relationships", "home", "family", "food-drinks", "home",
+  "colours", "conversation-repair", "places-directions", "time-calendar", "market-shopping", "greetings", "school",
+  "transport", "feelings-needs", "health", "weather", "time-calendar", "conversation-repair", "conversation-repair", "school",
+  "home", "transport", "health", "greetings", "conversation-repair", "conversation-repair"
 ];
 const number = /one|two|three|four|five|six|seven|eight|nine|ten|number|hundred/i;
 const question = /^(what|who|where|how|which|whom)|\?$/i;
@@ -72,4 +74,10 @@ const supplements = [
   linguistic: { sourceType: "reference vocabulary" }
 }));
 const seen = new Set();
-export const gaExploreLibrary = { languageId: "ga", languageName: "Ga", nativeName: "Ga", wordTypes, themes, levels, entries: [...supplements, ...entries].filter(item => { const key=`${normalize(item.native)}|${normalize(item.english)}|${item.level}`; if(seen.has(key)) return false; seen.add(key); return true; }) };
+export const gaExploreLibrary = {
+  languageId: "ga", languageName: "Ga", nativeName: "Ga", wordTypes, themes, levels,
+  guideSource: "https://pages.mtu.edu/~rlstrick/rsvtxt/gaguide.pdf",
+  editorialNote: "Guide-aligned vocabulary; tone, contemporary usage, and pronunciation remain subject to native-speaker review.",
+  featuredThemeIds: ["greetings", "conversation-repair", "market-shopping", "places-directions", "time-calendar", "health"],
+  entries: [...supplements, ...entries].filter(item => { const key=`${normalize(item.native)}|${normalize(item.english)}|${item.level}`; if(seen.has(key)) return false; seen.add(key); return true; })
+};
